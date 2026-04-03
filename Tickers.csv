@@ -1,0 +1,2557 @@
+﻿Ticker,Name,Sector,Asset Class,Location
+HYLN,HYLIION HOLDINGS CORP,Industrials,Equity,United States
+CATX,PERSPECTIVE THERAPEUTICS INC,Health Care,Equity,United States
+DC,DAKOTA GOLD CORP,Materials,Equity,United States
+EPM,EVOLUTION PETROLEUM CORP,Energy,Equity,United States
+NG,NOVAGOLD RESOURCES INC,Materials,Equity,Canada
+IE,IVANHOE ELECTRIC INC,Materials,Equity,United States
+UEC,URANIUM ENERGY CORP,Energy,Equity,United States
+UUUU,ENERGY FUELS INC,Energy,Equity,Canada
+CMT,CORE MOLDING TECHNOLOGIES INC,Materials,Equity,United States
+CMCL,CALEDONIA MINING PLC,Materials,Equity,Canada
+IDR,IDAHO STRATEGIC RESOURCES INC,Materials,Equity,United States
+BHB,BAR HARBOR BANKSHARES,Financials,Equity,United States
+REPX,RILEY EXPLORATION PERMIAN INC,Energy,Equity,United States
+TMP,TOMPKINS FINANCIAL CORP,Financials,Equity,United States
+PRK,PARK NATIONAL CORP,Financials,Equity,United States
+NHC,NATIONAL HEALTHCARE CORP,Health Care,Equity,United States
+SEB,SEABOARD CORP,Consumer Staples,Equity,United States
+JELD,JELD WEN HOLDING INC,Industrials,Equity,United States
+NXDR,NEXTDOOR HOLDINGS INC CLASS A,Communication,Equity,United States
+OPTU,OPTIMUM COMMUNICATIONS INC CLASS A,Communication,Equity,United States
+RC,READY CAPITAL CORP,Financials,Equity,United States
+BLND,BLEND LABS INC CLASS A,Information Technology,Equity,United States
+ZIP,ZIPRECRUITER INC CLASS A,Communication,Equity,United States
+DDD,3D SYSTEMS CORP,Industrials,Equity,United States
+COTY,COTY INC CLASS A,Consumer Staples,Equity,United States
+UIS,UNISYS CORP,Information Technology,Equity,United States
+KLC,KINDERCARE LEARNING COMPANIES INC,Consumer Discretionary,Equity,United States
+AVD,AMER VANGUARD CORP,Materials,Equity,United States
+ACH,ACCENDRA HEALTH INC,Health Care,Equity,United States
+EVH,EVOLENT HEALTH INC CLASS A,Health Care,Equity,United States
+BHR,BRAEMAR HOTELS RESORTS INC,Real Estate,Equity,United States
+CMTG,CLAROS MORTGAGE TRUST INC,Financials,Equity,United States
+CLVT,CLARIVATE PLC,Industrials,Equity,United States
+BDN,BRANDYWINE REALTY TRUST REIT,Real Estate,Equity,United States
+CYH,COMMUNITY HEALTH SYSTEMS INC,Health Care,Equity,United States
+KOS,KOSMOS ENERGY LTD,Energy,Equity,United States
+ACCO,ACCO BRANDS CORP,Industrials,Equity,United States
+EVC,ENTRAVISION COMMUNICATIONS CORP CL,Communication,Equity,United States
+BBAI,BIGBEAR.AI HOLDINGS INC,Information Technology,Equity,United States
+ASPN,ASPEN AEROGELS INC,Materials,Equity,United States
+TBI,TRUEBLUE INC,Industrials,Equity,United States
+WTI,W AND T OFFSHORE INC,Energy,Equity,United States
+UWMC,UWM HOLDINGS CORP CLASS A,Financials,Equity,United States
+PACK,RANPAK HOLDINGS CORP CLASS A,Materials,Equity,United States
+LAW,CS DISCO INC,Information Technology,Equity,United States
+ADCT,ADC THERAPEUTICS SA,Health Care,Equity,United States
+BFLY,BUTTERFLY NETWORK INC CLASS A,Health Care,Equity,United States
+AMBP,ARDAGH METAL PACKAGING SA,Materials,Equity,United States
+YEXT,YEXT INC,Information Technology,Equity,United States
+BUR,BURFORD CAPITAL LTD,Financials,Equity,United States
+ACVA,ACV AUCTIONS INC CLASS A,Industrials,Equity,United States
+NUVB,NUVATION BIO INC CLASS A,Health Care,Equity,United States
+INN,SUMMIT HOTEL PROPERTIES REIT INC,Real Estate,Equity,United States
+NXDT,NEXPOINT DIVERSIFIED REAL ESTATE T,Real Estate,Equity,United States
+GENI,GENIUS SPORTS LTD,Consumer Discretionary,Equity,United Kingdom
+WEAV,WEAVE COMMUNICATIONS INC,Information Technology,Equity,United States
+BBBY,BED BATH AND BEYOND INC,Consumer Discretionary,Equity,United States
+OSG,OCTAVE SPECIALTY GROUP INC,Financials,Equity,United States
+MPT,MEDICAL PROPERTIES TRUST REIT INC,Real Estate,Equity,United States
+GTN,GRAY MEDIA INC,Communication,Equity,United States
+NABL,N ABLE INC,Information Technology,Equity,United States
+SG,SWEETGREEN INC CLASS A,Consumer Discretionary,Equity,United States
+ACRE,ARES COMMERCIAL REAL ESTATE REIT C,Financials,Equity,United States
+ESRT,EMPIRE STATE REALTY REIT INC TRUST,Real Estate,Equity,United States
+JBI,JANUS INTERNATIONAL GROUP INC,Industrials,Equity,United States
+ACHR,ARCHER AVIATION INC CLASS A,Industrials,Equity,United States
+TDOC,TELADOC HEALTH INC,Health Care,Equity,United States
+AHRT,AH REALTY INC,Real Estate,Equity,United States
+ALTG,ALTA EQUIPMENT GROUP INC CLASS A,Industrials,Equity,United States
+BGS,B AND G FOODS INC,Consumer Staples,Equity,United States
+SITC,SITE CENTERS CORP,Real Estate,Equity,United States
+RWT,REDWOOD TRUST REIT INC,Financials,Equity,United States
+GBTG,GLOBAL BUSINESS TRAVEL GROUP INC C,Consumer Discretionary,Equity,United States
+DBI,DESIGNER BRANDS INC CLASS A,Consumer Discretionary,Equity,United States
+BRSP,BRIGHTSPIRE CAPITAL INC CLASS A,Financials,Equity,United States
+COUR,COURSERA INC,Consumer Discretionary,Equity,United States
+XPER,XPERI INC,Information Technology,Equity,United States
+MBI,MBIA INC,Financials,Equity,United States
+MEI,METHODE ELECTRONICS INC,Information Technology,Equity,United States
+HPP,HUDSON PACIFIC PROPERTIES REIT INC,Real Estate,Equity,United States
+DCH,DAUCH CORPORATION,Consumer Discretionary,Equity,United States
+UA,UNDER ARMOUR INC CLASS C,Consumer Discretionary,Equity,United States
+NAT,NORDIC AMERICAN TANKERS LTD,Energy,Equity,United States
+UAA,UNDER ARMOUR INC CLASS A,Consumer Discretionary,Equity,United States
+XPOF,XPONENTIAL FITNESS INC CLASS A,Consumer Discretionary,Equity,United States
+TE,T1 ENERGY INC,Industrials,Equity,United States
+RMAX,RE MAX HOLDINGS INC CLASS A,Real Estate,Equity,United States
+FFWM,FIRST FOUNDATION INC,Financials,Equity,United States
+OGN,ORGANON,Health Care,Equity,United States
+GRNT,GRANITE RIDGE RESOURCES INC,Energy,Equity,United States
+CXM,SPRINKLR INC CLASS A,Information Technology,Equity,United States
+PD,PAGERDUTY INC,Information Technology,Equity,United States
+BORR,BORR DRILLING LTD,Energy,Equity,Norway
+OEC,ORION SA,Materials,Equity,United States
+SB,SAFE BULKERS INC,Industrials,Equity,Monaco
+KREF,KKR REAL ESTATE FINANCE INC TRUST,Financials,Equity,United States
+ASAN,ASANA INC CLASS A,Information Technology,Equity,United States
+VYX,NCR VOYIX CORP,Information Technology,Equity,United States
+PDM,PIEDMONT REALTY TRUST INC CLASS A,Real Estate,Equity,United States
+EGY,VAALCO ENERGY INC,Energy,Equity,United States
+ADT,ADT INC,Consumer Discretionary,Equity,United States
+CTOS,CUSTOM TRUCK ONE SOURCE INC,Industrials,Equity,United States
+TIC,TIC SOLUTIONS INC,Industrials,Equity,United States
+PSFE,PAYSAFE LTD,Financials,Equity,United States
+SXC,SUNCOKE ENERGY INC,Materials,Equity,United States
+LUMN,LUMEN TECHNOLOGIES INC,Communication,Equity,United States
+CODI,COMPASS DIVERSIFIED,Financials,Equity,United States
+TDAY,USA TODAY INC,Communication,Equity,United States
+TWI,TITAN INTERNATIONAL INC,Industrials,Equity,United States
+ORC,ORCHID ISLAND CAPITAL INC,Financials,Equity,United States
+CWH,CAMPING WORLD HOLDINGS INC CLASS A,Consumer Discretionary,Equity,United States
+RPC,RIDGEPOST CAPITAL INC CLASS A,Financials,Equity,United States
+RIG,TRANSOCEAN LTD,Energy,Equity,United States
+COMP,COMPASS INC CLASS A,Real Estate,Equity,United States
+NUS,NU SKIN ENTERPRISES INC CLASS A,Consumer Staples,Equity,United States
+SVV,SAVERS VALUE VILLAGE INC,Consumer Discretionary,Equity,United States
+RES,RPC INC,Energy,Equity,United States
+ABR,ARBOR REALTY TRUST REIT INC,Financials,Equity,United States
+AVTR,AVANTOR INC,Health Care,Equity,United States
+UTZ,UTZ BRANDS INC CLASS A,Consumer Staples,Equity,United States
+RLJ,RLJ LODGING TRUST REIT,Real Estate,Equity,United States
+TG,TREDEGAR CORP,Materials,Equity,United States
+TRTX,TPG RE FINANCE TRUST INC,Financials,Equity,United States
+VSTS,VESTIS CORP,Industrials,Equity,United States
+IVR,INVESCO MORTGAGE CAPITAL REIT INC,Financials,Equity,United States
+CLDT,CHATHAM LODGING TRUST REIT,Real Estate,Equity,United States
+AI,C3 AI INC CLASS A,Information Technology,Equity,United States
+EBS,EMERGENT BIOSOLUTIONS INC,Health Care,Equity,United States
+CARS,CARS.COM INC,Communication,Equity,United States
+GNW,GENWORTH FINANCIAL INC,Financials,Equity,United States
+JOBY,JOBY AVIATION INC CLASS A,Industrials,Equity,United States
+ONTF,ON24 INC,Information Technology,Equity,United States
+CLF,CLEVELAND CLIFFS INC,Materials,Equity,United States
+RDW,REDWIRE CORP,Industrials,Equity,United States
+MBC,MASTERBRAND INC,Industrials,Equity,United States
+FBRT,FRANKLIN BSP REALTY TRUST INC,Financials,Equity,United States
+BHVN,BIOHAVEN LTD,Health Care,Equity,United States
+FLO,FLOWERS FOODS INC,Consumer Staples,Equity,United States
+WNC,WABASH NATIONAL CORP,Industrials,Equity,United States
+MATV,MATIV HOLDINGS INC,Materials,Equity,United States
+TTI,TETRA TECHNOLOGIES INC,Energy,Equity,United States
+WU,WESTERN UNION,Financials,Equity,United States
+UAMY,UNITED STATES ANTIMONY CORP,Materials,Equity,United States
+OWL,BLUE OWL CAPITAL INC CLASS A,Financials,Equity,United States
+SHO,SUNSTONE HOTEL INVESTORS REIT INC,Real Estate,Equity,United States
+MAX,MEDIAALPHA INC CLASS A,Communication,Equity,United States
+TROX,TRONOX HOLDINGS PLC,Materials,Equity,United States
+RITM,RITHM CAPITAL CORP,Financials,Equity,United States
+GNL,GLOBAL NET LEASE INC,Real Estate,Equity,United States
+DEI,DOUGLAS EMMETT REIT INC,Real Estate,Equity,United States
+LION,LIONSGATE STUDIOS CORP,Communication,Equity,United States
+GPK,GRAPHIC PACKAGING HOLDING,Materials,Equity,United States
+FUBO,FUBOTV INC CLASS A,Communication,Equity,United States
+DV,DOUBLEVERIFY HOLDINGS INC,Communication,Equity,United States
+MFA,MFA FINANCIAL INC,Financials,Equity,United States
+KODK,EASTMAN KODAK,Information Technology,Equity,United States
+PRGO,PERRIGO PLC,Health Care,Equity,United States
+LEG,LEGGETT & PLATT INC,Consumer Discretionary,Equity,United States
+PAGS,PAGSEGURO DIGITAL LTD CLASS A,Financials,Equity,Brazil
+LADR,LADDER CAPITAL CORP CLASS A,Financials,Equity,United States
+MED,MEDIFAST INC,Consumer Staples,Equity,United States
+HLX,HELIX ENERGY SOLUTIONS GROUP INC,Energy,Equity,United States
+NIQ,NIQ GLOBAL INTELLIGENCE PLC,Communication,Equity,United States
+OI,O I GLASS INC,Materials,Equity,United States
+SMR,NUSCALE POWER CORP CLASS A,Industrials,Equity,United States
+PK,PARK HOTELS RESORTS INC,Real Estate,Equity,United States
+ARI,APOLLO COMMERCIAL REAL ESTATE FINA,Financials,Equity,United States
+SGHC,SUPER GROUP LTD,Consumer Discretionary,Equity,United States
+CAL,CALERES INC,Consumer Discretionary,Equity,United States
+SFL,SFL LTD,Energy,Equity,United States
+PATH,UIPATH INC CLASS A,Information Technology,Equity,United States
+CNH,CNH INDUSTRIAL N.V. NV,Industrials,Equity,United States
+CNNE,CANNAE HOLDINGS INC,Financials,Equity,United States
+RYAM,RAYONIER ADVANCED MATERIALS INC,Materials,Equity,United States
+ACEL,ACCEL ENTERTAINMENT INC CLASS A,Consumer Discretionary,Equity,United States
+GDOT,GREEN DOT CORP CLASS A,Financials,Equity,United States
+PBI,PITNEY BOWES INC,Industrials,Equity,United States
+FPI,FARMLAND PARTNERS INC,Real Estate,Equity,United States
+KW,KENNEDY WILSON HOLDINGS INC,Real Estate,Equity,United States
+COLD,AMERICOLD REALTY INC TRUST,Real Estate,Equity,United States
+PHR,PHREESIA INC,Health Care,Equity,United States
+OSCR,OSCAR HEALTH INC CLASS A,Financials,Equity,United States
+PMT,PENNYMAC MORTGAGE INVESTMENT TRUST,Financials,Equity,United States
+TWO,TWO HARBORS INVESTMENT CORP,Financials,Equity,United States
+F,FORD MOTOR CO,Consumer Discretionary,Equity,United States
+APLE,APPLE HOSPITALITY REIT INC,Real Estate,Equity,United States
+BV,BRIGHTVIEW HOLDINGS INC,Industrials,Equity,United States
+EFC,ELLINGTON FINANCIAL INC,Financials,Equity,United States
+MTW,MANITOWOC INC,Industrials,Equity,United States
+BOC,BOSTON OMAHA CORP CLASS A,Communication,Equity,United States
+CWK,CUSHMAN AND WAKEFIELD LTD,Real Estate,Equity,United States
+DXC,DXC TECHNOLOGY,Information Technology,Equity,United States
+SEMR,SEMRUSH HOLDINGS INC CLASS A,Information Technology,Equity,United States
+TK,TEEKAY CORPORATION CORP LTD,Energy,Equity,Bermuda
+DX,DYNEX CAPITAL REIT INC,Financials,Equity,United States
+OIS,OIL STATES INTERNATIONAL INC,Energy,Equity,United States
+LXFR,LUXFER HOLDINGS PLC,Industrials,Equity,United States
+DNOW,DNOW INC,Industrials,Equity,United States
+PEB,PEBBLEBROOK HOTEL TRUST REIT,Real Estate,Equity,United States
+KD,KYNDRYL HOLDINGS INC,Information Technology,Equity,United States
+CIM,CHIMERA INVESTMENT CORP,Financials,Equity,United States
+GRND,GRINDR INC,Communication,Equity,United States
+KSS,KOHLS CORP,Consumer Discretionary,Equity,United States
+S,SENTINELONE INC CLASS A,Information Technology,Equity,United States
+BRSL,BRIGHTSTAR LOTTERY PLC,Consumer Discretionary,Equity,United States
+HUN,HUNTSMAN CORP,Materials,Equity,United States
+PAR,PAR TECHNOLOGY CORP,Information Technology,Equity,United States
+ECVT,ECOVYST INC,Materials,Equity,United States
+FLG,FLAGSTAR BANK NATIONAL ASSOCIATION,Financials,Equity,United States
+AESI,ATLAS ENERGY SOLUTIONS INC,Energy,Equity,United States
+HAYW,HAYWARD HOLDINGS INC,Industrials,Equity,United States
+SBH,SALLY BEAUTY HOLDINGS INC,Consumer Discretionary,Equity,United States
+DFH,DREAM FINDERS HOMES INC CLASS A,Consumer Discretionary,Equity,United States
+SAFE,SAFEHOLD INC,Real Estate,Equity,United States
+ARLO,ARLO TECHNOLOGIES INC,Information Technology,Equity,United States
+CALY,CALLAWAY GOLF COMPANY,Consumer Discretionary,Equity,United States
+AVNS,AVANOS MEDICAL INC,Health Care,Equity,United States
+NU,NU HOLDINGS LTD CLASS A,Financials,Equity,Brazil
+EHAB,ENHABIT INC,Health Care,Equity,United States
+RKT,ROCKET COMPANIES INC CLASS A,Financials,Equity,United States
+CRGY,CRESCENT ENERGY CLASS A,Energy,Equity,United States
+GNE,GENIE ENERGY LTD CLASS B,Utilities,Equity,United States
+BKD,BROOKDALE SENIOR LIVING INC,Health Care,Equity,United States
+LC,LENDINGCLUB CORP,Financials,Equity,United States
+RXO,RXO INC,Industrials,Equity,United States
+QBTS,D WAVE QUANTUM INC,Information Technology,Equity,United States
+WT,WISDOMTREE INC,Financials,Equity,United States
+AES,AES CORP,Utilities,Equity,United States
+OOMA,OOMA INC,Information Technology,Equity,United States
+BETA,BETA TECHNOLOGIES INC CLASS A,Industrials,Equity,United States
+CLW,CLEARWATER PAPER CORP,Materials,Equity,United States
+UMH,UMH PROPERTIES INC,Real Estate,Equity,United States
+HLF,HERBALIFE LTD,Consumer Staples,Equity,United States
+ZETA,ZETA GLOBAL HOLDINGS CORP CLASS A,Information Technology,Equity,United States
+NLOP,NET LEASE OFFICE PROPERTIES,Real Estate,Equity,United States
+NPKI,NPK INTERNATIONAL INC,Industrials,Equity,United States
+XHR,XENIA HOTELS RESORTS REIT INC,Real Estate,Equity,United States
+HE,HAWAIIAN ELECTRIC INDUSTRIES INC,Utilities,Equity,United States
+PUMP,PROPETRO HOLDING CORP,Energy,Equity,United States
+FIGS,FIGS INC CLASS A,Consumer Discretionary,Equity,United States
+DOLE,DOLE PLC,Consumer Staples,Equity,Ireland
+IRT,INDEPENDENCE REALTY INC,Real Estate,Equity,United States
+JBGS,JBG SMITH PROPERTIES,Real Estate,Equity,United States
+CMDB,COSTAMARE BULKERS HOLDINGS LTD,Industrials,Equity,Monaco
+ASC,ARDMORE SHIPPING CORP,Energy,Equity,Bermuda
+FC,FRANKLIN COVEY,Industrials,Equity,United States
+BRBR,BELLRING BRANDS INC,Consumer Staples,Equity,United States
+DBRG,DIGITALBRIDGE GROUP INC CLASS A,Financials,Equity,United States
+CHCT,COMMUNITY HEALTHCARE TRUST INC,Real Estate,Equity,United States
+WTTR,SELECT WATER SOLUTIONS INC CLASS A,Energy,Equity,United States
+CAG,CONAGRA BRANDS INC,Consumer Staples,Equity,United States
+ARR,ARMOUR RESIDENTIAL REIT INC,Financials,Equity,United States
+FMC,FMC CORP,Materials,Equity,United States
+WWW,WOLVERINE WORLD WIDE INC,Consumer Discretionary,Equity,United States
+BAX,BAXTER INTERNATIONAL INC,Health Care,Equity,United States
+WSR,WHITESTONE REIT,Real Estate,Equity,United States
+MTUS,METALLUS INC,Materials,Equity,United States
+GPGI,GPGI INC CLASS A,Information Technology,Equity,United States
+SSTK,SHUTTERSTOCK INC,Communication,Equity,United States
+AMPX,AMPRIUS TECHNOLOGIES INC,Industrials,Equity,United States
+AEO,AMERICAN EAGLE OUTFITTERS INC,Consumer Discretionary,Equity,United States
+FNB,FNB CORP,Financials,Equity,United States
+SEM,SELECT MEDICAL HOLDINGS CORP,Health Care,Equity,United States
+LXU,LSB INDUSTRIES INC,Materials,Equity,United States
+VFC,VF CORP,Consumer Discretionary,Equity,United States
+TALO,TALOS ENERGY INC,Energy,Equity,United States
+DOC,HEALTHPEAK PROPERTIES INC,Real Estate,Equity,United States
+CMRE,COSTAMARE INC,Industrials,Equity,Monaco
+FUN,SIX FLAGS ENTERTAINMENT CORP,Consumer Discretionary,Equity,United States
+MCS,THE MARCUS CORP,Communication,Equity,United States
+GEO,GEO GROUP INC,Industrials,Equity,United States
+BBWI,BATH AND BODY WORKS INC,Consumer Discretionary,Equity,United States
+HR,HEALTHCARE REALTY TRUST INC CLASS,Real Estate,Equity,United States
+BANC,BANC OF CALIFORNIA INC,Financials,Equity,United States
+USNA,USANA HEALTH SCIENCES INC,Consumer Staples,Equity,United States
+ENR,ENERGIZER HOLDINGS INC,Consumer Staples,Equity,United States
+VSH,VISHAY INTERTECHNOLOGY INC,Information Technology,Equity,United States
+STWD,STARWOOD PROPERTY TRUST REIT INC,Financials,Equity,United States
+ACI,ALBERTSONS COMPANY INC CLASS A,Consumer Staples,Equity,United States
+CDE,COEUR MINING INC,Materials,Equity,United States
+SD,SANDRIDGE ENERGY INC,Energy,Equity,United States
+PCG,PG&E CORP,Utilities,Equity,United States
+FCF,FIRST COMMONWEALTH FINANCIAL CORP,Financials,Equity,United States
+CPRI,CAPRI HOLDINGS LTD,Consumer Discretionary,Equity,United States
+NX,QUANEX BUILDING PRODUCTS CORP,Industrials,Equity,United States
+KVUE,KENVUE INC,Consumer Staples,Equity,United States
+CLB,CORE LABORATORIES INC,Energy,Equity,United States
+PINS,PINTEREST INC CLASS A,Communication,Equity,United States
+VEL,VELOCITY FINANCIAL INC,Financials,Equity,United States
+MIR,MIRION TECHNOLOGIES INC CLASS A,Information Technology,Equity,United States
+XPRO,EXPRO GROUP HOLDINGS NV,Energy,Equity,United States
+HL,HECLA MINING,Materials,Equity,United States
+M,MACYS INC,Consumer Discretionary,Equity,United States
+JHX,JAMES HARDIE INDUSTRIES PLC,Materials,Equity,Australia
+CPNG,COUPANG INC CLASS A,Consumer Discretionary,Equity,United States
+DHT,DHT HOLDINGS INC,Energy,Equity,Bermuda
+CTO,CTO REALTY GROWTH INC,Real Estate,Equity,United States
+DEC,DIVERSIFIED ENERGY COMPANY,Energy,Equity,United States
+AAT,AMERICAN ASSETS TRUST REIT INC,Real Estate,Equity,United States
+PRMB,PRIMO BRANDS CLASS A CORP,Consumer Staples,Equity,United States
+PSTL,POSTAL REALTY TRUST INC CLASS A,Real Estate,Equity,United States
+MAC,MACERICH REIT,Real Estate,Equity,United States
+SOC,SABLE OFFSHORE CORP CLASS A,Energy,Equity,United States
+BNL,BROADSTONE NET LEASE INC,Real Estate,Equity,United States
+NCLH,NORWEGIAN CRUISE LINE HOLDINGS LTD,Consumer Discretionary,Equity,United States
+VTS,VITESSE ENERGY INC,Energy,Equity,United States
+NTST,NETSTREIT CORP,Real Estate,Equity,United States
+FIHL,FIDELIS INSURANCE HOLDINGS LTD,Financials,Equity,Bermuda
+AKR,ACADIA REALTY TRUST REIT,Real Estate,Equity,United States
+NVRI,ENVIRI CORP,Industrials,Equity,United States
+BXMT,BLACKSTONE MORTGAGE TRUST REIT CLA,Financials,Equity,United States
+AMN,AMN HEALTHCARE INC,Health Care,Equity,United States
+VRE,VERIS RESIDENTIAL INC,Real Estate,Equity,United States
+QXO,QXO INC,Industrials,Equity,United States
+BZH,BEAZER HOMES INC,Consumer Discretionary,Equity,United States
+TRC,TEJON RANCH,Real Estate,Equity,United States
+INR,INFINITY NATURAL RESOURCES INC CLA,Energy,Equity,United States
+HIMS,HIMS HERS HEALTH INC CLASS A,Health Care,Equity,United States
+HPQ,HP INC,Information Technology,Equity,United States
+CXW,CORECIVIC REIT INC,Industrials,Equity,United States
+KEY,KEYCORP,Financials,Equity,United States
+U,UNITY SOFTWARE INC,Information Technology,Equity,United States
+HOG,HARLEY DAVIDSON INC,Consumer Discretionary,Equity,United States
+CBAN,COLONY BANKCORP INC,Financials,Equity,United States
+ALH,ALLIANCE LAUNDRY HOLDINGS INC,Industrials,Equity,United States
+NOV,NOV INC,Energy,Equity,United States
+UE,URBAN EDGE PROPERTIES,Real Estate,Equity,United States
+ADNT,ADIENT PLC,Consumer Discretionary,Equity,United States
+RCUS,ARCUS BIOSCIENCES INC,Health Care,Equity,United States
+RYN,RAYONIER REIT INC,Real Estate,Equity,United States
+WRBY,WARBY PARKER INC CLASS A,Consumer Discretionary,Equity,United States
+MD,PEDIATRIX MEDICAL GROUP INC,Health Care,Equity,United States
+HIW,HIGHWOODS PROPERTIES REIT INC,Real Estate,Equity,United States
+PFS,PROVIDENT FINANCIAL SERVICES INC,Financials,Equity,United States
+MDU,MDU RESOURCES GROUP INC,Utilities,Equity,United States
+MYE,MYERS INDUSTRIES INC,Materials,Equity,United States
+NLY,ANNALY CAPITAL MANAGEMENT REIT INC,Financials,Equity,United States
+SPNT,SIRIUSPOINT LTD,Financials,Equity,United States
+FBP,FIRST BANCORP,Financials,Equity,United States
+PKST,PEAKSTONE REALTY TRUST CLASS E,Real Estate,Equity,United States
+SEG,SEAPORT ENTERTAINMENT GROUP INC,Real Estate,Equity,United States
+RSI,RUSH STREET INTERACTIVE INC CLASS,Consumer Discretionary,Equity,United States
+FLOC,FLOWCO HOLDINGS INC CLASS A,Energy,Equity,United States
+EPC,EDGEWELL PERSONAL CARE,Consumer Staples,Equity,United States
+CON,CONCENTRA GROUP HOLDINGS PARENT IN,Health Care,Equity,United States
+MEG,MONTROSE ENVIRONMENTAL GRP INC,Industrials,Equity,United States
+RYZ,RYERSON HOLDING CORP,Materials,Equity,United States
+HVT,HAVERTY FURNITURE COMPANIES INC,Consumer Discretionary,Equity,United States
+EBF,ENNIS INC,Industrials,Equity,United States
+CUZ,COUSINS PROPERTIES REIT INC,Real Estate,Equity,United States
+PRM,PERIMETER SOLUTIONS INC,Materials,Equity,United States
+DEA,EASTERLY GOVERNMENT PROPERTIES INC,Real Estate,Equity,United States
+OLP,ONE LIBERTY PROPERTIES REIT INC,Real Estate,Equity,United States
+AMTB,AMERANT BANCORP INC CLASS A,Financials,Equity,United States
+CC,CHEMOURS,Materials,Equity,United States
+PR,PERMIAN RESOURCES CORP CLASS A,Energy,Equity,United States
+BOW,BOWHEAD SPECIALTY HOLDINGS INC,Financials,Equity,United States
+ENOV,ENOVIS CORP,Health Care,Equity,United States
+RVLV,REVOLVE GROUP CLASS A INC,Consumer Discretionary,Equity,United States
+GME,GAMESTOP CORP CLASS A,Consumer Discretionary,Equity,United States
+GTES,GATES INDUSTRIAL PLC,Industrials,Equity,United States
+FHN,FIRST HORIZON CORP,Financials,Equity,United States
+ETD,ETHAN ALLEN INTERIORS INC,Consumer Discretionary,Equity,United States
+KIM,KIMCO REALTY REIT CORP,Real Estate,Equity,United States
+INGM,INGRAM MICRO HOLDING CORP,Information Technology,Equity,United States
+ATEN,A10 NETWORKS INC,Information Technology,Equity,United States
+GNK,GENCO SHIPPING AND TRADING LTD,Industrials,Equity,United States
+BEN,FRANKLIN RESOURCES INC,Financials,Equity,United States
+VOYG,VOYAGER TECHNOLOGIES INC CLASS A,Industrials,Equity,United States
+CMP,COMPASS MINERALS INTERNATIONAL INC,Materials,Equity,United States
+HRL,HORMEL FOODS CORP,Consumer Staples,Equity,United States
+BOX,BOX INC CLASS A,Information Technology,Equity,United States
+ELAN,ELANCO ANIMAL HEALTH INC,Health Care,Equity,United States
+AM,ANTERO MIDSTREAM CORP,Energy,Equity,United States
+IVZ,INVESCO LTD,Financials,Equity,United States
+SILA,SILA RLTY TR INC TRUST,Real Estate,Equity,United States
+BKSY,BLACKSKY TECHNOLOGY INC CLASS A,Industrials,Equity,United States
+WKC,WORLD KINECT CORP,Energy,Equity,United States
+CSTM,CONSTELLIUM SE CLASS A,Materials,Equity,United States
+CRK,COMSTOCK RESOURCES INC,Energy,Equity,United States
+CWAN,CLEARWATER ANALYTICS HOLDINGS INC,Information Technology,Equity,United States
+DOCS,DOXIMITY INC CLASS A,Health Care,Equity,United States
+FCPT,FOUR CORNERS PROPERTY INC TRUST,Real Estate,Equity,United States
+AMBQ,AMBIQ MICRO INC,Information Technology,Equity,United States
+WY,WEYERHAEUSER REIT,Real Estate,Equity,United States
+HPE,HEWLETT PACKARD ENTERPRISE,Information Technology,Equity,United States
+MOV,MOVADO GROUP INC,Consumer Discretionary,Equity,United States
+ASIX,ADVANSIX INC,Materials,Equity,United States
+KRG,KITE REALTY GROUP TRUST REIT,Real Estate,Equity,United States
+CCL,CARNIVAL CORP,Consumer Discretionary,Equity,United States
+FG,F&G ANNUITIES AND LIFE INC,Financials,Equity,United States
+YELP,YELP INC,Communication,Equity,United States
+INVH,INVITATION HOMES INC,Real Estate,Equity,United States
+PRA,PROASSURANCE CORP,Financials,Equity,United States
+NVST,ENVISTA HOLDINGS CORP,Health Care,Equity,United States
+NXRT,NEXPOINT RESIDENTIAL TRUST INC,Real Estate,Equity,United States
+VNO,VORNADO REALTY TRUST REIT,Real Estate,Equity,United States
+GAP,GAP INC,Consumer Discretionary,Equity,United States
+FOR,FORESTAR GROUP INC,Real Estate,Equity,United States
+RHI,ROBERT HALF,Industrials,Equity,United States
+ASB,ASSOCIATED BANCORP,Financials,Equity,United States
+MOS,MOSAIC,Materials,Equity,United States
+INVX,INNOVEX INTERNATIONAL INC,Energy,Equity,United States
+RF,REGIONS FINANCIAL CORP,Financials,Equity,United States
+DIN,DINE BRANDS GLOBAL INC,Consumer Discretionary,Equity,United States
+TDC,TERADATA CORP,Information Technology,Equity,United States
+HIPO,HIPPO HOLDINGS INC,Financials,Equity,United States
+KN,KNOWLES CORP,Information Technology,Equity,United States
+SNDR,SCHNEIDER NATIONAL INC CLASS B,Industrials,Equity,United States
+SARO,STANDARDAERO,Industrials,Equity,United States
+CURB,CURBLINE PROPERTIES,Real Estate,Equity,United States
+TOST,TOAST INC CLASS A,Financials,Equity,United States
+OUT,OUTFRONT MEDIA INC,Real Estate,Equity,United States
+MMI,MARCUS & MILLICHAP INC,Real Estate,Equity,United States
+MTG,MGIC INVESTMENT CORP,Financials,Equity,United States
+RAMP,LIVERAMP HOLDINGS INC,Information Technology,Equity,United States
+HZO,MARINEMAX INC,Consumer Discretionary,Equity,United States
+HRTG,HERITAGE INSURANCE HOLDINGS INC,Financials,Equity,United States
+AMTM,AMENTUM HOLDINGS INC,Industrials,Equity,United States
+LTH,LIFE TIME GROUP HOLDINGS INC,Consumer Discretionary,Equity,United States
+NGVC,NATURAL GROCERS BY VITAMIN COTTAGE,Consumer Staples,Equity,United States
+CHWY,CHEWY INC CLASS A,Consumer Discretionary,Equity,United States
+CBZ,CBIZ INC,Industrials,Equity,United States
+HOMB,HOME BANCSHARES INC,Financials,Equity,United States
+NSP,INSPERITY INC,Industrials,Equity,United States
+CVLG,COVENANT LOGISTICS GROUP INC CLASS,Industrials,Equity,United States
+VICI,VICI PPTYS INC,Real Estate,Equity,United States
+OPLN,OPENLANE INC,Industrials,Equity,United States
+AMRC,AMERESCO INC CLASS A,Industrials,Equity,United States
+AXTA,AXALTA COATING SYSTEMS LTD,Materials,Equity,United States
+DLX,DELUXE CORP,Industrials,Equity,United States
+PFE,PFIZER INC,Health Care,Equity,United States
+MWA,MUELLER WATER PRODUCTS INC SERIES,Industrials,Equity,United States
+BFB,BROWN FORMAN CORP CLASS B,Consumer Staples,Equity,United States
+BFA,BROWN FORMAN CORP CLASS A,Consumer Staples,Equity,United States
+EVTC,EVERTEC INC,Financials,Equity,United States
+AMH,AMERICAN HOMES RENT REIT CLASS A,Real Estate,Equity,United States
+IONQ,IONQ INC,Information Technology,Equity,United States
+PKE,PARK AEROSPACE CORP,Industrials,Equity,United States
+GCO,GENESCO INC,Consumer Discretionary,Equity,United States
+KRC,KILROY REALTY REIT CORP,Real Estate,Equity,United States
+CNK,CINEMARK HOLDINGS INC,Communication,Equity,United States
+WS,WORTHINGTON STEEL INC,Materials,Equity,United States
+MRP,MILLROSE PROPERTIES INC CLASS A,Real Estate,Equity,United States
+KFRC,KFORCE INC,Industrials,Equity,United States
+BRX,BRIXMOR PROPERTY GROUP REIT INC,Real Estate,Equity,United States
+MAN,MANPOWER INC,Industrials,Equity,United States
+PRG,PROG HOLDINGS INC,Financials,Equity,United States
+HG,HAMILTON INSURANCE GROUP LTD CLASS,Financials,Equity,United States
+IBTA,IBOTTA INC CLASS A,Communication,Equity,United States
+CPS,COOPER STANDARD HOLDINGS INC,Consumer Discretionary,Equity,United States
+OLN,OLIN CORP,Materials,Equity,United States
+LBRT,LIBERTY ENERGY INC CLASS A,Energy,Equity,United States
+T,AT&T INC,Communication,Equity,United States
+BBT,BEACON FINANCIAL CORP,Financials,Equity,United States
+CTRI,CENTURI HOLDINGS INC,Industrials,Equity,United States
+PRKS,UNITED PARKS AND RESORTS INC,Consumer Discretionary,Equity,United States
+IOT,SAMSARA INC CLASS A,Information Technology,Equity,United States
+KMPR,KEMPER CORP,Financials,Equity,United States
+BKV,BKV CORP,Energy,Equity,United States
+CDRE,CADRE HOLDINGS INC,Industrials,Equity,United States
+SMA,SMARTSTOP SELF STORAGE REIT INC,Real Estate,Equity,United States
+FLNG,FLEX LNG LTD,Energy,Equity,Norway
+EPRT,ESSENTIAL PROPERTIES REALTY TRUST,Real Estate,Equity,United States
+SBSI,SOUTHSIDE BANCSHARES INC,Financials,Equity,United States
+IVT,INVENTRUST PROPERTIES CORP,Real Estate,Equity,United States
+PACS,PACS GROUP INC,Health Care,Equity,United States
+CDP,COPT DEFENSE PROPERTIES,Real Estate,Equity,United States
+BY,BYLINE BANCORP INC,Financials,Equity,United States
+NOG,NORTHERN OIL AND GAS INC,Energy,Equity,United States
+CMG,CHIPOTLE MEXICAN GRILL INC,Consumer Discretionary,Equity,United States
+PL,PLANET LABS CLASS A,Industrials,Equity,United States
+UCB,UNITED COMMUNITY BANKS INC,Financials,Equity,United States
+GIC,GLOBAL INDUSTRIAL,Industrials,Equity,United States
+TRN,TRINITY INDUSTRIES INC,Industrials,Equity,United States
+HRB,H&R BLOCK INC,Consumer Discretionary,Equity,United States
+RM,REGIONAL MANAGEMENT CORP,Financials,Equity,United States
+AS,AMER SPORTS INC,Consumer Discretionary,Equity,United States
+WGO,WINNEBAGO INDUSTRIES INC,Consumer Discretionary,Equity,United States
+CPF,CENTRAL PACIFIC FINANCIAL CORP,Financials,Equity,United States
+RYAN,RYAN SPECIALTY HOLDINGS INC CLASS,Financials,Equity,United States
+GTY,GETTY REALTY REIT CORP,Real Estate,Equity,United States
+LZB,LA-Z-BOY INC,Consumer Discretionary,Equity,United States
+CNC,CENTENE CORP,Health Care,Equity,United States
+BBUC,BROOKFIELD BUSINESS CORP CLASS A,Industrials,Equity,Canada
+LOB,LIVE OAK BANCSHARES INC,Financials,Equity,United States
+HY,HYSTER YALE INC CLASS A,Industrials,Equity,United States
+XRN,CHIRON REAL ESTATE INC,Real Estate,Equity,United States
+BFS,SAUL CENTERS REIT INC,Real Estate,Equity,United States
+MGY,MAGNOLIA OIL GAS CORP CLASS A,Energy,Equity,United States
+ONON,ON HOLDING AG CLASS A,Consumer Discretionary,Equity,United States
+REXR,REXFORD INDUSTRIAL REALTY REIT INC,Real Estate,Equity,United States
+DAN,DANA INCORPORATED INC,Consumer Discretionary,Equity,United States
+RDN,RADIAN GROUP INC,Financials,Equity,United States
+SM,SM ENERGY,Energy,Equity,United States
+IIIN,INSTEEL INDUSTRIES INC,Industrials,Equity,United States
+REZI,RESIDEO TECHNOLOGIES INC,Industrials,Equity,United States
+LPG,DORIAN LPG LTD,Energy,Equity,United States
+ESI,ELEMENT SOLUTIONS INC,Materials,Equity,United States
+VVV,VALVOLINE INC,Consumer Discretionary,Equity,United States
+EE,EXCELERATE ENERGY INC CLASS A,Energy,Equity,United States
+UDR,UDR REIT INC,Real Estate,Equity,United States
+UVE,UNIVERSAL INSURANCE HOLDINGS INC,Financials,Equity,United States
+SKT,TANGER INC,Real Estate,Equity,United States
+KMI,KINDER MORGAN INC,Energy,Equity,United States
+GRDN,GUARDIAN PHARMACY SERVICES INC CLA,Health Care,Equity,United States
+LNC,LINCOLN NATIONAL CORP,Financials,Equity,United States
+BIRK,BIRKENSTOCK HOLDING PLC,Consumer Discretionary,Equity,United States
+EPAC,ENERPAC TOOL GROUP CORP CLASS A,Industrials,Equity,United States
+HNI,HNI CORP,Industrials,Equity,United States
+BLSH,BULLISH,Financials,Equity,United States
+CNMD,CONMED CORP,Health Care,Equity,United States
+OXM,OXFORD INDUSTRIES INC,Consumer Discretionary,Equity,United States
+AUB,ATLANTIC UNION BANKSHARES CORP,Financials,Equity,United States
+ST,SENSATA TECHNOLOGIES HOLDING PLC,Industrials,Equity,United States
+CRI,CARTERS INC,Consumer Discretionary,Equity,United States
+CVI,CVR ENERGY INC,Energy,Equity,United States
+VNT,VONTIER CORP,Information Technology,Equity,United States
+APAM,ARTISAN PARTNERS ASSET MANAGEMENT,Financials,Equity,United States
+RNST,RENASANT CORP,Financials,Equity,United States
+HTH,HILLTOP HOLDINGS INC,Financials,Equity,United States
+AORT,ARTIVION INC,Health Care,Equity,United States
+SLG,SL GREEN REALTY REIT CORP,Real Estate,Equity,United States
+EQH,EQUITABLE HOLDINGS INC,Financials,Equity,United States
+PRSU,PURSUIT ATTRACTIONS AND HOSPITALIT,Consumer Discretionary,Equity,United States
+RNG,RINGCENTRAL INC CLASS A,Information Technology,Equity,United States
+IP,INTERNATIONAL PAPER,Materials,Equity,United States
+AROC,ARCHROCK INC,Energy,Equity,United States
+TREX,TREX INC,Industrials,Equity,United States
+AVNT,AVIENT CORP,Materials,Equity,United States
+YETI,YETI HOLDINGS INC,Consumer Discretionary,Equity,United States
+SMP,STANDARD MOTOR PRODUCTS INC,Consumer Discretionary,Equity,United States
+STEL,STELLAR BANCORP INC,Financials,Equity,United States
+DT,DYNATRACE INC,Information Technology,Equity,United States
+CUBE,CUBESMART REIT,Real Estate,Equity,United States
+KMT,KENNAMETAL INC,Industrials,Equity,United States
+STAG,STAG INDUSTRIAL REIT INC,Real Estate,Equity,United States
+HP,HELMERICH & PAYNE INC,Energy,Equity,United States
+ALK,ALASKA AIR GROUP INC,Industrials,Equity,United States
+CTRA,COTERRA ENERGY INC,Energy,Equity,United States
+MGM,MGM RESORTS INTERNATIONAL,Consumer Discretionary,Equity,United States
+HASI,HA SUSTAINABLE INFRASTRUCTURE CAPI,Financials,Equity,United States
+OII,OCEANEERING INTERNATIONAL INC,Energy,Equity,United States
+GIS,GENERAL MILLS INC,Consumer Staples,Equity,United States
+IMAX,IMAX CORP,Communication,Equity,United States
+G,GENPACT LTD,Industrials,Equity,United States
+UGI,UGI CORP,Utilities,Equity,United States
+KBR,KBR INC,Industrials,Equity,United States
+BILL,BILL HOLDINGS INC,Information Technology,Equity,United States
+NSA,NATIONAL STORAGE AFFILIATES TRUST,Real Estate,Equity,United States
+CTRE,CARETRUST REIT INC,Real Estate,Equity,United States
+UTI,UNIVERSAL TECHNICAL INSTITUTE INC,Consumer Discretionary,Equity,United States
+TCBX,THIRD COAST BANCSHARES INC,Financials,Equity,United States
+LTC,LTC PROPERTIES REIT INC,Real Estate,Equity,United States
+BBW,BUILD A BEAR WORKSHOP INC,Consumer Discretionary,Equity,United States
+MIAX,MIAMI INTERNATIONAL HOLDINGS INC,Financials,Equity,United States
+LUV,SOUTHWEST AIRLINES,Industrials,Equity,United States
+ABM,ABM INDUSTRIES INC,Industrials,Equity,United States
+CBL,CBL ASSOCIATES PROPERTIES INC,Real Estate,Equity,United States
+ONIT,ONITY GROUP INC,Financials,Equity,United States
+ASGN,ASGN INC,Information Technology,Equity,United States
+WLY,JOHN WILEY AND SONS INC CLASS A,Communication,Equity,United States
+PPL,PPL CORP,Utilities,Equity,United States
+BIPC,BROOKFIELD INFRASTRUCTURE CORP CLA,Utilities,Equity,Canada
+ALLY,ALLY FINANCIAL INC,Financials,Equity,United States
+HGV,HILTON GRAND VACATIONS INC,Consumer Discretionary,Equity,United States
+KOP,KOPPERS HOLDINGS INC,Materials,Equity,United States
+NBHC,NATIONAL BANK HOLDINGS CORP CLASS,Financials,Equity,United States
+TNET,TRINET GROUP INCINARY,Industrials,Equity,United States
+SLGN,SILGAN HOLDINGS INC,Materials,Equity,United States
+FBIN,FORTUNE BRANDS INNOVATIONS INC,Industrials,Equity,United States
+SMBK,SMARTFINANCIAL INC,Financials,Equity,United States
+AMCR,AMCOR PLC,Materials,Equity,United States
+CWENA,CLEARWAY ENERGY INC CLASS A,Utilities,Equity,United States
+QGEN,QIAGEN NV,Health Care,Equity,Germany
+LAZ,LAZARD INC,Financials,Equity,United States
+CWEN,CLEARWAY ENERGY INC CLASS C,Utilities,Equity,United States
+BEPC,BROOKFIELD RENEWABLE SUBORDINATE V,Utilities,Equity,Canada
+SW,SMURFIT WESTROCK PLC,Materials,Equity,United States
+ORI,OLD REPUBLIC INTERNATIONAL CORP,Financials,Equity,United States
+GOLD,GOLD INC,Consumer Discretionary,Equity,United States
+BTU,PEABODY ENERGY CORP,Energy,Equity,United States
+CNO,CNO FINANCIAL GROUP INC,Financials,Equity,United States
+UHT,UNIVERSAL HEALTH REALTY INCOME TRU,Real Estate,Equity,United States
+ARMK,ARAMARK,Consumer Discretionary,Equity,United States
+JEF,JEFFERIES FINANCIAL GROUP INC,Financials,Equity,United States
+APG,API GROUP CORP,Industrials,Equity,United States
+RAL,RALLIANT CORP,Information Technology,Equity,United States
+AVA,AVISTA CORP,Utilities,Equity,United States
+OFG,OFG BANCORP,Financials,Equity,United States
+SLVM,SYLVAMO CORP,Materials,Equity,United States
+OBK,ORIGIN BANCORP INC,Financials,Equity,United States
+WTRG,ESSENTIAL UTILITIES INC,Utilities,Equity,United States
+EIG,EMPLOYERS HOLDINGS INC,Financials,Equity,United States
+HAL,HALLIBURTON,Energy,Equity,United States
+CNX,CNX RESOURCES CORP,Energy,Equity,United States
+DOW,DOW INC,Materials,Equity,United States
+RGR,STURM RUGER INC,Consumer Discretionary,Equity,United States
+KMX,CARMAX INC,Consumer Discretionary,Equity,United States
+CXT,CRANE NXT,Information Technology,Equity,United States
+PLOW,DOUGLAS DYNAMICS INC,Industrials,Equity,United States
+VPG,VISHAY PRECISION GROUP INC,Information Technology,Equity,United States
+LW,LAMB WESTON HOLDINGS INC,Consumer Staples,Equity,United States
+FDP,FRESH DEL MONTE PRODUCE INC,Consumer Staples,Equity,United States
+TDS,TELEPHONE AND DATA SYSTEMS INC,Communication,Equity,United States
+NNN,NNN REIT INC,Real Estate,Equity,United States
+SEE,SEALED AIR CORP,Materials,Equity,United States
+HTB,HOMETRUST BANCSHARES INC,Financials,Equity,United States
+MUR,MURPHY OIL CORP,Energy,Equity,United States
+HMN,HORACE MANN EDUCATORS CORP,Financials,Equity,United States
+TR,TOOTSIE ROLL INDUSTRIES INC,Consumer Staples,Equity,United States
+CNP,CENTERPOINT ENERGY INC,Utilities,Equity,United States
+VSCO,VICTORIA S SECRET,Consumer Discretionary,Equity,United States
+TGLS,TECNOGLASS INC,Industrials,Equity,United States
+VIRT,VIRTU FINANCIAL INC CLASS A,Financials,Equity,United States
+UHALB,U HAUL NON VOTING SERIES N,Industrials,Equity,United States
+NATL,NCR ATLEOS CORP,Financials,Equity,United States
+WD,WALKER & DUNLOP INC,Financials,Equity,United States
+BAM,BROOKFIELD ASSET MANAGEMENT VOTING,Financials,Equity,Canada
+TAP,MOLSON COORS BREWING CLASS B,Consumer Staples,Equity,United States
+GBCI,GLACIER BANCORP INC,Financials,Equity,United States
+EQBK,EQUITY BANCSHARES INC CLASS A,Financials,Equity,United States
+ZWS,ZURN ELKAY WATER SOLUTIONS CORP,Industrials,Equity,United States
+FOUR,SHIFT4 PAYMENTS INC CLASS A,Financials,Equity,United States
+BKU,BANKUNITED INC,Financials,Equity,United States
+GLOB,GLOBANT SA,Information Technology,Equity,United States
+TFC,TRUIST FINANCIAL CORP,Financials,Equity,United States
+OHI,OMEGA HEALTHCARE INVESTORS REIT IN,Real Estate,Equity,United States
+CSV,CARRIAGE SERVICES INC,Consumer Discretionary,Equity,United States
+CNA,CNA FINANCIAL CORP,Financials,Equity,United States
+CWT,CALIFORNIA WATER SERVICE GROUP,Utilities,Equity,United States
+AR,ANTERO RESOURCES CORP,Energy,Equity,United States
+MLR,MILLER INDUSTRIES INC,Industrials,Equity,United States
+DD,DUPONT DE NEMOURS INC,Materials,Equity,United States
+SDRL,SEADRILL LTD,Energy,Equity,United States
+QTWO,Q2 HOLDINGS INC,Information Technology,Equity,United States
+FNF,FIDELITY NATIONAL FINANCIAL INC,Financials,Equity,United States
+UHAL,U HAUL HOLDING,Industrials,Equity,United States
+RBRK,RUBRIK INC CLASS A,Information Technology,Equity,United States
+FLR,FLUOR CORP,Industrials,Equity,United States
+DFIN,DONNELLEY FINANCIAL SOLUTIONS INC,Financials,Equity,United States
+UNFI,UNITED NATURAL FOODS INC,Consumer Staples,Equity,United States
+NI,NISOURCE INC,Utilities,Equity,United States
+VTOL,BRISTOW GROUP INC,Energy,Equity,United States
+ARE,ALEXANDRIA REAL ESTATE EQUITIES RE,Real Estate,Equity,United States
+LXP,LXP INDUSTRIAL TRUST,Real Estate,Equity,United States
+IPI,INTREPID POTASH INC,Materials,Equity,United States
+BROS,DUTCH BROS INC CLASS A,Consumer Discretionary,Equity,United States
+TPH,TRI POINTE HOMES INC,Consumer Discretionary,Equity,United States
+FIS,FIDELITY NATIONAL INFORMATION SERV,Financials,Equity,United States
+BAC,BANK OF AMERICA CORP,Financials,Equity,United States
+AHR,AMERICAN HEALTHCARE REIT INC,Real Estate,Equity,United States
+ETSY,ETSY INC,Consumer Discretionary,Equity,United States
+IDT,IDT CORP CLASS B,Communication,Equity,United States
+DK,DELEK US HOLDINGS INC,Energy,Equity,United States
+YOU,CLEAR SECURE INC CLASS A,Information Technology,Equity,United States
+OGE,OGE ENERGY CORP,Utilities,Equity,United States
+RRC,RANGE RESOURCES CORP,Energy,Equity,United States
+REX,REX AMERICAN RESOURCES CORP,Energy,Equity,United States
+CTS,CTS CORP,Information Technology,Equity,United States
+CNM,CORE & MAIN INC CLASS A,Industrials,Equity,United States
+WHD,CACTUS INC CLASS A,Energy,Equity,United States
+ESTC,ELASTIC NV,Information Technology,Equity,United States
+KNTK,KINETIK HOLDINGS INC CLASS A,Energy,Equity,United States
+EPR,EPR PROPERTIES REIT,Real Estate,Equity,United States
+BKE,BUCKLE INC,Consumer Discretionary,Equity,United States
+SCL,STEPAN,Materials,Equity,United States
+GXO,GXO LOGISTICS INC,Industrials,Equity,United States
+BLX,BANCO LATINOAMERICANO DE COMERCIO,Financials,Equity,Panama
+NE,NOBLE CORPORATION PLC,Energy,Equity,United States
+FE,FIRSTENERGY CORP,Utilities,Equity,United States
+INSP,INSPIRE MEDICAL SYSTEMS INC,Health Care,Equity,United States
+OKLO,OKLO INC CLASS A,Utilities,Equity,United States
+FND,FLOOR DECOR HOLDINGS INC CLASS A,Consumer Discretionary,Equity,United States
+CALX,CALIX NETWORKS INC,Information Technology,Equity,United States
+VZ,VERIZON COMMUNICATIONS INC,Communication,Equity,United States
+WOR,WORTHINGTON ENTERPRISES INC,Industrials,Equity,United States
+AIN,ALBANY INTERNATIONAL CORP CLASS A,Industrials,Equity,United States
+USB,US BANCORP,Financials,Equity,United States
+KBH,KB HOME,Consumer Discretionary,Equity,United States
+IIPR,INNOVATIVE INDUSTRIAL PROPERTIES I,Real Estate,Equity,United States
+GBX,GREENBRIER INC,Industrials,Equity,United States
+THR,THERMON GROUP HOLDINGS INC,Industrials,Equity,United States
+FBK,FB FINANCIAL CORP,Financials,Equity,United States
+PBF,PBF ENERGY INC CLASS A,Energy,Equity,United States
+NTB,BANK OF NT BUTTERFIELD & SON LTD,Financials,Equity,United States
+NKE,NIKE INC CLASS B,Consumer Discretionary,Equity,United States
+JHG,JANUS HENDERSON GROUP PLC,Financials,Equity,United States
+BXP,BXP INC,Real Estate,Equity,United States
+OMF,ONEMAIN HOLDINGS INC,Financials,Equity,United States
+AAP,ADVANCE AUTO PARTS INC,Consumer Discretionary,Equity,United States
+LVS,LAS VEGAS SANDS CORP,Consumer Discretionary,Equity,United States
+POR,PORTLAND GENERAL ELECTRIC,Utilities,Equity,United States
+MP,MP MATERIALS CORP CLASS A,Materials,Equity,United States
+BXC,BLUELINX HOLDINGS INC,Industrials,Equity,United States
+WHR,WHIRLPOOL CORP,Consumer Discretionary,Equity,United States
+DVN,DEVON ENERGY CORP,Energy,Equity,United States
+AAMI,ACADIAN ASSET MANAGEMENT INC,Financials,Equity,United States
+UTL,UNITIL CORP,Utilities,Equity,United States
+RBLX,ROBLOX CORP CLASS A,Communication,Equity,United States
+ROL,ROLLINS INC,Industrials,Equity,United States
+PSN,PARSONS CORP,Industrials,Equity,United States
+UVV,UNIVERSAL CORP,Consumer Staples,Equity,United States
+NWN,NORTHWEST NATURAL HOLDING COMPANY,Utilities,Equity,United States
+MKC,MCCORMICK & CO NON-VOTING INC,Consumer Staples,Equity,United States
+ASH,ASHLAND INC,Materials,Equity,United States
+SON,SONOCO PRODUCTS,Materials,Equity,United States
+SLB,SLB NV,Energy,Equity,United States
+FTV,FORTIVE CORP,Industrials,Equity,United States
+HAE,HAEMONETICS CORP,Health Care,Equity,United States
+PII,POLARIS INC,Consumer Discretionary,Equity,United States
+BWA,BORGWARNER INC,Consumer Discretionary,Equity,United States
+CARR,CARRIER GLOBAL CORP,Industrials,Equity,United States
+PCOR,PROCORE TECHNOLOGIES INC,Information Technology,Equity,United States
+MC,MOELIS CLASS A,Financials,Equity,United States
+NJR,NEW JERSEY RESOURCES CORP,Utilities,Equity,United States
+CCS,CENTURY COMMUNITIES INC,Consumer Discretionary,Equity,United States
+KNX,KNIGHT-SWIFT TRANSPORTATION HOLDIN,Industrials,Equity,United States
+BHE,BENCHMARK ELECTRONICS INC,Information Technology,Equity,United States
+TFIN,TRIUMPH FINANCIAL INC,Financials,Equity,United States
+MSGE,MADISON SQUARE GARDEN ENTERTAINMEN,Communication,Equity,United States
+LOAR,LOAR HOLDINGS INC,Industrials,Equity,United States
+XYZ,BLOCK INC CLASS A,Financials,Equity,United States
+PRLB,PROTO LABS INC,Industrials,Equity,United States
+FCX,FREEPORT MCMORAN INC,Materials,Equity,United States
+RLI,RLI CORP,Financials,Equity,United States
+TEX,TEREX CORP,Industrials,Equity,United States
+CBU,COMMUNITY FINANCIAL SYSTEM INC,Financials,Equity,United States
+FR,FIRST INDUSTRIAL REALTY TRUST INC,Real Estate,Equity,United States
+TMHC,TAYLOR MORRISON HOME CORP,Consumer Discretionary,Equity,United States
+ESNT,ESSENT GROUP LTD,Financials,Equity,United States
+CSR,CENTERSPACE,Real Estate,Equity,United States
+CFG,CITIZENS FINANCIAL GROUP INC,Financials,Equity,United States
+WK,WORKIVA INC CLASS A,Information Technology,Equity,United States
+SEI,SOLARIS OILFIELD INFRASTRUCTURE IN,Energy,Equity,United States
+DLB,DOLBY LABORATORIES INC CLASS A,Information Technology,Equity,United States
+ATMU,ATMUS FILTRATION TECHNOLOGIES INC,Industrials,Equity,United States
+CMC,COMMERCIAL METALS,Materials,Equity,United States
+TXNM,TXNM ENERGY INC,Utilities,Equity,United States
+AA,ALCOA CORP,Materials,Equity,United States
+FAF,FIRST AMERICAN FINANCIAL CORP,Financials,Equity,United States
+KGS,KODIAK GAS SERVICES INC,Energy,Equity,United States
+BMY,BRISTOL MYERS SQUIBB,Health Care,Equity,United States
+EQR,EQUITY RESIDENTIAL REIT,Real Estate,Equity,United States
+PSTG,EVERPURE INC CLASS A,Information Technology,Equity,United States
+STC,STEWART INFO SERVICES CORP,Financials,Equity,United States
+ATKR,ATKORE INC,Industrials,Equity,United States
+FUL,HB FULLER,Materials,Equity,United States
+PBH,PRESTIGE CONSUMER HEALTHCARE INC,Health Care,Equity,United States
+BALL,BALL CORP,Materials,Equity,United States
+DAR,DARLING INGREDIENTS INC,Consumer Staples,Equity,United States
+MAS,MASCO CORP,Industrials,Equity,United States
+MTH,MERITAGE CORP,Consumer Discretionary,Equity,United States
+SMG,SCOTTS MIRACLE GRO,Materials,Equity,United States
+O,REALTY INCOME REIT CORP,Real Estate,Equity,United States
+TRNO,TERRENO REALTY REIT CORP,Real Estate,Equity,United States
+LMND,LEMONADE INC,Financials,Equity,United States
+CNS,COHEN & STEERS INC,Financials,Equity,United States
+D,DOMINION ENERGY INC,Utilities,Equity,United States
+ELF,ELF BEAUTY INC,Consumer Staples,Equity,United States
+JOE,ST JOE,Real Estate,Equity,United States
+GRC,GORMAN-RUPP,Industrials,Equity,United States
+GRBK,GREEN BRICK PARTNERS INC,Consumer Discretionary,Equity,United States
+FET,FORUM ENERGY TECHNOLOGIES INC,Energy,Equity,United States
+OVV,OVINTIV INC,Energy,Equity,United States
+ELS,EQUITY LIFESTYLE PROPERTIES REIT I,Real Estate,Equity,United States
+HHH,HOWARD HUGHES HOLDINGS INC,Real Estate,Equity,United States
+KFY,KORN FERRY,Industrials,Equity,United States
+SOLV,SOLVENTUM CORP,Health Care,Equity,United States
+BBY,BEST BUY INC,Consumer Discretionary,Equity,United States
+ODC,OIL DRI CORPORATION OF AMERICA,Consumer Staples,Equity,United States
+CE,CELANESE CORP,Materials,Equity,United States
+BRO,BROWN & BROWN INC,Financials,Equity,United States
+DINO,HF SINCLAIR CORP,Energy,Equity,United States
+TSN,TYSON FOODS INC CLASS A,Consumer Staples,Equity,United States
+AOS,A O SMITH CORP,Industrials,Equity,United States
+HLIO,HELIOS TECHNOLOGIES INC,Industrials,Equity,United States
+WRB,WR BERKLEY CORP,Financials,Equity,United States
+AL,AIR LEASE CORP CLASS A,Industrials,Equity,United States
+DAL,DELTA AIR LINES INC,Industrials,Equity,United States
+MMS,MAXIMUS INC,Industrials,Equity,United States
+OXY,OCCIDENTAL PETROLEUM CORP,Energy,Equity,United States
+SYF,SYNCHRONY FINANCIAL,Financials,Equity,United States
+PB,PROSPERITY BANCSHARES INC,Financials,Equity,United States
+MTDR,MATADOR RESOURCES,Energy,Equity,United States
+PARR,PAR PACIFIC HOLDINGS INC,Energy,Equity,United States
+TRU,TRANSUNION,Industrials,Equity,United States
+GPN,GLOBAL PAYMENTS INC,Financials,Equity,United States
+SAH,SONIC AUTOMOTIVE INC CLASS A,Consumer Discretionary,Equity,United States
+VAC,MARRIOTT VACATIONS WORLDWIDE CORP,Consumer Discretionary,Equity,United States
+VOYA,VOYA FINANCIAL INC,Financials,Equity,United States
+GEF,GREIF INC CLASS A,Materials,Equity,United States
+PVH,PVH CORP,Consumer Discretionary,Equity,United States
+KTB,KONTOOR BRANDS INC,Consumer Discretionary,Equity,United States
+MO,ALTRIA GROUP INC,Consumer Staples,Equity,United States
+TNC,TENNANT,Industrials,Equity,United States
+APTV,APTIV PLC,Consumer Discretionary,Equity,United States
+PHIN,PHINIA INC,Consumer Discretionary,Equity,United States
+EL,ESTEE LAUDER INC CLASS A,Consumer Staples,Equity,United States
+EQT,EQT CORP,Energy,Equity,United States
+ES,EVERSOURCE ENERGY,Utilities,Equity,United States
+WPC,W. P. CAREY REIT INC,Real Estate,Equity,United States
+CUBI,CUSTOMERS BANCORP INC,Financials,Equity,United States
+TNL,TRAVEL LEISURE,Consumer Discretionary,Equity,United States
+MET,METLIFE INC,Financials,Equity,United States
+WAL,WESTERN ALLIANCE,Financials,Equity,United States
+WBS,WEBSTER FINANCIAL CORP,Financials,Equity,United States
+WMK,WEIS MARKETS INC,Consumer Staples,Equity,United States
+VVX,V2X INC,Industrials,Equity,United States
+VIK,VIKING HOLDINGS,Consumer Discretionary,Equity,United States
+BKH,BLACK HILLS CORP,Utilities,Equity,United States
+SWK,STANLEY BLACK & DECKER INC,Industrials,Equity,United States
+CRC,CALIFORNIA RESOURCES CORP,Energy,Equity,United States
+BSX,BOSTON SCIENTIFIC CORP,Health Care,Equity,United States
+UBER,UBER TECHNOLOGIES INC,Industrials,Equity,United States
+CVS,CVS HEALTH CORP,Health Care,Equity,United States
+EIX,EDISON INTERNATIONAL,Utilities,Equity,United States
+SGI,SOMNIGROUP INTERNATIONAL INC,Consumer Discretionary,Equity,United States
+GFF,GRIFFON CORP,Industrials,Equity,United States
+MTX,MINERALS TECHNOLOGIES INC,Materials,Equity,United States
+NGVT,INGEVITY CORP,Materials,Equity,United States
+SF,STIFEL FINANCIAL CORP,Financials,Equity,United States
+BC,BRUNSWICK CORP,Consumer Discretionary,Equity,United States
+IFF,INTERNATIONAL FLAVORS & FRAGRANCES,Materials,Equity,United States
+INSW,INTERNATIONAL SEAWAYS INC,Energy,Equity,United States
+FTI,TECHNIPFMC PLC,Energy,Equity,United States
+EMN,EASTMAN CHEMICAL,Materials,Equity,United States
+LPX,LOUISIANA PACIFIC CORP,Materials,Equity,United States
+QSR,RESTAURANTS BRANDS INTERNATIONAL I,Consumer Discretionary,Equity,Canada
+W,WAYFAIR INC CLASS A,Consumer Discretionary,Equity,United States
+BFH,BREAD FINANCIAL HOLDINGS INC,Financials,Equity,United States
+FLS,FLOWSERVE CORP,Industrials,Equity,United States
+ADM,ARCHER DANIELS MIDLAND,Consumer Staples,Equity,United States
+TNK,TEEKAY TANKERS LTD CLASS A,Energy,Equity,Bermuda
+SFBS,SERVISFIRST BANCSHARES INC,Financials,Equity,United States
+SKY,CHAMPION HOMES INC,Consumer Discretionary,Equity,United States
+BOH,BANK OF HAWAII CORP,Financials,Equity,United States
+UNM,UNUM,Financials,Equity,United States
+AIG,AMERICAN INTERNATIONAL GROUP INC,Financials,Equity,United States
+GM,GENERAL MOTORS,Consumer Discretionary,Equity,United States
+PIPR,PIPER SANDLER COMPANIES,Financials,Equity,United States
+KR,KROGER,Consumer Staples,Equity,United States
+WMB,WILLIAMS INC,Energy,Equity,United States
+SPB,SPECTRUM BRANDS HOLDINGS INC,Consumer Staples,Equity,United States
+PLNT,PLANET FITNESS INC CLASS A,Consumer Discretionary,Equity,United States
+OMC,OMNICOM GROUP INC,Communication,Equity,United States
+CBT,CABOT CORP,Materials,Equity,United States
+ADC,AGREE REALTY REIT CORP,Real Estate,Equity,United States
+BCC,BOISE CASCADE,Industrials,Equity,United States
+USPH,US PHYSICAL THERAPY INC,Health Care,Equity,United States
+DBD,DIEBOLD NIXDORF INC,Information Technology,Equity,United States
+AWR,AMERICAN STATES WATER,Utilities,Equity,United States
+CAVA,CAVA GROUP INC,Consumer Discretionary,Equity,United States
+KO,COCA-COLA,Consumer Staples,Equity,United States
+STNG,SCORPIO TANKERS INC,Energy,Equity,United States
+ABCB,AMERIS BANCORP,Financials,Equity,United States
+OTIS,OTIS WORLDWIDE CORP,Industrials,Equity,United States
+TPC,TUTOR PERINI CORP,Industrials,Equity,United States
+CMS,CMS ENERGY CORP,Utilities,Equity,United States
+WFC,WELLS FARGO,Financials,Equity,United States
+BFAM,BRIGHT HORIZONS FAMILY SOLUTIONS I,Consumer Discretionary,Equity,United States
+GHM,GRAHAM CORP,Industrials,Equity,United States
+BAH,BOOZ ALLEN HAMILTON HOLDING CORP C,Industrials,Equity,United States
+CCI,CROWN CASTLE INC,Real Estate,Equity,United States
+THO,THOR INDUSTRIES INC,Consumer Discretionary,Equity,United States
+AGO,ASSURED GUARANTY LTD,Financials,Equity,United States
+EW,EDWARDS LIFESCIENCES CORP,Health Care,Equity,United States
+HXL,HEXCEL CORP,Industrials,Equity,United States
+WH,WYNDHAM HOTELS RESORTS INC,Consumer Discretionary,Equity,United States
+IR,INGERSOLL RAND INC,Industrials,Equity,United States
+GDDY,GODADDY INC CLASS A,Information Technology,Equity,United States
+BYD,BOYD GAMING CORP,Consumer Discretionary,Equity,United States
+KNF,KNIFE RIVER CORP,Materials,Equity,United States
+BLDR,BUILDERS FIRSTSOURCE INC,Industrials,Equity,United States
+LYB,LYONDELLBASELL INDUSTRIES NV CLASS,Materials,Equity,United States
+MCB,METROPOLITAN BANK HOLDING CORP,Financials,Equity,United States
+PEG,PUBLIC SERVICE ENTERPRISE GROUP IN,Utilities,Equity,United States
+SHAK,SHAKE SHACK INC CLASS A,Consumer Discretionary,Equity,United States
+DOCN,DIGITALOCEAN HOLDINGS INC,Information Technology,Equity,United States
+SCI,SERVICE,Consumer Discretionary,Equity,United States
+SYY,SYSCO CORP,Consumer Staples,Equity,United States
+VTR,VENTAS REIT INC,Real Estate,Equity,United States
+CTVA,CORTEVA INC,Materials,Equity,United States
+NHI,NATIONAL HEALTH INVESTORS REIT INC,Real Estate,Equity,United States
+TDW,TIDEWATER INC,Energy,Equity,United States
+NYT,NEW YORK TIMES CLASS A,Communication,Equity,United States
+PNFP,PINNACLE FINANCIAL PARTNERS INC,Financials,Equity,United States
+AX,AXOS FINANCIAL INC,Financials,Equity,United States
+PFGC,PERFORMANCE FOOD GROUP,Consumer Staples,Equity,United States
+GGG,GRACO INC,Industrials,Equity,United States
+GMED,GLOBUS MEDICAL INC CLASS A,Health Care,Equity,United States
+DCI,DONALDSON INC,Industrials,Equity,United States
+RVTY,REVVITY INC,Health Care,Equity,United States
+SIG,SIGNET JEWELERS LTD,Consumer Discretionary,Equity,United States
+KRMN,KARMAN HOLDINGS INC,Industrials,Equity,United States
+CL,COLGATE-PALMOLIVE,Consumer Staples,Equity,United States
+GEFB,GREIF INC CLASS B,Materials,Equity,United States
+PNR,PENTAIR,Industrials,Equity,United States
+OGS,ONE GAS INC,Utilities,Equity,United States
+VLTO,VERALTO CORP,Industrials,Equity,United States
+ITGR,INTEGER HOLDINGS CORP,Health Care,Equity,United States
+TPB,TURNING POINT BRANDS INC,Consumer Staples,Equity,United States
+ACM,AECOM,Industrials,Equity,United States
+PFSI,PENNYMAC FINANCIAL SERVICES INC,Financials,Equity,United States
+LRN,STRIDE INC,Consumer Discretionary,Equity,United States
+MCY,MERCURY GENERAL CORP,Financials,Equity,United States
+LENB,LENNAR CORP CLASS B,Consumer Discretionary,Equity,United States
+SXT,SENSIENT TECHNOLOGIES CORP,Materials,Equity,United States
+SWX,SOUTHWEST GAS HOLDINGS INC,Utilities,Equity,United States
+MDT,MEDTRONIC PLC,Health Care,Equity,United States
+TXT,TEXTRON INC,Industrials,Equity,United States
+KKR,KKR AND CO INC,Financials,Equity,United States
+ZBH,ZIMMER BIOMET HOLDINGS INC,Health Care,Equity,United States
+ANF,ABERCROMBIE AND FITCH CLASS A,Consumer Discretionary,Equity,United States
+AU,ANGLOGOLD ASHANTI PLC,Materials,Equity,South Africa
+NBR,NABORS INDUSTRIES LTD,Energy,Equity,United States
+SSB,SOUTHSTATE BANK CORP,Financials,Equity,United States
+LEN,LENNAR A CORP CLASS A,Consumer Discretionary,Equity,United States
+MSM,MSC INDUSTRIAL INC CLASS A,Industrials,Equity,United States
+RHP,RYMAN HOSPITALITY PROPERTIES REIT,Real Estate,Equity,United States
+SR,SPIRE INC,Utilities,Equity,United States
+USFD,US FOODS HOLDING CORP,Consumer Staples,Equity,United States
+NEE,NEXTERA ENERGY INC,Utilities,Equity,United States
+ESAB,ESAB CORP,Industrials,Equity,United States
+GOLF,ACUSHNET HOLDINGS CORP,Consumer Discretionary,Equity,United States
+TTC,TORO,Industrials,Equity,United States
+SCHW,CHARLES SCHWAB CORP,Financials,Equity,United States
+DIS,WALT DISNEY,Communication,Equity,United States
+PRU,PRUDENTIAL FINANCIAL INC,Financials,Equity,United States
+CRCL,CIRCLE INTERNET GROUP INC CLASS A,Information Technology,Equity,United States
+OKE,ONEOK INC,Energy,Equity,United States
+DECK,DECKERS OUTDOOR CORP,Consumer Discretionary,Equity,United States
+RBA,RB GLOBAL INC,Industrials,Equity,Canada
+CHD,CHURCH AND DWIGHT INC,Consumer Staples,Equity,United States
+UPS,UNITED PARCEL SERVICE INC CLASS B,Industrials,Equity,United States
+CABO,CABLE ONE INC,Communication,Equity,United States
+SJM,JM SMUCKER,Consumer Staples,Equity,United States
+NFG,NATIONAL FUEL GAS,Utilities,Equity,United States
+SO,SOUTHERN,Utilities,Equity,United States
+POST,POST HOLDINGS INC,Consumer Staples,Equity,United States
+SRE,SEMPRA,Utilities,Equity,United States
+MHK,MOHAWK INDUSTRIES INC,Consumer Discretionary,Equity,United States
+CPT,CAMDEN PROPERTY TRUST REIT,Real Estate,Equity,United States
+RPM,RPM INTERNATIONAL INC,Materials,Equity,United States
+TKR,TIMKEN,Industrials,Equity,United States
+EHC,ENCOMPASS HEALTH CORP,Health Care,Equity,United States
+IRM,IRON MOUNTAIN INC,Real Estate,Equity,United States
+AXS,AXIS CAPITAL HOLDINGS LTD,Financials,Equity,United States
+HCC,WARRIOR MET COAL INC,Materials,Equity,United States
+NOW,SERVICENOW INC,Information Technology,Equity,United States
+CCK,CROWN HOLDINGS INC,Materials,Equity,United States
+BJ,BJS WHOLESALE CLUB HOLDINGS INC,Consumer Staples,Equity,United States
+PNW,PINNACLE WEST CORP,Utilities,Equity,United States
+HRI,HERC HOLDINGS INC,Industrials,Equity,United States
+FLUT,FLUTTER ENTERTAINMENT PLC,Consumer Discretionary,Equity,United States
+CHH,CHOICE HOTELS INTERNATIONAL INC,Consumer Discretionary,Equity,United States
+BCO,BRINKS,Industrials,Equity,United States
+JXN,JACKSON FINANCIAL INC CLASS A,Financials,Equity,United States
+CRH,CRH PUBLIC LIMITED PLC,Materials,Equity,United States
+CLX,CLOROX,Consumer Staples,Equity,United States
+NEM,NEWMONT,Materials,Equity,United States
+SN,SHARKNINJA INC,Consumer Discretionary,Equity,United States
+VAL,VALARIS LTD,Energy,Equity,United States
+ACA,ARCOSA INC,Industrials,Equity,United States
+FRT,FEDERAL REALTY INVESTMENT TRUST RE,Real Estate,Equity,United States
+GKOS,GLAUKOS CORP,Health Care,Equity,United States
+PPG,PPG INDUSTRIES INC,Materials,Equity,United States
+ABT,ABBOTT LABORATORIES,Health Care,Equity,United States
+L,LOEWS CORP,Financials,Equity,United States
+OC,OWENS CORNING,Industrials,Equity,United States
+GPC,GENUINE PARTS,Consumer Discretionary,Equity,United States
+ARES,ARES MANAGEMENT CORP CLASS A,Financials,Equity,United States
+AFL,AFLAC INC,Financials,Equity,United States
+FSS,FEDERAL SIGNAL CORP,Industrials,Equity,United States
+SPHR,SPHERE ENTERTAINMENT CLASS A,Communication,Equity,United States
+HOV,HOVNANIAN ENTERPRISES INC CLASS A,Consumer Discretionary,Equity,United States
+AIR,AAR CORP,Industrials,Equity,United States
+C,CITIGROUP INC,Financials,Equity,United States
+BX,BLACKSTONE INC,Financials,Equity,United States
+APO,APOLLO GLOBAL MANAGEMENT INC,Financials,Equity,United States
+MLI,MUELLER INDUSTRIES INC,Industrials,Equity,United States
+AEE,AMEREN CORP,Utilities,Equity,United States
+ROG,ROGERS CORP,Information Technology,Equity,United States
+ETR,ENTERGY CORP,Utilities,Equity,United States
+A,AGILENT TECHNOLOGIES INC,Health Care,Equity,United States
+ED,CONSOLIDATED EDISON INC,Utilities,Equity,United States
+Q,QNITY ELECTRONICS INC,Information Technology,Equity,United States
+ORA,ORMAT TECH INC,Utilities,Equity,United States
+INGR,INGREDION INC,Consumer Staples,Equity,United States
+BDC,BELDEN INC,Information Technology,Equity,United States
+CNR,CORE NATURAL RESOURCES INC,Energy,Equity,United States
+WLK,WESTLAKE CORP,Materials,Equity,United States
+ZTS,ZOETIS INC CLASS A,Health Care,Equity,United States
+AGCO,AGCO CORP,Industrials,Equity,United States
+WEC,WEC ENERGY GROUP INC,Utilities,Equity,United States
+ALSN,ALLISON TRANSMISSION HOLDINGS INC,Industrials,Equity,United States
+CVSA,COVISTA INC,Consumer Discretionary,Equity,United States
+PHM,PULTEGROUP INC,Consumer Discretionary,Equity,United States
+BK,BANK OF NEW YORK MELLON CORP,Financials,Equity,United States
+TFX,TELEFLEX INC,Health Care,Equity,United States
+NVT,NVENT ELECTRIC PLC,Industrials,Equity,United States
+PAYC,PAYCOM SOFTWARE INC,Industrials,Equity,United States
+DG,DOLLAR GENERAL CORP,Consumer Staples,Equity,United States
+ECG,EVERUS CONSTRUCTION GROUP INC,Industrials,Equity,United States
+XYL,XYLEM INC,Industrials,Equity,United States
+LNN,LINDSAY CORP,Industrials,Equity,United States
+GVA,GRANITE CONSTRUCTION INC,Industrials,Equity,United States
+LEA,LEAR CORP,Consumer Discretionary,Equity,United States
+MHO,M I HOMES INC,Consumer Discretionary,Equity,United States
+MRK,MERCK & CO INC,Health Care,Equity,United States
+TGT,TARGET CORP,Consumer Staples,Equity,United States
+TWLO,TWILIO INC CLASS A,Information Technology,Equity,United States
+MAA,MID AMERICA APARTMENT COMMUNITIES,Real Estate,Equity,United States
+ANET,ARISTA NETWORKS INC,Information Technology,Equity,United States
+DCO,DUCOMMUN INC,Industrials,Equity,United States
+LCII,LCI INDUSTRIES,Consumer Discretionary,Equity,United States
+RDDT,REDDIT INC CLASS A,Communication,Equity,United States
+ATR,APTARGROUP INC,Materials,Equity,United States
+STT,STATE STREET CORP,Financials,Equity,United States
+AZZ,AZZ INC,Industrials,Equity,United States
+JBTM,JBT MAREL CORP,Industrials,Equity,United States
+APH,AMPHENOL CORP CLASS A,Information Technology,Equity,United States
+CPK,CHESAPEAKE UTILITIES CORP,Utilities,Equity,United States
+KWR,QUAKER HOUGHTON CORP,Materials,Equity,United States
+EMR,EMERSON ELECTRIC,Industrials,Equity,United States
+SUI,SUN COMMUNITIES REIT INC,Real Estate,Equity,United States
+AFG,AMERICAN FINANCIAL GROUP INC,Financials,Equity,United States
+J,JACOBS SOLUTIONS INC,Industrials,Equity,United States
+MTN,VAIL RESORTS INC,Consumer Discretionary,Equity,United States
+NNI,NELNET INC CLASS A,Financials,Equity,United States
+BG,BUNGE GLOBAL SA,Consumer Staples,Equity,United States
+PLD,PROLOGIS REIT INC,Real Estate,Equity,United States
+EXR,EXTRA SPACE STORAGE REIT INC,Real Estate,Equity,United States
+VRTS,VIRTUS INVESTMENT PARTNERS INC,Financials,Equity,United States
+ENVA,ENOVA INTERNATIONAL INC,Financials,Equity,United States
+DUK,DUKE ENERGY CORP,Utilities,Equity,United States
+SITE,SITEONE LANDSCAPE SUPPLY INC,Industrials,Equity,United States
+RH,RH,Consumer Discretionary,Equity,United States
+TOL,TOLL BROTHERS INC,Consumer Discretionary,Equity,United States
+JCI,JOHNSON CONTROLS INTERNATIONAL PLC,Industrials,Equity,United States
+CBRE,CBRE GROUP INC CLASS A,Real Estate,Equity,United States
+HIG,HARTFORD INSURANCE GROUP INC,Financials,Equity,United States
+WMS,ADVANCED DRAINAGE SYSTEMS INC,Industrials,Equity,United States
+BE,BLOOM ENERGY CLASS A CORP,Industrials,Equity,United States
+EAT,BRINKER INTERNATIONAL INC,Consumer Discretionary,Equity,United States
+CFR,CULLEN FROST BANKERS INC,Financials,Equity,United States
+COP,CONOCOPHILLIPS,Energy,Equity,United States
+MOH,MOLINA HEALTHCARE INC,Health Care,Equity,United States
+KEX,KIRBY CORP,Industrials,Equity,United States
+DHI,D R HORTON INC,Consumer Discretionary,Equity,United States
+GL,GLOBE LIFE INC,Financials,Equity,United States
+EPAM,EPAM SYSTEMS INC,Information Technology,Equity,United States
+DTM,DT MIDSTREAM INC,Energy,Equity,United States
+CF,CF INDUSTRIES HOLDINGS INC,Materials,Equity,United States
+PJT,PJT PARTNERS INC CLASS A,Financials,Equity,United States
+GLW,CORNING INC,Information Technology,Equity,United States
+AWK,AMERICAN WATER WORKS INC,Utilities,Equity,United States
+NPK,NATIONAL PRESTO INDUSTRIES INC,Industrials,Equity,United States
+TPR,TAPESTRY INC,Consumer Discretionary,Equity,United States
+HLI,HOULIHAN LOKEY INC CLASS A,Financials,Equity,United States
+ARW,ARROW ELECTRONICS INC,Information Technology,Equity,United States
+ORCL,ORACLE CORP,Information Technology,Equity,United States
+OSK,OSHKOSH CORP,Industrials,Equity,United States
+ATI,ATI INC,Industrials,Equity,United States
+IDA,IDACORP INC,Utilities,Equity,United States
+EXPD,EXPEDITORS INTERNATIONAL OF WASHIN,Industrials,Equity,United States
+RJF,RAYMOND JAMES INC,Financials,Equity,United States
+MTRN,MATERION CORP,Materials,Equity,United States
+AGM,FEDERAL AGRICULTURAL MORTGAGE NON,Financials,Equity,United States
+H,HYATT HOTELS CORP CLASS A,Consumer Discretionary,Equity,United States
+PG,PROCTER & GAMBLE,Consumer Staples,Equity,United States
+MMM,3M,Industrials,Equity,United States
+PRIM,PRIMORIS SERVICES CORP,Industrials,Equity,United States
+NIC,NICOLET BANKSHARES INC,Financials,Equity,United States
+DTE,DTE ENERGY,Utilities,Equity,United States
+ALLE,ALLEGION PLC,Industrials,Equity,United States
+GWRE,GUIDEWIRE SOFTWARE INC,Information Technology,Equity,United States
+LYV,LIVE NATION ENTERTAINMENT INC,Communication,Equity,United States
+BMI,BADGER METER INC,Information Technology,Equity,United States
+WEX,WEX INC,Financials,Equity,United States
+NRG,NRG ENERGY INC,Utilities,Equity,United States
+PAG,PENSKE AUTOMOTIVE GROUP VOTING INC,Consumer Discretionary,Equity,United States
+BOOT,BOOT BARN HOLDINGS INC,Consumer Discretionary,Equity,United States
+EOG,EOG RESOURCES INC,Energy,Equity,United States
+HCI,HCI GROUP INC,Financials,Equity,United States
+STZ,CONSTELLATION BRANDS INC CLASS A,Consumer Staples,Equity,United States
+RHLD,RESOLUTE HOLDINGS MANAGEMENT INC,Industrials,Equity,United States
+ICE,INTERCONTINENTAL EXCHANGE INC,Financials,Equity,United States
+SNOW,SNOWFLAKE INC,Information Technology,Equity,United States
+YUM,YUM BRANDS INC,Consumer Discretionary,Equity,United States
+DVA,DAVITA INC,Health Care,Equity,United States
+BDX,BECTON DICKINSON,Health Care,Equity,United States
+TJX,TJX INC,Consumer Discretionary,Equity,United States
+IT,GARTNER INC,Information Technology,Equity,United States
+VST,VISTRA CORP,Utilities,Equity,United States
+LDOS,LEIDOS HOLDINGS INC,Industrials,Equity,United States
+SNX,TD SYNNEX CORP,Information Technology,Equity,United States
+BR,BROADRIDGE FINANCIAL SOLUTIONS INC,Industrials,Equity,United States
+MATX,MATSON INC,Industrials,Equity,United States
+MS,MORGAN STANLEY,Financials,Equity,United States
+CRL,CHARLES RIVER LABORATORIES INTERNA,Health Care,Equity,United States
+AVB,AVALONBAY COMMUNITIES REIT INC,Real Estate,Equity,United States
+SCCO,SOUTHERN COPPER CORP,Materials,Equity,Peru
+AWI,ARMSTRONG WORLD INDUSTRIES INC,Industrials,Equity,United States
+NUE,NUCOR CORP,Materials,Equity,United States
+PM,PHILIP MORRIS INTERNATIONAL INC,Consumer Staples,Equity,United States
+IQV,IQVIA HOLDINGS INC,Health Care,Equity,United States
+CR,CRANE,Industrials,Equity,United States
+MSA,MSA SAFETY INC,Industrials,Equity,United States
+ALG,ALAMO GROUP INC,Industrials,Equity,United States
+GATX,GATX CORP,Industrials,Equity,United States
+AVY,AVERY DENNISON CORP,Materials,Equity,United States
+SSD,SIMPSON MANUFACTURING INC,Industrials,Equity,United States
+HUM,HUMANA INC,Health Care,Equity,United States
+MRSH,MARSH INC,Financials,Equity,United States
+THG,HANOVER INSURANCE GROUP INC,Financials,Equity,United States
+AMT,AMERICAN TOWER REIT CORP,Real Estate,Equity,United States
+FCN,FTI CONSULTING INC,Industrials,Equity,United States
+XOM,EXXON MOBIL CORP,Energy,Equity,United States
+ENS,ENERSYS,Industrials,Equity,United States
+DELL,DELL TECHNOLOGIES INC CLASS C,Information Technology,Equity,United States
+EFX,EQUIFAX INC,Industrials,Equity,United States
+VEEV,VEEVA SYSTEMS INC CLASS A,Health Care,Equity,United States
+WSM,WILLIAMS SONOMA INC,Consumer Discretionary,Equity,United States
+DLR,DIGITAL REALTY TRUST REIT INC,Real Estate,Equity,United States
+COF,CAPITAL ONE FINANCIAL CORP,Financials,Equity,United States
+CRM,SALESFORCE INC,Information Technology,Equity,United States
+ALB,ALBEMARLE CORP,Materials,Equity,United States
+SPG,SIMON PROPERTY GROUP REIT INC,Real Estate,Equity,United States
+DHR,DANAHER CORP,Health Care,Equity,United States
+EXP,EAGLE MATERIALS INC,Materials,Equity,United States
+LEU,CENTRUS ENERGY CORP CLASS A,Energy,Equity,United States
+EGP,EASTGROUP PROPERTIES REIT INC,Real Estate,Equity,United States
+ATO,ATMOS ENERGY CORP,Utilities,Equity,United States
+RRX,REGAL REXNORD CORP,Industrials,Equity,United States
+UHS,UNIVERSAL HEALTH SERVICES INC CLAS,Health Care,Equity,United States
+ITT,ITT INC,Industrials,Equity,United States
+IEX,IDEX CORP,Industrials,Equity,United States
+PSX,PHILLIPS,Energy,Equity,United States
+XPO,XPO INC,Industrials,Equity,United States
+TKO,TKO GROUP HOLDINGS INC CLASS A,Communication,Equity,United States
+DKS,DICKS SPORTING INC,Consumer Discretionary,Equity,United States
+RTX,RTX CORP,Industrials,Equity,United States
+BA,BOEING,Industrials,Equity,United States
+THC,TENET HEALTHCARE CORP,Health Care,Equity,United States
+AN,AUTONATION INC,Consumer Discretionary,Equity,United States
+DRI,DARDEN RESTAURANTS INC,Consumer Discretionary,Equity,United States
+ACN,ACCENTURE PLC CLASS A,Information Technology,Equity,United States
+GNRC,GENERAC HOLDINGS INC,Industrials,Equity,United States
+DGX,QUEST DIAGNOSTICS INC,Health Care,Equity,United States
+ABG,ASBURY AUTOMOTIVE GROUP INC,Consumer Discretionary,Equity,United States
+WELL,WELLTOWER INC,Real Estate,Equity,United States
+R,RYDER SYSTEM INC,Industrials,Equity,United States
+FDS,FACTSET RESEARCH SYSTEMS INC,Financials,Equity,United States
+RGA,REINSURANCE GROUP OF AMERICA INC,Financials,Equity,United States
+PGR,PROGRESSIVE CORP,Financials,Equity,United States
+SPXC,SPX TECHNOLOGIES INC,Industrials,Equity,United States
+MTB,M&T BANK CORP,Financials,Equity,United States
+PNC,PNC FINANCIAL SERVICES GROUP INC,Financials,Equity,United States
+BWXT,BWX TECHNOLOGIES INC,Industrials,Equity,United States
+ALL,ALLSTATE CORP,Financials,Equity,United States
+NET,CLOUDFLARE INC CLASS A,Information Technology,Equity,United States
+ONTO,ONTO INNOVATION INC,Information Technology,Equity,United States
+CAH,CARDINAL HEALTH INC,Health Care,Equity,United States
+DOV,DOVER CORP,Industrials,Equity,United States
+GTLS,CHART INDUSTRIES INC,Industrials,Equity,United States
+AJG,ARTHUR J GALLAGHER,Financials,Equity,United States
+HEIA,HEICO CORP CLASS A,Industrials,Equity,United States
+AME,AMETEK INC,Industrials,Equity,United States
+ABBV,ABBVIE INC,Health Care,Equity,United States
+CVX,CHEVRON CORP,Energy,Equity,United States
+PKG,PACKAGING CORP OF AMERICA,Materials,Equity,United States
+AIZ,ASSURANT INC,Financials,Equity,United States
+HSY,HERSHEY FOODS,Consumer Staples,Equity,United States
+MOD,MODINE MANUFACTURING,Industrials,Equity,United States
+RSG,REPUBLIC SERVICES INC,Industrials,Equity,United States
+GPOR,GULFPORT ENERGY CORP,Energy,Equity,United States
+STE,STERIS,Health Care,Equity,United States
+RMD,RESMED INC,Health Care,Equity,United States
+AMR,ALPHA METALLURGICAL RESOURCE INC,Materials,Equity,United States
+FERG,FERGUSON ENTERPRISES INC,Industrials,Equity,United States
+WM,WASTE MANAGEMENT INC,Industrials,Equity,United States
+HWM,HOWMET AEROSPACE INC,Industrials,Equity,United States
+SAM,BOSTON BEER INC CLASS A,Consumer Staples,Equity,United States
+GRMN,GARMIN LTD,Consumer Discretionary,Equity,United States
+LOW,LOWES COMPANIES INC,Consumer Discretionary,Equity,United States
+HUBS,HUBSPOT INC,Information Technology,Equity,United States
+ALX,ALEXANDERS REIT INC,Real Estate,Equity,United States
+IBM,INTERNATIONAL BUSINESS MACHINES CO,Information Technology,Equity,United States
+UNP,UNION PACIFIC CORP,Industrials,Equity,United States
+ESS,ESSEX PROPERTY TRUST REIT INC,Real Estate,Equity,United States
+JNJ,JOHNSON & JOHNSON,Health Care,Equity,United States
+WAB,WESTINGHOUSE AIR BRAKE TECHNOLOGIE,Industrials,Equity,United States
+WST,WEST PHARMACEUTICAL SERVICES INC,Health Care,Equity,United States
+COHR,COHERENT CORP,Information Technology,Equity,United States
+PRI,PRIMERICA INC,Financials,Equity,United States
+NPO,ENPRO INC,Industrials,Equity,United States
+UNF,UNIFIRST CORP,Industrials,Equity,United States
+TRGP,TARGA RESOURCES CORP,Energy,Equity,United States
+LAD,LITHIA MOTORS INC CLASS A,Consumer Discretionary,Equity,United States
+SXI,STANDEX INTERNATIONAL CORP,Industrials,Equity,United States
+VRT,VERTIV HOLDINGS CLASS A,Industrials,Equity,United States
+MPC,MARATHON PETROLEUM CORP,Energy,Equity,United States
+VLO,VALERO ENERGY CORP,Energy,Equity,United States
+UNH,UNITEDHEALTH GROUP INC,Health Care,Equity,United States
+ITW,ILLINOIS TOOL INC,Industrials,Equity,United States
+AIT,APPLIED INDUSTRIAL TECHNOLOGIES IN,Industrials,Equity,United States
+JBL,JABIL INC,Information Technology,Equity,United States
+ECL,ECOLAB INC,Materials,Equity,United States
+VMC,VULCAN MATERIALS,Materials,Equity,United States
+RCL,ROYAL CARIBBEAN GROUP LTD,Consumer Discretionary,Equity,United States
+CI,CIGNA,Health Care,Equity,United States
+WCC,WESCO INTERNATIONAL INC,Industrials,Equity,United States
+IBP,INSTALLED BUILDING PRODUCTS INC,Consumer Discretionary,Equity,United States
+CSW,CSW INDUSTRIALS INC,Industrials,Equity,United States
+LH,LABCORP HOLDINGS INC,Health Care,Equity,United States
+BIO,BIO RAD LABORATORIES INC CLASS A,Health Care,Equity,United States
+PSA,PUBLIC STORAGE REIT,Real Estate,Equity,United States
+AMG,AFFILIATED MANAGERS GROUP INC,Financials,Equity,United States
+AYI,ACUITY INC,Industrials,Equity,United States
+HEI,HEICO CORP,Industrials,Equity,United States
+CLH,CLEAN HARBORS INC,Industrials,Equity,United States
+EVR,EVERCORE INC CLASS A,Financials,Equity,United States
+KEYS,KEYSIGHT TECHNOLOGIES INC,Information Technology,Equity,United States
+ESE,ESCO TECHNOLOGIES INC,Industrials,Equity,United States
+GE,GE AEROSPACE,Industrials,Equity,United States
+JPM,JPMORGAN CHASE & CO,Financials,Equity,United States
+NSC,NORFOLK SOUTHERN CORP,Industrials,Equity,United States
+CPAY,CORPAY INC,Financials,Equity,United States
+TRV,TRAVELERS COMPANIES INC,Financials,Equity,United States
+ELV,ELEVANCE HEALTH INC,Health Care,Equity,United States
+WTS,WATTS WATER TECHNOLOGIES INC CLASS,Industrials,Equity,United States
+MOGA,MOOG INC CLASS A,Industrials,Equity,United States
+WAT,WATERS CORP,Health Care,Equity,United States
+KAI,KADANT INC,Industrials,Equity,United States
+APD,AIR PRODUCTS AND CHEMICALS INC,Materials,Equity,United States
+RNR,RENAISSANCERE HOLDING LTD,Financials,Equity,United States
+AXP,AMERICAN EXPRESS,Financials,Equity,United States
+JLL,JONES LANG LASALLE INC,Real Estate,Equity,United States
+HLT,HILTON WORLDWIDE HOLDINGS INC,Consumer Discretionary,Equity,United States
+V,VISA INC CLASS A,Financials,Equity,United States
+LNG,CHENIERE ENERGY INC,Energy,Equity,United States
+RS,RELIANCE STEEL & ALUMINUM,Materials,Equity,United States
+CVNA,CARVANA CLASS A,Consumer Discretionary,Equity,United States
+MCD,MCDONALDS CORP,Consumer Discretionary,Equity,United States
+MSGS,MADISON SQUARE GARDEN SPORTS CORP,Communication,Equity,United States
+COR,CENCORA INC,Health Care,Equity,United States
+BURL,BURLINGTON STORES INC,Consumer Discretionary,Equity,United States
+AON,AON PLC CLASS A,Financials,Equity,United States
+SHW,SHERWIN WILLIAMS,Materials,Equity,United States
+MTZ,MASTEC INC,Industrials,Equity,United States
+EG,EVEREST GROUP LTD,Financials,Equity,United States
+CB,CHUBB,Financials,Equity,United States
+HD,HOME DEPOT INC,Consumer Discretionary,Equity,United States
+GPI,GROUP AUTOMOTIVE INC,Consumer Discretionary,Equity,United States
+CSL,CARLISLE COMPANIES INC,Industrials,Equity,United States
+KNSL,KINSALE CAPITAL GROUP INC,Financials,Equity,United States
+SYK,STRYKER CORP,Health Care,Equity,United States
+RL,RALPH LAUREN CORP CLASS A,Consumer Discretionary,Equity,United States
+TYL,TYLER TECHNOLOGIES INC,Information Technology,Equity,United States
+PEN,PENUMBRA INC,Health Care,Equity,United States
+DY,DYCOM INDUSTRIES INC,Industrials,Equity,United States
+LHX,L3HARRIS TECHNOLOGIES INC,Industrials,Equity,United States
+FDX,FEDEX CORP,Industrials,Equity,United States
+GD,GENERAL DYNAMICS CORP,Industrials,Equity,United States
+WSO,WATSCO INC,Industrials,Equity,United States
+BLD,TOPBUILD CORP,Consumer Discretionary,Equity,United States
+ROK,ROCKWELL AUTOMATION INC,Industrials,Equity,United States
+ETN,EATON PLC,Industrials,Equity,United States
+SNA,SNAP ON INC,Industrials,Equity,United States
+CHE,CHEMED CORP,Health Care,Equity,United States
+CRS,CARPENTER TECHNOLOGY CORP,Industrials,Equity,United States
+HII,HUNTINGTON INGALLS INDUSTRIES INC,Industrials,Equity,United States
+VMI,VALMONT INDS INC,Industrials,Equity,United States
+CIEN,CIENA CORP,Information Technology,Equity,United States
+SPGI,S&P GLOBAL INC,Financials,Equity,United States
+TT,TRANE TECHNOLOGIES PLC,Industrials,Equity,United States
+MCO,MOODYS CORP,Financials,Equity,United States
+AMP,AMERIPRISE FINANCE INC,Financials,Equity,United States
+LII,LENNOX INTERNATIONAL INC,Industrials,Equity,United States
+MSI,MOTOROLA SOLUTIONS INC,Information Technology,Equity,United States
+BRKB,BERKSHIRE HATHAWAY INC CLASS B,Financials,Equity,United States
+HCA,HCA HEALTHCARE INC,Health Care,Equity,United States
+SPOT,SPOTIFY TECHNOLOGY SA,Communication,Equity,Sweden
+TMO,THERMO FISHER SCIENTIFIC INC,Health Care,Equity,United States
+HUBB,HUBBELL INC,Industrials,Equity,United States
+MA,MASTERCARD INC CLASS A,Financials,Equity,United States
+MUSA,MURPHY USA INC,Consumer Discretionary,Equity,United States
+TPL,TEXAS PACIFIC LAND CORP,Energy,Equity,United States
+CMI,CUMMINS INC,Industrials,Equity,United States
+MSCI,MSCI INC,Financials,Equity,United States
+RBC,RBC BEARINGS INC,Industrials,Equity,United States
+PWR,QUANTA SERVICES INC,Industrials,Equity,United States
+FN,FABRINET,Information Technology,Equity,United States
+DDS,DILLARDS INC CLASS A,Consumer Discretionary,Equity,United States
+CACI,CACI INTERNATIONAL INC CLASS A,Industrials,Equity,United States
+AGX,ARGAN INC,Industrials,Equity,United States
+DE,DEERE,Industrials,Equity,United States
+MLM,MARTIN MARIETTA MATERIALS INC,Materials,Equity,United States
+TDY,TELEDYNE TECHNOLOGIES INC,Information Technology,Equity,United States
+LMT,LOCKHEED MARTIN CORP,Industrials,Equity,United States
+NEU,NEWMARKET CORP,Materials,Equity,United States
+CW,CURTISS WRIGHT CORP,Industrials,Equity,United States
+NOC,NORTHROP GRUMMAN CORP,Industrials,Equity,United States
+CAT,CATERPILLAR INC,Industrials,Equity,United States
+EME,EMCOR GROUP INC,Industrials,Equity,United States
+URI,UNITED RENTALS INC,Industrials,Equity,United States
+UI,UBIQUITI INC,Information Technology,Equity,United States
+GS,GOLDMAN SACHS GROUP INC,Financials,Equity,United States
+GEV,GE VERNOVA INC,Industrials,Equity,United States
+MCK,MCKESSON CORP,Health Care,Equity,United States
+LLY,ELI LILLY,Health Care,Equity,United States
+PH,PARKER-HANNIFIN CORP,Industrials,Equity,United States
+BLK,BLACKROCK INC,Financials,Equity,United States
+FICO,FAIR ISAAC CORP,Information Technology,Equity,United States
+GHC,GRAHAM HOLDINGS COMPANY CLASS B,Consumer Discretionary,Equity,United States
+GWW,WW GRAINGER INC,Industrials,Equity,United States
+TDG,TRANSDIGM GROUP INC,Industrials,Equity,United States
+MTD,METTLER TOLEDO INC,Health Care,Equity,United States
+FIX,COMFORT SYSTEMS USA INC,Industrials,Equity,United States
+MKL,MARKEL GROUP INC,Financials,Equity,United States
+WTM,WHITE MOUNTAINS INSURANCE GROUP LT,Financials,Equity,United States
+AZO,AUTOZONE INC,Consumer Discretionary,Equity,United States
+NVR,NVR INC,Consumer Discretionary,Equity,United States
+INH,INHIBRX INC CVR,Health Care,Equity,United States
+FATE,FATE THERAPEUTICS INC,Health Care,Equity,United States
+LUNG,PULMONX CORP,Health Care,Equity,United States
+LPRO,OPEN LENDING CORP,Financials,Equity,United States
+MNTK,MONTAUK RENEWABLES INC,Utilities,Equity,United States
+TMCI,TREACE MEDICAL CONCEPTS INC,Health Care,Equity,United States
+PACB,PACIFIC BIOSCIENCES OF CALIFORNIA,Health Care,Equity,United States
+CNDT,CONDUENT INC,Industrials,Equity,United States
+BTBT,BIT DIGITAL INC,Information Technology,Equity,United States
+AKBA,AKEBIA THERAPEUTICS INC,Health Care,Equity,United States
+GERN,GERON CORP,Health Care,Equity,United States
+XRX,XEROX HOLDINGS CORP,Information Technology,Equity,United States
+MVST,MICROVAST HOLDINGS INC,Industrials,Equity,United States
+OABI,OMNIAB INC,Health Care,Equity,United States
+SABR,SABRE CORP,Consumer Discretionary,Equity,United States
+CDXS,CODEXIS INC,Health Care,Equity,United States
+EGHT,8X8 INC,Information Technology,Equity,United States
+CHRS,COHERUS ONCOLOGY INC,Health Care,Equity,United States
+EVGO,EVGO INC CLASS A,Consumer Discretionary,Equity,United States
+CLOV,CLOVER HEALTH INVESTMENTS CORP CLA,Health Care,Equity,United States
+ALDX,ALDEYRA THERAPEUTICS INC,Health Care,Equity,United States
+SVC,SERVICE PROPERTIES TRUST,Real Estate,Equity,United States
+CERS,CERUS CORP,Health Care,Equity,United States
+EU,ENCORE ENERGY CORP,Energy,Equity,United States
+KOPN,KOPIN CORP,Information Technology,Equity,United States
+POWW,OUTDOOR HOLDING,Consumer Discretionary,Equity,United States
+ALEC,ALECTOR INC,Health Care,Equity,United States
+OLPX,OLAPLEX HOLDINGS INC,Consumer Staples,Equity,United States
+SNBR,SLEEP NUMBER CORP,Consumer Discretionary,Equity,United States
+NKTX,NKARTA INC,Health Care,Equity,United States
+RBBN,RIBBON COMMUNICATIONS INC,Information Technology,Equity,United States
+PLUG,PLUG POWER INC,Industrials,Equity,United States
+NNOX,NANO X IMAGING LTD,Health Care,Equity,Israel
+TTEC,TTEC HOLDINGS INC,Industrials,Equity,United States
+EDIT,EDITAS MEDICINE INC,Health Care,Equity,United States
+ALLO,ALLOGENE THERAPEUTICS INC,Health Care,Equity,United States
+MNKD,MANNKIND CORP,Health Care,Equity,United States
+ORGO,ORGANOGENESIS HOLDINGS INC CLASS A,Health Care,Equity,United States
+RZLV,REZOLVE AI PLC,Information Technology,Equity,United Kingdom
+REAX,REAL BROKERAGE INC,Real Estate,Equity,Canada
+CMRC,BIGCOMMERCE HOLDINGS INC SERIES,Information Technology,Equity,United States
+THRY,THRYV HOLDINGS INC,Communication,Equity,United States
+GEVO,GEVO INC,Energy,Equity,United States
+CLNE,CLEAN ENERGY FUELS CORP,Energy,Equity,United States
+ABAT,AMERICAN BATTERY TECHNOLOGY COMPAN,Materials,Equity,United States
+WOOF,PETCO HEALTH AND WELLNESS COMPANY,Consumer Discretionary,Equity,United States
+PLTK,PLAYTIKA HOLDING CORP,Communication,Equity,United States
+ESPR,ESPERION THERAPEUTICS INC,Health Care,Equity,United States
+SANA,SANA BIOTECHNOLOGY INC,Health Care,Equity,United States
+ABSI,ABSCI CORP,Health Care,Equity,United States
+IHRT,IHEARTMEDIA INC CLASS A,Communication,Equity,United States
+AVXL,ANAVEX LIFE SCIENCES CORP,Health Care,Equity,United States
+MRVI,MARAVAI LIFESCIENCES HOLDINGS INC,Health Care,Equity,United States
+HNST,THE HONEST COMPANY INC,Consumer Staples,Equity,United States
+AIOT,POWERFLEET INC,Information Technology,Equity,United States
+APPS,DIGITAL TURBINE INC,Information Technology,Equity,United States
+SLDP,SOLID POWER INC CLASS A,Consumer Discretionary,Equity,United States
+FNKO,FUNKO INC CLASS A,Consumer Discretionary,Equity,United States
+RXRX,RECURSION PHARMACEUTICALS INC CLAS,Health Care,Equity,United States
+OSUR,ORASURE TECHNOLOGIES INC,Health Care,Equity,United States
+ALT,ALTIMMUNE INC,Health Care,Equity,United States
+NCMI,NATIONAL CINEMEDIA INC,Communication,Equity,United States
+IRWD,IRONWOOD PHARMA INC CLASS A,Health Care,Equity,United States
+RPAY,REPAY HOLDINGS CORP CLASS A,Financials,Equity,United States
+FLWS,1-800 FLOWERS.COM INC CLASS A,Consumer Discretionary,Equity,United States
+DOMO,DOMO INC CLASS B,Information Technology,Equity,United States
+RMNI,RIMINI STREET INC,Information Technology,Equity,United States
+TDUP,THREDUP INC CLASS A,Consumer Discretionary,Equity,United States
+INDI,INDIE SEMICONDUCTOR INC CLASS A,Information Technology,Equity,United States
+BMBL,BUMBLE INC CLASS A,Communication,Equity,United States
+DNUT,KRISPY KREME INC,Consumer Discretionary,Equity,United States
+SFIX,STITCH FIX INC CLASS A,Consumer Discretionary,Equity,United States
+PRME,PRIME MEDICINE INC,Health Care,Equity,United States
+NWL,NEWELL BRANDS INC,Consumer Discretionary,Equity,United States
+IOVA,IOVANCE BIOTHERAPEUTICS INC,Health Care,Equity,United States
+ULCC,FRONTIER GROUP HOLDINGS INC,Industrials,Equity,United States
+QTRX,QUANTERIX CORP,Health Care,Equity,United States
+RGP,RESOURCES CONNECTION INC,Industrials,Equity,United States
+PGEN,PRECIGEN INC,Health Care,Equity,United States
+TTGT,TECHTARGET INC,Communication,Equity,United States
+SSP,EW SCRIPPS CLASS A,Communication,Equity,United States
+RCKT,ROCKET PHARMACEUTICALS INC,Health Care,Equity,United States
+CRCT,CRICUT INC CLASS A,Consumer Discretionary,Equity,United States
+MDXG,MIMEDX GROUP INC,Health Care,Equity,United States
+RCEL,AVITA MEDICAL INC,Health Care,Equity,United States
+WEST,WESTROCK COFFEE,Consumer Staples,Equity,United States
+VYGR,VOYAGER THERAPEUTICS INC,Health Care,Equity,United States
+MQ,MARQETA INC CLASS A,Financials,Equity,United States
+EOLS,EVOLUS INC,Health Care,Equity,United States
+AQST,AQUESTIVE THERAPEUTICS INC,Health Care,Equity,United States
+TSHA,TAYSHA GENE THERAPIES INC,Health Care,Equity,United States
+AUR,AURORA INNOVATION INC CLASS A,Information Technology,Equity,United States
+SRTA,STRATA CRITICAL MEDICAL INC CLASS,Health Care,Equity,United States
+NAGE,NIAGEN BIOSCIENCE INC,Consumer Staples,Equity,United States
+JBLU,JETBLUE AIRWAYS CORP,Industrials,Equity,United States
+MYGN,MYRIAD GENETICS INC,Health Care,Equity,United States
+ABUS,ARBUTUS BIOPHARMA CORP,Health Care,Equity,United States
+GOGO,GOGO INC,Communication,Equity,United States
+CTKB,CYTEK BIOSCIENCES INC,Health Care,Equity,United States
+UDMY,UDEMY INC,Consumer Discretionary,Equity,United States
+SLS,SELLAS LIFE SCIENCES GROUP INC,Health Care,Equity,United States
+ASPI,ASP ISOTOPES INC,Materials,Equity,United States
+PTON,PELOTON INTERACTIVE CLASS A INC,Consumer Discretionary,Equity,United States
+DMRC,DIGIMARC CORP,Information Technology,Equity,United States
+NB,NIOCORP DEVELOPMENTS LTD,Materials,Equity,United States
+HTZ,HERTZ GLOBAL HLDGS INC,Industrials,Equity,United States
+LRMR,LARIMAR THERAPEUTICS INC,Health Care,Equity,United States
+PRTH,PRIORITY TECHNOLOGY HOLDINGS INC,Financials,Equity,United States
+RUM,RUMBLE INC CLASS A,Communication,Equity,United States
+PAYO,PAYONEER GLOBAL INC,Financials,Equity,United States
+BULL,WEBULL CORP CLASS A,Financials,Equity,United States
+FIP,FTAI INFRASTRUCTURE INC,Industrials,Equity,United States
+ACTG,ACACIA RESEARCH CORP,Financials,Equity,United States
+EOSE,EOS ENERGY ENTERPRISES INC CLASS A,Industrials,Equity,United States
+ANNX,ANNEXON INC,Health Care,Equity,United States
+VSTM,VERASTEM INC,Health Care,Equity,United States
+AVIR,ATEA PHARMACEUTICALS INC,Health Care,Equity,United States
+SVRA,SAVARA INC,Health Care,Equity,United States
+TALK,TALKSPACE INC,Health Care,Equity,United States
+PTLO,PORTILLO S INC CLASS A,Consumer Discretionary,Equity,United States
+BOOM,DMC GLOBAL INC,Energy,Equity,United States
+CMPX,COMPASS THERAPEUTICS,Health Care,Equity,United States
+ENVX,ENOVIX CORP,Industrials,Equity,United States
+BLMN,BLOOMIN BRANDS INC,Consumer Discretionary,Equity,United States
+RPD,RAPID7 INC,Information Technology,Equity,United States
+PCT,PURECYCLE TECHNOLOGIES INC,Materials,Equity,United States
+SIGA,SIGA TECHNOLOGIES INC,Health Care,Equity,United States
+CRSR,CORSAIR GAMING INC,Information Technology,Equity,United States
+XERS,XERIS BIOPHARMA HOLDINGS INC,Health Care,Equity,United States
+ARKO,ARKO,Consumer Discretionary,Equity,United States
+LXEO,LEXEO THERAPEUTICS INC,Health Care,Equity,United States
+ARDX,ARDELYX INC,Health Care,Equity,United States
+LZ,LEGALZOOM COM INC,Industrials,Equity,United States
+SEAT,VIVID SEATS INC CLASS A,Communication,Equity,United States
+GDYN,GRID DYNAMICS HOLDINGS INC CLASS A,Information Technology,Equity,United States
+SPT,SPROUT SOCIAL INC CLASS A,Information Technology,Equity,United States
+IMMR,IMMERSION CORP,Information Technology,Equity,United States
+PAYS,PAYSIGN INC,Financials,Equity,United States
+FORR,FORRESTER RESEARCH INC,Industrials,Equity,United States
+ILPT,INDUSTRIAL LOGISTICS PROPERTIES TR,Real Estate,Equity,United States
+GTM,ZOOMINFO TECHNOLOGIES INC,Communication,Equity,United States
+EVLV,EVOLV TECHNOLOGIES HOLDINGS INC CL,Information Technology,Equity,United States
+CERT,CERTARA INC,Health Care,Equity,United States
+HDSN,HUDSON TECHNOLOGIES INC,Industrials,Equity,United States
+MASS,908 DEVICES INC,Information Technology,Equity,United States
+EWCZ,EUROPEAN WAX CENTER INC CLASS A,Consumer Discretionary,Equity,United States
+CCC,CCC INTELLIGENT SOLUTIONS HOLDINGS,Information Technology,Equity,United States
+SOUN,SOUNDHOUND AI INC CLASS A,Information Technology,Equity,United States
+EXPI,EXP WORLD HOLDINGS INC,Real Estate,Equity,United States
+CRNC,CERENCE INC,Information Technology,Equity,United States
+STGW,STAGWELL INC CLASS A,Communication,Equity,United States
+JRVR,JAMES RIVER GROUP HOLDINGS INC,Financials,Equity,United States
+ASLE,AERSALE CORP,Industrials,Equity,United States
+INGN,INOGEN INC,Health Care,Equity,United States
+QS,QUANTUMSCAPE CORP CLASS A,Consumer Discretionary,Equity,United States
+RXST,RXSIGHT INC,Health Care,Equity,United States
+AURA,AURA BIOSCIENCES INC,Health Care,Equity,United States
+AVAH,AVEANNA HEALTHCARE HOLDINGS INC,Health Care,Equity,United States
+LFST,LIFESTANCE HEALTH GROUP INC,Health Care,Equity,United States
+WVE,WAVE LIFE SCIENCES LTD,Health Care,Equity,United States
+SSTI,SOUNDTHINKING INC,Information Technology,Equity,United States
+AMPL,AMPLITUDE INC CLASS A,Information Technology,Equity,United States
+GT,GOODYEAR TIRE & RUBBER,Consumer Discretionary,Equity,United States
+STKL,SUNOPTA INC,Consumer Staples,Equity,Canada
+ANGI,ANGI INC CLASS A,Communication,Equity,United States
+ARHS,ARHAUS INC CLASS A,Consumer Discretionary,Equity,United States
+AMCX,AMC NETWORKS CLASS A INC,Communication,Equity,United States
+OPRX,OPTIMIZERX CORP,Health Care,Equity,United States
+SHLS,SHOALS TECHNOLOGIES GROUP INC CLAS,Industrials,Equity,United States
+ACDC,PROFRAC HOLDING CLASS A CORP,Energy,Equity,United States
+QUBT,QUANTUM COMPUTING INC,Information Technology,Equity,United States
+INSE,INSPIRED ENTERTAINMENT INC,Consumer Discretionary,Equity,United States
+CRMD,CORMEDIX INC,Health Care,Equity,United States
+DHC,DIVERSIFIED HEALTHCARE TRUST,Real Estate,Equity,United States
+FULC,FULCRUM THERAPEUTICS INC,Health Care,Equity,United States
+PRCH,PORCH GROUP INC,Information Technology,Equity,United States
+ARCT,ARCTURUS THERAPEUTICS HOLDINGS INC,Health Care,Equity,United States
+PANL,PANGAEA LOGISTICS SOLUTIONS LTD,Industrials,Equity,United States
+WEN,WENDYS,Consumer Discretionary,Equity,United States
+VNDA,VANDA PHARMACEUTICALS INC,Health Care,Equity,United States
+CFFN,CAPITOL FEDERAL FINANCIAL INC,Financials,Equity,United States
+MCW,MISTER CAR WASH INC,Consumer Discretionary,Equity,United States
+CRML,CRITICAL METALS CORP,Materials,Equity,United States
+GO,GROCERY OUTLET HOLDING CORP,Consumer Staples,Equity,United States
+SLDB,SOLID BIOSCIENCES INC,Health Care,Equity,United States
+NEO,NEOGENOMICS INC,Health Care,Equity,United States
+REPL,REPLIMUNE GROUP INC,Health Care,Equity,United States
+ADAM,ADAMAS INC TRUST,Financials,Equity,United States
+ARRY,ARRAY TECHNOLOGIES INC,Industrials,Equity,United States
+KRNY,KEARNY FINANCIAL CORP,Financials,Equity,United States
+IBRX,IMMUNITYBIO INC,Health Care,Equity,United States
+OCUL,OCULAR THERAPEUTIX INC,Health Care,Equity,United States
+MGTX,MEIRAGTX HOLDINGS PLC,Health Care,Equity,United States
+KURA,KURA ONCOLOGY INC,Health Care,Equity,United States
+RGNX,REGENXBIO INC,Health Care,Equity,United States
+CYRX,CRYOPORT INC,Health Care,Equity,United States
+FRSH,FRESHWORKS INC CLASS A,Information Technology,Equity,United States
+UNIT,UNITI GROUP INC,Communication,Equity,United States
+ASUR,ASURE SOFTWARE INC,Industrials,Equity,United States
+SUNS,SUNRISE REALTY TRUST INC,Financials,Equity,United States
+MARA,MARA HOLDINGS INC,Information Technology,Equity,United States
+NAVI,NAVIENT CORP,Financials,Equity,United States
+SPRY,ARS PHARMACEUTICALS INC,Health Care,Equity,United States
+NEXT,NEXTDECADE CORP,Energy,Equity,United States
+HLMN,HILLMAN SOLUTIONS CORP,Industrials,Equity,United States
+PUBM,PUBMATIC INC CLASS A,Communication,Equity,United States
+NVTS,NAVITAS SEMICONDUCTOR CORP,Information Technology,Equity,United States
+SERV,SERVE ROBOTICS INC,Consumer Discretionary,Equity,United States
+LILA,LIBERTY LATIN AMERICA LTD CLASS A,Communication,Equity,United States
+BTDR,BITDEER TECHNOLOGIES GROUP CLASS A,Information Technology,Equity,Singapore
+VIR,VIR BIOTECHNOLOGY INC,Health Care,Equity,United States
+LENZ,LENZ THERAPEUTICS INC,Health Care,Equity,United States
+LILAK,LIBERTY LATIN AMERICA LTD CLASS C,Communication,Equity,United States
+NVAX,NOVAVAX INC,Health Care,Equity,United States
+DJT,TRUMP MEDIA TECHNOLOGY GROUP CORP,Communication,Equity,United States
+REAL,THE REALREAL INC,Consumer Discretionary,Equity,United States
+EMBC,EMBECTA CORP,Health Care,Equity,United States
+BCBP,BCB BANCORP INC,Financials,Equity,United States
+CLSK,CLEANSPARK INC,Information Technology,Equity,United States
+UPB,UPSTREAM BIO INC,Health Care,Equity,United States
+NEOG,NEOGEN CORP,Health Care,Equity,United States
+KELYA,KELLY SERVICES INC CLASS A,Industrials,Equity,United States
+BYRN,BYRNA TECHNOLOGIES INC,Industrials,Equity,United States
+ONEW,ONEWATER MARINE CLASS A INC,Consumer Discretionary,Equity,United States
+CVRX,CVRX INC,Health Care,Equity,United States
+BVS,BIOVENTUS CLASS A INC,Health Care,Equity,United States
+FTRE,FORTREA HOLDINGS INC,Health Care,Equity,United States
+CLPT,CLEARPOINT NEURO INC,Health Care,Equity,United States
+ZVRA,ZEVRA THERAPEUTICS INC,Health Care,Equity,United States
+IART,INTEGRA LIFESCIENCES HOLDINGS CORP,Health Care,Equity,United States
+ADMA,ADMA BIOLOGICS INC,Health Care,Equity,United States
+VMD,VIEMED HEALTHCARE INC,Health Care,Equity,United States
+PRTA,PROTHENA PLC,Health Care,Equity,United States
+DRH,DIAMONDROCK HOSPITALITY,Real Estate,Equity,United States
+BCRX,BIOCRYST PHARMACEUTICALS INC,Health Care,Equity,United States
+FDMT,4D MOLECULAR THERAPEUTICS INC,Health Care,Equity,United States
+HLIT,HARMONIC INC,Information Technology,Equity,United States
+BGC,BGC GROUP INC CLASS A,Financials,Equity,United States
+LCID,LUCID GROUP INC,Consumer Discretionary,Equity,United States
+AEBI,AEBI SCHMIDT HOLDING AG,Industrials,Equity,United States
+AVPT,AVEPOINT INC CLASS A,Information Technology,Equity,United States
+GCMG,GCM GROSVENOR INC CLASS A,Financials,Equity,United States
+CCRN,CROSS COUNTRY HEALTHCARE INC,Health Care,Equity,United States
+RLAY,RELAY THERAPEUTICS INC,Health Care,Equity,United States
+TH,TARGET HOSPITALITY CORP,Consumer Discretionary,Equity,United States
+AGNC,AGNC INVESTMENT REIT CORP,Financials,Equity,United States
+JACK,JACK IN THE BOX INC,Consumer Discretionary,Equity,United States
+PLAY,DAVE AND BUSTERS ENTERTAINMENT INC,Consumer Discretionary,Equity,United States
+ASST,STRIVE INC CLASS A,Health Care,Equity,United States
+ERII,ENERGY RECOVERY INC,Industrials,Equity,United States
+LAND,GLADSTONE LAND REIT CORP,Real Estate,Equity,United States
+OMER,OMEROS CORP,Health Care,Equity,United States
+NRDS,NERDWALLET INC CLASS A,Financials,Equity,United States
+ARVN,ARVINAS INC,Health Care,Equity,United States
+TRIP,TRIPADVISOR INC,Communication,Equity,United States
+OSPN,ONESPAN INC,Information Technology,Equity,United States
+HTLD,HEARTLAND EXPRESS INC,Industrials,Equity,United States
+TBCH,TURTLE BEACH CORP,Information Technology,Equity,United States
+AAL,AMERICAN AIRLINES GROUP INC,Industrials,Equity,United States
+FWRG,FIRST WATCH RESTAURANT GROUP INC,Consumer Discretionary,Equity,United States
+KRRO,KORRO BIO INC,Health Care,Equity,United States
+NEWT,NEWTEKONE INC,Financials,Equity,United States
+GRPN,GROUPON INC,Consumer Discretionary,Equity,United States
+DSGN,DESIGN THERAPEUTICS INC,Health Care,Equity,United States
+PHAT,PHATHOM PHARMACEUTICALS INC,Health Care,Equity,United States
+CTLP,CANTALOUPE INC,Financials,Equity,United States
+KROS,KEROS THERAPEUTICS INC,Health Care,Equity,United States
+VREX,VAREX IMAGING CORP,Health Care,Equity,United States
+DSP,VIANT TECHNOLOGY INC CLASS A,Information Technology,Equity,United States
+BBNX,BETA BIONICS INC,Health Care,Equity,United States
+UPWK,UPWORK INC,Industrials,Equity,United States
+ANGO,ANGIODYNAMICS INC,Health Care,Equity,United States
+HOPE,HOPE BANCORP INC,Financials,Equity,United States
+ATEC,ALPHATEC HOLDNGS INC,Health Care,Equity,United States
+NVCR,NOVOCURE LTD,Health Care,Equity,United States
+GOOD,GLADSTONE COMMERCIAL REIT CORP,Real Estate,Equity,United States
+SDGR,SCHRODINGER INC,Health Care,Equity,United States
+SPOK,SPOK HOLDINGS INC,Communication,Equity,United States
+ACIC,AMERICAN COASTAL INSURANCE CORP,Financials,Equity,United States
+FA,FIRST ADVANTAGE CORP,Industrials,Equity,United States
+PGY,PAGAYA TECHNOLOGIES LTD CLASS A,Information Technology,Equity,United States
+AHCO,ADAPTHEALTH CORP,Health Care,Equity,United States
+TRVI,TREVI THERAPEUTICS INC,Health Care,Equity,United States
+VERX,VERTEX INC CLASS A,Information Technology,Equity,United States
+PTEN,PATTERSON UTI ENERGY INC,Energy,Equity,United States
+FLYW,FLYWIRE CORP,Financials,Equity,United States
+EVCM,EVERCOMMERCE INC,Information Technology,Equity,United States
+XNCR,XENCOR INC,Health Care,Equity,United States
+REFI,CHICAGO ATLANTIC REAL ESTATE FINAN,Financials,Equity,United States
+SLP,SIMULATIONS PLUS INC,Health Care,Equity,United States
+XRAY,DENTSPLY SIRONA INC,Health Care,Equity,United States
+SGRY,SURGERY PARTNERS INC,Health Care,Equity,United States
+OFIX,ORTHOFIX MEDICAL INC,Health Care,Equity,United States
+PAX,PATRIA INVESTMENTS LTD CLASS A,Financials,Equity,Brazil
+LBTYK,LIBERTY GLOBAL LTD CLASS C,Communication,Equity,United States
+MGNI,MAGNITE INC,Communication,Equity,United States
+STRZ,STARZ ENTERTAINMENT CORP,Communication,Equity,United States
+SAIL,SAILPOINT INC,Information Technology,Equity,United States
+QNST,QUINSTREET INC,Communication,Equity,United States
+AMRX,AMNEAL PHARMACEUTICALS INC CLASS A,Health Care,Equity,United States
+OMDA,OMADA HEALTH INC,Health Care,Equity,United States
+TRDA,ENTRADA THERAPEUTICS INC,Health Care,Equity,United States
+VLY,VALLEY NATIONAL,Financials,Equity,United States
+LBTYA,LIBERTY GLOBAL LTD CLASS A,Communication,Equity,United States
+ORIC,ORIC PHARMACEUTICALS INC,Health Care,Equity,United States
+HTBK,HERITAGE COMMERCE CORP,Financials,Equity,United States
+ENTA,ENANTA PHARMACEUTICALS INC,Health Care,Equity,United States
+NAVN,NAVAN INC CLASS A,Consumer Discretionary,Equity,United States
+SIBN,SI BONE INC,Health Care,Equity,United States
+NTLA,INTELLIA THERAPEUTICS INC,Health Care,Equity,United States
+HCKT,HACKETT GROUP INC,Information Technology,Equity,United States
+ADPT,ADAPTIVE BIOTECHNOLOGIES CORP,Health Care,Equity,United States
+NWBI,NORTHWEST BANCSHARES INC,Financials,Equity,United States
+EYPT,EYEPOINT INC,Health Care,Equity,United States
+RUN,SUNRUN INC,Industrials,Equity,United States
+DRVN,DRIVEN BRANDS HOLDINGS INC,Consumer Discretionary,Equity,United States
+RCAT,RED CAT HOLDINGS INC,Industrials,Equity,United States
+SONO,SONOS INC,Consumer Discretionary,Equity,United States
+BLFY,BLUE FOUNDRY BANCORP,Financials,Equity,United States
+AEVA,AEVA TECHNOLOGIES INC,Information Technology,Equity,United States
+RIOT,RIOT PLATFORMS INC,Information Technology,Equity,United States
+CGEM,CULLINAN THERAPEUTICS INC,Health Care,Equity,United States
+LYFT,LYFT INC CLASS A,Industrials,Equity,United States
+FMNB,FARMERS NATIONAL BANC CORP,Financials,Equity,United States
+MRTN,MARTEN TRANSPORT LTD,Industrials,Equity,United States
+ADTN,ADTRAN HOLDINGS INC,Information Technology,Equity,United States
+CRMT,AMERICAS CAR MART INC,Consumer Discretionary,Equity,United States
+VTRS,VIATRIS INC,Health Care,Equity,United States
+FRST,PRIMIS FINANCIAL CORP,Financials,Equity,United States
+MITK,MITEK SYSTEMS INC,Information Technology,Equity,United States
+SHC,SOTERA HEALTH COMPANY,Health Care,Equity,United States
+SBGI,SINCLAIR INC CLASS A,Communication,Equity,United States
+VITL,VITAL FARMS INC,Consumer Staples,Equity,United States
+JANX,JANUX THERAPEUTICS INC,Health Care,Equity,United States
+RNA,ATRIUM THERAPEUTICS INC,Health Care,Equity,United States
+RGTI,RIGETTI COMPUTING INC,Information Technology,Equity,United States
+NPCE,NEUROPACE INC,Health Care,Equity,United States
+NFBK,NORTHFIELD BANCORP INC,Financials,Equity,United States
+JBIO,JADE BIOSCIENCES INC,Health Care,Equity,United States
+STNE,STONECO LTD CLASS A,Financials,Equity,Brazil
+LOVE,LOVESAC COMPANY,Consumer Discretionary,Equity,United States
+AMLX,AMYLYX PHARMACEUTICALS INC,Health Care,Equity,United States
+TFSL,TFS FINANCIAL CORP,Financials,Equity,United States
+LMNR,LIMONEIRA,Consumer Staples,Equity,United States
+OLMA,OLEMA PHARMACEUTICALS INC,Health Care,Equity,United States
+CIFR,CIPHER DIGITAL INC,Information Technology,Equity,United States
+PENN,PENN ENTERTAINMENT INC,Consumer Discretionary,Equity,United States
+LOCO,EL POLLO LOCO INC,Consumer Discretionary,Equity,United States
+VRRM,VERRA MOBILITY CORP CLASS A,Industrials,Equity,United States
+HELE,HELEN OF TROY LTD,Consumer Discretionary,Equity,United States
+AVO,MISSION PRODUCE INC,Consumer Staples,Equity,United States
+NCNO,NCINO INC,Information Technology,Equity,United States
+CRVS,CORVUS PHARMACEUTICALS INC,Health Care,Equity,United States
+CMCO,COLUMBUS MCKINNON CORP,Industrials,Equity,United States
+FLNC,FLUENCE ENERGY INC CLASS A,Industrials,Equity,United States
+AUPH,AURINIA PHARMACEUTICALS INC,Health Care,Equity,United States
+ANIK,ANIKA THERAPEUTICS INC,Health Care,Equity,United States
+MAT,MATTEL INC,Consumer Discretionary,Equity,United States
+NMRK,NEWMARK GROUP INC CLASS A,Real Estate,Equity,United States
+SMPL,THE SIMPLY GOOD FOODS COMPANY,Consumer Staples,Equity,United States
+MCHB,MECHANICS BANCORP CLASS A,Financials,Equity,United States
+FOLD,AMICUS THERAPEUTICS INC,Health Care,Equity,United States
+FIVN,FIVE9 INC,Information Technology,Equity,United States
+SWBI,SMITH WESSON BRANDS INC,Consumer Discretionary,Equity,United States
+SHEN,SHENANDOAH TELECOMMUNICATIONS,Communication,Equity,United States
+NRIX,NURIX THERAPEUTICS INC,Health Care,Equity,United States
+RIVN,RIVIAN AUTOMOTIVE INC CLASS A,Consumer Discretionary,Equity,United States
+QDEL,QUIDELORTHO CORP,Health Care,Equity,United States
+FFIC,FLUSHING FINANCIAL CORP,Financials,Equity,United States
+WULF,TERAWULF INC,Information Technology,Equity,United States
+ERAS,ERASCA INC,Health Care,Equity,United States
+RELY,REMITLY GLOBAL INC,Financials,Equity,United States
+MLKN,MILLERKNOLL INC,Industrials,Equity,United States
+CORZ,CORE SCIENTIFIC INC,Information Technology,Equity,United States
+HBAN,HUNTINGTON BANCSHARES INC,Financials,Equity,United States
+TBPH,THERAVANCE BIOPHARMA INC,Health Care,Equity,United States
+MAMA,MAMAS CREATIONS INC,Consumer Staples,Equity,United States
+AKTS,AKTIS ONCOLOGY INC,Health Care,Equity,United States
+EVER,EVERQUOTE INC CLASS A,Communication,Equity,United States
+SOFI,SOFI TECHNOLOGIES INC,Financials,Equity,United States
+ALKT,ALKAMI TECHNOLOGY INC,Information Technology,Equity,United States
+EXTR,EXTREME NETWORKS INC,Information Technology,Equity,United States
+RMR,RMR GROUP INC CLASS A,Real Estate,Equity,United States
+GLUE,MONTE ROSA THERAPEUTICS INC,Health Care,Equity,United States
+USAR,USA RARE EARTH INC CLASS A,Materials,Equity,United States
+MNRO,MONRO INC,Consumer Discretionary,Equity,United States
+KIDS,ORTHOPEDIATRICS CORP,Health Care,Equity,United States
+METC,RAMACO RESOURCES INC CLASS A,Materials,Equity,United States
+FLGT,FULGENT GENETICS INC,Health Care,Equity,United States
+FRBA,FIRST BANK,Financials,Equity,United States
+IMXI,INTERNATIONAL MONEY EXPRESS INC,Financials,Equity,United States
+SCVL,SHOE CARNIVAL INC,Consumer Discretionary,Equity,United States
+TCX,TUCOWS INC,Information Technology,Equity,United States
+TITN,TITAN MACHINERY INC,Industrials,Equity,United States
+BIOA,BIOAGE LABS INC,Health Care,Equity,United States
+HBNC,HORIZON BANCORP INC,Financials,Equity,United States
+FWRD,FORWARD AIR CORP,Industrials,Equity,United States
+SNCY,SUN COUNTRY AIRLINES HOLDINGS INC,Industrials,Equity,United States
+AIP,ARTERIS INC,Information Technology,Equity,United States
+TENB,TENABLE HOLDINGS INC,Information Technology,Equity,United States
+SMMT,SUMMIT THERAPEUTICS INC,Health Care,Equity,United States
+ALHC,ALIGNMENT HEALTHCARE INC,Health Care,Equity,United States
+TIPT,TIPTREE INC,Financials,Equity,United States
+PENG,PENGUIN SOLUTIONS INC,Information Technology,Equity,United States
+GLRE,GREENLIGHT CAPITAL LTD CLASS A,Financials,Equity,United States
+CDNA,CAREDX INC,Health Care,Equity,United States
+DGICA,DONEGAL GROUP INC CLASS A,Financials,Equity,United States
+PRAA,PRA GROUP INC,Financials,Equity,United States
+FOXF,FOX FACTORY HOLDING CORP,Consumer Discretionary,Equity,United States
+BAND,BANDWIDTH INC CLASS A,Communication,Equity,United States
+LIND,LINDBLAD EXPEDITIONS HOLDINGS INC,Consumer Discretionary,Equity,United States
+GPRE,GREEN PLAINS INC,Energy,Equity,United States
+CAI,CARIS LIFE SCIENCES INC,Health Care,Equity,United States
+APLS,APELLIS PHARMACEUTICALS INC,Health Care,Equity,United States
+GLDD,GREAT LAKES DREDGE AND DOCK CORP,Industrials,Equity,United States
+MXL,MAXLINEAR INC,Information Technology,Equity,United States
+WSC,WILLSCOT HOLDINGS CORP CLASS A,Industrials,Equity,United States
+NRC,NATIONAL RESEARCH CORP,Health Care,Equity,United States
+DYN,DYNE THERAPEUTICS INC,Health Care,Equity,United States
+URGN,UROGEN PHARMA LTD,Health Care,Equity,United States
+PWP,PERELLA WEINBERG PARTNERS CLASS A,Financials,Equity,United States
+CLBK,COLUMBIA FINANCIAL INC,Financials,Equity,United States
+PGNY,PROGYNY INC,Health Care,Equity,United States
+OCFC,OCEANFIRST FINANCIAL CORP,Financials,Equity,United States
+BWB,BRIDGEWATER BANCSHARES INC,Financials,Equity,United States
+LUNR,INTUITIVE MACHINES INC CLASS A,Industrials,Equity,United States
+BCAL,CALIFORNIA BANCORP,Financials,Equity,United States
+SLDE,SLIDE INSURANCE HOLDINGS INC,Financials,Equity,United States
+HNRG,HALLADOR ENERGY,Utilities,Equity,United States
+CCOI,COGENT COMMUNICATIONS HOLDINGS INC,Communication,Equity,United States
+OUST,OUSTER INC,Information Technology,Equity,United States
+XP,XP CLASS A INC,Financials,Equity,Brazil
+GTX,GARRETT MOTION INC,Consumer Discretionary,Equity,United States
+CBLL,CERIBELL INC,Health Care,Equity,United States
+NN,NEXTNAV INC,Information Technology,Equity,United States
+DFTX,DEFINIUM THERAPEUTICS INC,Health Care,Equity,United States
+STAA,STAAR SURGICAL,Health Care,Equity,United States
+VISN,VISTANCE NETWORKS INC,Information Technology,Equity,United States
+UPBD,UPBOUND GROUP INC,Consumer Discretionary,Equity,United States
+SHBI,SHORE BANCSHARES INC,Financials,Equity,United States
+WSBF,WATERSTONE FINANCIAL INC,Financials,Equity,United States
+DNLI,DENALI THERAPEUTICS INC,Health Care,Equity,United States
+ZBIO,ZENAS BIOPHARMA INC,Health Care,Equity,United States
+CEVA,CEVA INC,Information Technology,Equity,United States
+GEN,GEN DIGITAL INC,Information Technology,Equity,United States
+BCAX,BICARA THERAPEUTICS INC,Health Care,Equity,United States
+HCSG,HEALTHCARE SERVICES GROUP INC,Industrials,Equity,United States
+LYTS,LSI INDUSTRIES INC,Industrials,Equity,United States
+MPLT,MAPLIGHT THERAPEUTICS INC,Health Care,Equity,United States
+BLFS,BIOLIFE SOLUTIONS INC,Health Care,Equity,United States
+MGPI,MGP INGREDIENTS INC,Consumer Staples,Equity,United States
+HST,HOST HOTELS & RESORTS REIT INC,Real Estate,Equity,United States
+SFNC,SIMMONS FIRST NATIONAL CORP CLASS,Financials,Equity,United States
+CVBF,CVB FINANCIAL CORP,Financials,Equity,United States
+EBC,EASTERN BANKSHARES INC,Financials,Equity,United States
+AMPH,AMPHASTAR PHARMACEUTICALS INC,Health Care,Equity,United States
+DAKT,DAKTRONICS INC,Information Technology,Equity,United States
+TNGX,TANGO THERAPEUTICS INC,Health Care,Equity,United States
+KALV,KALVISTA PHARMACEUTICALS INC,Health Care,Equity,United States
+RARE,ULTRAGENYX PHARMACEUTICAL INC,Health Care,Equity,United States
+KMTS,KESTRA MEDICAL TECHNOLOGIES LTD,Health Care,Equity,United States
+TXG,10X GENOMICS INC CLASS A,Health Care,Equity,United States
+OSBC,OLD SECOND BANCORP INC,Financials,Equity,United States
+CLMB,CLIMB GLOBAL SOLUTIONS INC,Information Technology,Equity,United States
+SBRA,SABRA HEALTH CARE REIT INC,Real Estate,Equity,United States
+IMNM,IMMUNOME INC,Health Care,Equity,United States
+JAKK,JAKKS PACIFIC INC,Consumer Discretionary,Equity,United States
+FULT,FULTON FINANCIAL CORP,Financials,Equity,United States
+INBK,FIRST INTERNET BANCORP,Financials,Equity,United States
+AZTA,AZENTA INC,Health Care,Equity,United States
+SRPT,SAREPTA THERAPEUTICS INC,Health Care,Equity,United States
+ULH,UNIVERSAL LOGISTICS HOLDINGS INC,Industrials,Equity,United States
+PRVA,PRIVIA HEALTH GROUP INC,Health Care,Equity,United States
+JMSB,JOHN MARSHALL BANCORP INC,Financials,Equity,United States
+NNE,NANO NUCLEAR ENERGY INC,Industrials,Equity,United States
+GTLB,GITLAB INC CLASS A,Information Technology,Equity,United States
+NGNE,NEUROGENE INC,Health Care,Equity,United States
+SLM,SLM CORP,Financials,Equity,United States
+NBBK,NB BANCORP INC,Financials,Equity,United States
+PLSE,PULSE BIOSCIENCES INC,Health Care,Equity,United States
+DKNG,DRAFTKINGS INC CLASS A,Consumer Discretionary,Equity,United States
+ACAD,ACADIA PHARMACEUTICALS INC,Health Care,Equity,United States
+MCFT,MASTERCRAFT BOAT HOLDINGS INC,Consumer Discretionary,Equity,United States
+RBB,RBB BANCORP,Financials,Equity,United States
+REYN,REYNOLDS CONSUMER PRODUCTS INC,Consumer Staples,Equity,United States
+TNDM,TANDEM DIABETES CARE INC,Health Care,Equity,United States
+BWIN,BALDWIN INSURANCE GROUP INC CLASS,Financials,Equity,United States
+HSTM,HEALTHSTREAM INC,Health Care,Equity,United States
+VRNS,VARONIS SYSTEMS INC,Information Technology,Equity,United States
+ARQT,ARCUTIS BIOTHERAPEUTICS INC,Health Care,Equity,United States
+TTD,TRADE DESK INC CLASS A,Communication,Equity,United States
+ZUMZ,ZUMIEZ INC,Consumer Discretionary,Equity,United States
+DAWN,DAY ONE BIOPHARMACEUTICALS INC,Health Care,Equity,United States
+ONB,OLD NATIONAL BANCORP,Financials,Equity,United States
+AVBP,ARRIVENT BIOPHARMA INC,Health Care,Equity,United States
+NESR,NATIONAL ENERGY SERVICES REUNITED,Energy,Equity,United States
+NTGR,NETGEAR INC,Information Technology,Equity,United States
+FRPH,FRP HOLDINGS INC,Real Estate,Equity,United States
+GNTX,GENTEX CORP,Consumer Discretionary,Equity,United States
+MSBI,MIDLAND STATES BANCORP INC,Financials,Equity,United States
+SMCI,SUPER MICRO COMPUTER INC,Information Technology,Equity,United States
+CPB,CAMPBELL SOUP,Consumer Staples,Equity,United States
+CZNC,CITIZENS AND NORTHERN CORP,Financials,Equity,United States
+KHC,KRAFT HEINZ,Consumer Staples,Equity,United States
+AOSL,ALPHA AND OMEGA SEMICONDUCTOR LTD,Information Technology,Equity,United States
+DBX,DROPBOX INC CLASS A,Information Technology,Equity,United States
+BEAM,BEAM THERAPEUTICS INC,Health Care,Equity,United States
+IIIV,I3 VERTICALS INC CLASS A,Information Technology,Equity,United States
+CIVB,CIVISTA BANCSHARES INC,Financials,Equity,United States
+OSW,ONESPAWORLD HOLDINGS LTD,Consumer Discretionary,Equity,United States
+NRIM,NORTHRIM BANCORP INC,Financials,Equity,United States
+CWBC,COMMUNITY WEST BANCSHARES,Financials,Equity,United States
+INVA,INNOVIVA INC,Health Care,Equity,United States
+SIRI,SIRIUSXM HOLDINGS INC,Communication,Equity,United States
+PCRX,PACIRA BIOSCIENCES INC,Health Care,Equity,United States
+CARE,CARTER BANKSHARES INC,Financials,Equity,United States
+ACHC,ACADIA HEALTHCARE COMPANY INC,Health Care,Equity,United States
+AVNW,AVIAT NETWORKS INC,Information Technology,Equity,United States
+RICK,RCI HOSPITALITY HOLDINGS INC,Consumer Discretionary,Equity,United States
+BRZE,BRAZE INC CLASS A,Information Technology,Equity,United States
+APPN,APPIAN CORP CLASS A,Information Technology,Equity,United States
+ETON,ETON PHARMACEUTCIALS INC,Health Care,Equity,United States
+CPRX,CATALYST PHARMACEUTICALS INC,Health Care,Equity,United States
+WTBA,WEST BANCORPORATION INC,Financials,Equity,United States
+NECB,NORTHEAST COMMUNITY BANCORP INC,Financials,Equity,United States
+SNDX,SYNDAX PHARMACEUTICALS INC,Health Care,Equity,United States
+CSTL,CASTLE BIOSCIENCES INC,Health Care,Equity,United States
+WAY,WAYSTAR HOLDING CORP,Health Care,Equity,United States
+ALRS,ALERUS FINANCIAL CORP,Financials,Equity,United States
+MLYS,MINERALYS THERAPEUTICS INC,Health Care,Equity,United States
+FLY,FIREFLY AEROSPACE INC,Industrials,Equity,United States
+APLD,APPLIED DIGITAL CORP,Information Technology,Equity,United States
+SEPN,SEPTERNA INC,Health Care,Equity,United States
+IMVT,IMMUNOVANT INC,Health Care,Equity,United States
+FHB,FIRST HAWAIIAN INC,Financials,Equity,United States
+ZYME,ZYMEWORKS INC,Health Care,Equity,United States
+ADEA,ADEIA INC,Information Technology,Equity,United States
+ASTH,ASTRANA HEALTH INC,Health Care,Equity,United States
+KE,KIMBALL ELECTRONICS INC,Information Technology,Equity,United States
+NWSA,NEWS CORP CLASS A,Communication,Equity,United States
+CCSI,CONSENSUS CLOUD SOLUTIONS INC,Information Technology,Equity,United States
+EGBN,EAGLE BANCORP INC,Financials,Equity,United States
+BUSE,FIRST BUSEY CORP,Financials,Equity,United States
+INTA,INTAPP INC,Information Technology,Equity,United States
+HTFL,HEARTFLOW INC,Health Care,Equity,United States
+MVBF,MVB FINANCIAL CORP,Financials,Equity,United States
+TILE,INTERFACE INC,Industrials,Equity,United States
+UPST,UPSTART HOLDINGS INC,Financials,Equity,United States
+ALMS,ALUMIS INC,Health Care,Equity,United States
+EYE,NATIONAL VISION HOLDINGS INC,Consumer Discretionary,Equity,United States
+FMAO,FARMERS AND MERCHANTS BANCORP INC,Financials,Equity,United States
+HFWA,HERITAGE FINANCIAL CORP,Financials,Equity,United States
+MATW,MATTHEWS INTERNATIONAL CORP CLASS,Consumer Discretionary,Equity,United States
+BMRC,BANK OF MARIN BANCORP,Financials,Equity,United States
+TRUP,TRUPANION INC,Financials,Equity,United States
+ADV,ADVANTAGE SOLUTIONS INC CLASS A,Communication,Equity,United States
+RIGL,RIGEL PHARMACEUTICALS INC,Health Care,Equity,United States
+CZR,CAESARS ENTERTAINMENT INC,Consumer Discretionary,Equity,United States
+HAFC,HANMI FINANCIAL CORP,Financials,Equity,United States
+GDEN,GOLDEN ENTERTAINMENT INC,Consumer Discretionary,Equity,United States
+DSGR,DISTRIBUTION SOLUTIONS GROUP INC,Industrials,Equity,United States
+CNOB,CONNECTONE BANCORP INC,Financials,Equity,United States
+MBUU,MALIBU BOATS CLASS A INC,Consumer Discretionary,Equity,United States
+KDP,KEURIG DR PEPPER INC,Consumer Staples,Equity,United States
+TCMD,TACTILE SYSTEMS TECHNOLOGY INC,Health Care,Equity,United States
+PRCT,PROCEPT BIOROBOTICS CORP,Health Care,Equity,United States
+CVGW,CALAVO GROWERS INC,Consumer Staples,Equity,United States
+CNXC,CONCENTRIX CORP,Industrials,Equity,United States
+SSRM,SSR MINING INC,Materials,Equity,Canada
+PPTA,PERPETUA RESOURCES CORP,Materials,Equity,United States
+ROIV,ROIVANT SCIENCES LTD,Health Care,Equity,United States
+HBT,HBT FINANCIAL INC,Financials,Equity,United States
+HRMY,HARMONY BIOSCIENCES HLDG INC,Health Care,Equity,United States
+GIII,G III APPAREL GROUP LTD,Consumer Discretionary,Equity,United States
+BFST,BUSINESS FIRST BANCSHARES INC,Financials,Equity,United States
+SFD,SMITHFIELD FOODS INC,Consumer Staples,Equity,United States
+COLB,COLUMBIA BANKING SYSTEM INC,Financials,Equity,United States
+CBRL,CRACKER BARREL OLD COUNTRY STORE I,Consumer Discretionary,Equity,United States
+SKYT,SKYWATER TECHNOLOGY INC,Information Technology,Equity,United States
+WBD,WARNER BROS. DISCOVERY INC SERIES,Communication,Equity,United States
+COFS,CHOICEONE FINANCIAL SERVICES INC,Financials,Equity,United States
+TVTX,TRAVERE THERAPEUTICS INC,Health Care,Equity,United States
+FFBC,FIRST FINANCIAL BANCORP,Financials,Equity,United States
+OPCH,OPTION CARE HEALTH INC,Health Care,Equity,United States
+VRDN,VIRIDIAN THERAPEUTICS ORS INC,Health Care,Equity,United States
+FSLY,FASTLY INC CLASS A,Information Technology,Equity,United States
+CLFD,CLEARFIELD INC,Information Technology,Equity,United States
+PRGS,PROGRESS SOFTWARE CORP,Information Technology,Equity,United States
+THRM,GENTHERM INC,Consumer Discretionary,Equity,United States
+FNLC,FIRST BANCORP INC,Financials,Equity,United States
+NWS,NEWS CORP CLASS B,Communication,Equity,United States
+ATNI,ATN INTERNATIONAL INC,Communication,Equity,United States
+RAPP,RAPPORT THERAPEUTICS INC,Health Care,Equity,United States
+IRDM,IRIDIUM COMMUNICATIONS INC,Communication,Equity,United States
+MCBS,METROCITY BANKSHARES INC,Financials,Equity,United States
+CMCSA,COMCAST CORP CLASS A,Communication,Equity,United States
+CCNE,CNB FINANCIAL CORP,Financials,Equity,United States
+MBX,MBX BIOSCIENCES INC,Health Care,Equity,United States
+WERN,WERNER ENTERPRISES INC,Industrials,Equity,United States
+BWMN,BOWMAN CONSULTING GROUP LTD,Industrials,Equity,United States
+ATRC,ATRICURE INC,Health Care,Equity,United States
+CAPR,CAPRICOR THERAPEUTICS INC,Health Care,Equity,United States
+INDV,INDIVIOR PHARMACEUTICALS INC,Health Care,Equity,United States
+FFIN,FIRST FINANCIAL BANKSHARES INC,Financials,Equity,United States
+BCML,BAYCOM CORP,Financials,Equity,United States
+LKQ,LKQ CORP,Consumer Discretionary,Equity,United States
+VCEL,VERICEL CORP,Health Care,Equity,United States
+TECX,TECTONIC THERAPEUTIC INC,Health Care,Equity,United States
+SBCF,SEACOAST BANKING OF FLORIDA,Financials,Equity,United States
+BBSI,BARRETT BUSINESS SERVICES INC,Industrials,Equity,United States
+ALKS,ALKERMES,Health Care,Equity,United States
+AGIO,AGIOS PHARMACEUTICALS INC,Health Care,Equity,United States
+LQDT,LIQUIDITY SERVICES INC,Industrials,Equity,United States
+OFLX,OMEGA FLEX INC,Industrials,Equity,United States
+MTCH,MATCH GROUP INC,Communication,Equity,United States
+TTEK,TETRA TECH INC,Industrials,Equity,United States
+EXLS,EXLSERVICE HOLDINGS INC,Industrials,Equity,United States
+PNTG,PENNANT GROUP INC,Health Care,Equity,United States
+COHU,COHU INC,Information Technology,Equity,United States
+VCYT,VERACYTE INC,Health Care,Equity,United States
+SLNO,SOLENO THERAPEUTICS INC,Health Care,Equity,United States
+ALGM,ALLEGRO MICROSYSTEMS INC,Information Technology,Equity,United States
+YORW,YORK WATER,Utilities,Equity,United States
+CLDX,CELLDEX THERAPEUTICS INC,Health Care,Equity,United States
+MAZE,MAZE THERAPEUTICS INC,Health Care,Equity,United States
+IDYA,IDEAYA BIOSCIENCES INC,Health Care,Equity,United States
+BETR,BETTER HOME FINANCE HOLDING CLASS,Financials,Equity,United States
+EWTX,EDGEWISE THERAPEUTICS INC,Health Care,Equity,United States
+FISI,FINANCIAL INSTITUTIONS INC,Financials,Equity,United States
+FIGR,FIGURE TECHNOLOGY SOLUTIONS INC CL,Financials,Equity,United States
+WAFD,WAFD INC,Financials,Equity,United States
+AXGN,AXOGEN INC,Health Care,Equity,United States
+MPB,MID PENN BANCORP INC,Financials,Equity,United States
+TGTX,TG THERAPEUTICS INC,Health Care,Equity,United States
+PZZA,PAPA JOHNS INTERNATIONAL INC,Consumer Discretionary,Equity,United States
+LINE,LINEAGE INC,Real Estate,Equity,United States
+OBT,ORANGE COUNTY BANCORP INC,Financials,Equity,United States
+NTCT,NETSCOUT SYSTEMS INC,Information Technology,Equity,United States
+PEBO,PEOPLES BANCORP INC,Financials,Equity,United States
+CLMT,CALUMET INC,Energy,Equity,United States
+CWCO,CONSOLIDATED WATER LTD,Utilities,Equity,United States
+IBCP,INDEPENDENT BANK CORP,Financials,Equity,United States
+CPRT,COPART INC,Industrials,Equity,United States
+COLL,COLLEGIUM PHARMACEUTICAL INC,Health Care,Equity,United States
+APOG,APOGEE ENTERPRISES INC,Industrials,Equity,United States
+CENTA,CENTRAL GARDEN AND PET CLASS A,Consumer Staples,Equity,United States
+VKTX,VIKING THERAPEUTICS INC,Health Care,Equity,United States
+AEHR,AEHR TEST SYSTEMS,Information Technology,Equity,United States
+WASH,WASHINGTON TRUST BANCORP INC,Financials,Equity,United States
+AMSF,AMERISAFE INC,Financials,Equity,United States
+OMCL,OMNICELL INC,Health Care,Equity,United States
+FIBK,FIRST INTERSTATE BANCSYSTEM INC,Financials,Equity,United States
+STOK,STOKE THERAPEUTICS INC,Health Care,Equity,United States
+DCOM,DIME COMMUNITY BANCSHARES INC,Financials,Equity,United States
+AROW,ARROW FINANCIAL CORP,Financials,Equity,United States
+SHOO,STEVEN MADDEN LTD,Consumer Discretionary,Equity,United States
+TOWN,TOWNEBANK,Financials,Equity,United States
+FIZZ,NATIONAL BEVERAGE CORP,Consumer Staples,Equity,United States
+BSRR,SIERRA BANCORP,Financials,Equity,United States
+WSBC,WESBANCO INC,Financials,Equity,United States
+PDFS,PDF SOLUTIONS INC,Information Technology,Equity,United States
+UVSP,UNIVEST FINANCIAL CORP,Financials,Equity,United States
+CRNX,CRINETICS PHARMACEUTICALS INC,Health Care,Equity,United States
+BRKR,BRUKER CORP,Health Care,Equity,United States
+AMSC,AMERICAN SUPERCONDUCTOR CORP,Industrials,Equity,United States
+HROW,HARROW INC,Health Care,Equity,United States
+CELH,CELSIUS HOLDINGS INC,Consumer Staples,Equity,United States
+VIAV,VIAVI SOLUTIONS INC,Information Technology,Equity,United States
+PGC,PEAPACK GLADSTONE FINANCIAL CORP,Financials,Equity,United States
+BJRI,BJS RESTAURANTS INC,Consumer Discretionary,Equity,United States
+BSY,BENTLEY SYSTEMS INC CLASS B,Information Technology,Equity,United States
+LAUR,LAUREATE EDUCATION INC,Consumer Discretionary,Equity,United States
+ORRF,ORRSTOWN FINANCIAL SERVICES INC,Financials,Equity,United States
+CARG,CARGURUS INC CLASS A,Communication,Equity,United States
+LQDA,LIQUIDIA CORP,Health Care,Equity,United States
+RDVT,RED VIOLET INC,Information Technology,Equity,United States
+VECO,VEECO INSTRUMENTS INC,Information Technology,Equity,United States
+HUBG,HUB GROUP INC CLASS A,Industrials,Equity,United States
+VSNT,VERSANT MEDIA GROUP INC,Communication,Equity,United States
+TRS,TRIMAS CORP,Materials,Equity,United States
+CART,MAPLEBEAR INC,Consumer Staples,Equity,United States
+BL,BLACKLINE INC,Information Technology,Equity,United States
+SCSC,SCANSOURCE INC,Information Technology,Equity,United States
+FSUN,FIRSTSUN CAPITAL BANCORP,Financials,Equity,United States
+COGT,COGENT BIOSCIENCES INC,Health Care,Equity,United States
+SION,SIONNA THERAPEUTICS INC,Health Care,Equity,United States
+TYRA,TYRA BIOSCIENCES INC,Health Care,Equity,United States
+UFCS,UNITED FIRE GROUP INC,Financials,Equity,United States
+GLIBA,GCI LIBERTY INC SERIES A,Communication,Equity,United States
+PPC,PILGRIMS PRIDE CORP,Consumer Staples,Equity,United States
+GLIBK,GCI LIBERTY INC SERIES C,Communication,Equity,United States
+PECO,PHILLIPS EDISON AND COMPANY INC,Real Estate,Equity,United States
+NMIH,NMI HOLDINGS INC,Financials,Equity,United States
+KOD,KODIAK SCIENCES INC,Health Care,Equity,United States
+CENT,CENTRAL GARDEN AND PET,Consumer Staples,Equity,United States
+FSBC,FIVE STAR BANCORP,Financials,Equity,United States
+INOD,INNODATA INC,Industrials,Equity,United States
+PRDO,PERDOCEO EDUCATION CORP,Consumer Discretionary,Equity,United States
+CORT,CORCEPT THERAPEUTICS INC,Health Care,Equity,United States
+NTNX,NUTANIX INC CLASS A,Information Technology,Equity,United States
+XMTR,XOMETRY INC CLASS A,Industrials,Equity,United States
+BLKB,BLACKBAUD INC,Information Technology,Equity,United States
+LGIH,LGI HOMES INC,Consumer Discretionary,Equity,United States
+ENPH,ENPHASE ENERGY INC,Information Technology,Equity,United States
+FRME,FIRST MERCHANTS CORP,Financials,Equity,United States
+AMAL,AMALGAMATED FINANCIAL CORP,Financials,Equity,United States
+FSBW,FS BANCORP INC,Financials,Equity,United States
+ATEX,ANTERIX INC,Communication,Equity,United States
+NSSC,NAPCO SECURITY TECHNOLOGIES INC,Information Technology,Equity,United States
+LIF,LIFE360 INC,Information Technology,Equity,United States
+SCHL,SCHOLASTIC CORP,Communication,Equity,United States
+ELVN,ENLIVEN THERAPEUTICS INC,Health Care,Equity,United States
+IAC,IAC INC,Communication,Equity,United States
+VERA,VERA THERAPEUTICS INC CLASS A,Health Care,Equity,United States
+TSBK,TIMBERLAND BANCORP INC,Financials,Equity,United States
+TPG,TPG INC CLASS A,Financials,Equity,United States
+PLAB,PHOTRONICS INC,Information Technology,Equity,United States
+CSX,CSX CORP,Industrials,Equity,United States
+CSGP,COSTAR GROUP INC,Real Estate,Equity,United States
+ACIW,ACI WORLDWIDE INC,Information Technology,Equity,United States
+ACMR,ACM RESEARCH CLASS A INC,Information Technology,Equity,United States
+AMWD,AMERICAN WOODMARK CORP,Industrials,Equity,United States
+FMBH,FIRST MID BANCSHARES INC,Financials,Equity,United States
+ACT,ENACT HOLDINGS INC,Financials,Equity,United States
+PEGA,PEGASYSTEMS INC,Information Technology,Equity,United States
+UBSI,UNITED BANKSHARES INC,Financials,Equity,United States
+ROCK,GIBRALTAR INDUSTRIES INC,Industrials,Equity,United States
+ZG,ZILLOW GROUP INC CLASS A,Real Estate,Equity,United States
+XPEL,XPEL INC,Consumer Discretionary,Equity,United States
+Z,ZILLOW GROUP INC CLASS C,Real Estate,Equity,United States
+LINC,LINCOLN EDUCATIONAL SERVICES CORP,Consumer Discretionary,Equity,United States
+STBA,S AND T BANCORP INC,Financials,Equity,United States
+GSHD,GOOSEHEAD INSURANCE INC CLASS A,Financials,Equity,United States
+GABC,GERMAN AMERICAN BANCORP INC,Financials,Equity,United States
+FCBC,FIRST COMMUNITY BANKSHARES INC,Financials,Equity,United States
+SPFI,SOUTH PLAINS FINANCIAL INC,Financials,Equity,United States
+MDLN,MEDLINE INC CLASS A,Health Care,Equity,United States
+EXEL,EXELIXIS INC,Health Care,Equity,United States
+BATRK,ATLANTA BRAVES HOLDINGS INC SERIES,Communication,Equity,United States
+GCT,GIGACLOUD TECHNOLOGY INC CLASS A,Consumer Discretionary,Equity,United States
+ZD,ZIFF DAVIS INC,Communication,Equity,United States
+TREE,LENDINGTREE INC,Financials,Equity,United States
+TRMK,TRUSTMARK CORP,Financials,Equity,United States
+NBTB,NBT BANCORP INC,Financials,Equity,United States
+SKWD,SKYWARD SPECIALTY INSURANCE GROUP,Financials,Equity,United States
+MBIN,MERCHANTS BANCORP,Financials,Equity,United States
+BTSG,BRIGHTSPRING HEALTH SERVICES INC,Health Care,Equity,United States
+ALRM,ALARM.COM HOLDINGS INC,Information Technology,Equity,United States
+AFRM,AFFIRM HOLDINGS INC CLASS A,Financials,Equity,United States
+SRRK,SCHOLAR ROCK HOLDING CORP,Health Care,Equity,United States
+TEM,TEMPUS AI INC CLASS A,Health Care,Equity,United States
+TRST,TRUSTCO BANK CORP,Financials,Equity,United States
+FDBC,FIDELITY D AND D BANCORP INC,Financials,Equity,United States
+GFS,GLOBALFOUNDRIES INC,Information Technology,Equity,United States
+MRX,MAREX GROUP PLC,Financials,Equity,United Kingdom
+CCBG,CAPITAL CITY BANK INC,Financials,Equity,United States
+INTC,INTEL CORPORATION CORP,Information Technology,Equity,United States
+CASS,CASS INFORMATION SYSTEMS INC,Financials,Equity,United States
+PYPL,PAYPAL HOLDINGS INC,Financials,Equity,United States
+ROOT,ROOT INC CLASS A,Financials,Equity,United States
+GLPI,GAMING AND LEISURE PROPERTIES REIT,Real Estate,Equity,United States
+APA,APA CORP,Energy,Equity,United States
+AMKR,AMKOR TECHNOLOGY INC,Information Technology,Equity,United States
+ORKA,ORUKA THERAPEUTICS INC,Health Care,Equity,United States
+OZK,BANK OZK,Financials,Equity,United States
+TWST,TWIST BIOSCIENCE CORP,Health Care,Equity,United States
+FITB,FIFTH THIRD BANCORP,Financials,Equity,United States
+DRS,LEONARDO DRS INC,Industrials,Equity,United States
+TSCO,TRACTOR SUPPLY,Consumer Discretionary,Equity,United States
+FAST,FASTENAL,Industrials,Equity,United States
+ICHR,ICHOR HOLDINGS LTD,Information Technology,Equity,United States
+STEP,STEPSTONE GROUP INC CLASS A,Financials,Equity,United States
+CG,CARLYLE GROUP INC,Financials,Equity,United States
+DOCU,DOCUSIGN INC,Information Technology,Equity,United States
+CRSP,CRISPR THERAPEUTICS AG,Health Care,Equity,United States
+BATRA,ATLANTA BRAVES HOLDINGS INC SERIES,Communication,Equity,United States
+CAC,CAMDEN NATIONAL CORP,Financials,Equity,United States
+RPRX,ROYALTY PHARMA PLC CLASS A,Health Care,Equity,United States
+TCBK,TRICO BANCSHARES,Financials,Equity,United States
+VSAT,VIASAT INC,Information Technology,Equity,United States
+JOUT,JOHNSON OUTDOORS INC CLASS A,Consumer Discretionary,Equity,United States
+COCO,THE VITA COCO COMPANY INC,Consumer Staples,Equity,United States
+ACNB,ACNB CORP,Financials,Equity,United States
+SYRE,SPYRE THERAPEUTICS INC,Health Care,Equity,United States
+HUT,HUT CORP,Information Technology,Equity,United States
+DGII,DIGI INTERNATIONAL INC,Information Technology,Equity,United States
+CGNX,COGNEX CORP,Information Technology,Equity,United States
+VNOM,VIPER ENERGY INC CLASS A,Energy,Equity,United States
+CBSH,COMMERCE BANCSHARES INC,Financials,Equity,United States
+EXC,EXELON CORP,Utilities,Equity,United States
+GRAL,GRAIL INC,Health Care,Equity,United States
+CATY,CATHAY GENERAL BANCORP,Financials,Equity,United States
+MBWM,MERCANTILE BANK CORP,Financials,Equity,United States
+POWI,POWER INTEGRATIONS INC,Information Technology,Equity,United States
+SUPN,SUPERNUS PHARMACEUTICALS INC,Health Care,Equity,United States
+MRNA,MODERNA INC,Health Care,Equity,United States
+CENX,CENTURY ALUMINUM,Materials,Equity,United States
+AMBA,AMBARELLA INC,Information Technology,Equity,United States
+UNTY,UNITY BANCORP INC,Financials,Equity,United States
+TECH,BIO TECHNE CORP,Health Care,Equity,United States
+LBRDA,LIBERTY BROADBAND CORP SERIES A,Communication,Equity,United States
+LBRDK,LIBERTY BROADBAND CORP SERIES C,Communication,Equity,United States
+WABC,WESTAMERICA BANCORPORATION,Financials,Equity,United States
+TBBK,BANCORP INC,Financials,Equity,United States
+MSEX,MIDDLESEX WATER,Utilities,Equity,United States
+ASTE,ASTEC INDUSTRIES INC,Industrials,Equity,United States
+PFIS,PEOPLES FINANCIAL SERVICES CORP,Financials,Equity,United States
+TERN,TERNS PHARMACEUTICALS INC,Health Care,Equity,United States
+FBIZ,FIRST BUSINESS FINANCIAL SERVICES,Financials,Equity,United States
+PCVX,VAXCYTE INC,Health Care,Equity,United States
+EFSC,ENTERPRISE FINANCIAL SERVICES CORP,Financials,Equity,United States
+FOX,FOX CORP CLASS B,Communication,Equity,United States
+SFST,SOUTHERN FIRST BANCSHARES INC,Financials,Equity,United States
+CRVL,CORVEL CORP,Health Care,Equity,United States
+ASO,ACADEMY SPORTS AND OUTDOORS INC,Consumer Discretionary,Equity,United States
+FTDR,FRONTDOOR INC,Consumer Discretionary,Equity,United States
+SWKS,SKYWORKS SOLUTIONS INC,Information Technology,Equity,United States
+PAHC,PHIBRO ANIMAL HEALTH CORP CLASS A,Health Care,Equity,United States
+RRR,RED ROCK RESORTS ORS CLASS A INC,Consumer Discretionary,Equity,United States
+FISV,FISERV INC,Financials,Equity,United States
+CAKE,CHEESECAKE FACTORY INC,Consumer Discretionary,Equity,United States
+BMRN,BIOMARIN PHARMACEUTICAL INC,Health Care,Equity,United States
+XENE,XENON PHARMACEUTICALS INC,Health Care,Equity,United States
+SPSC,SPS COMMERCE INC,Information Technology,Equity,United States
+COLM,COLUMBIA SPORTSWEAR,Consumer Discretionary,Equity,United States
+LGN,LEGENCE CORP CLASS A,Industrials,Equity,United States
+GLNG,GOLAR LNG LTD,Energy,Equity,Norway
+BLBD,BLUE BIRD CORP,Industrials,Equity,United States
+FBNC,FIRST BANCORP,Financials,Equity,United States
+ZION,ZIONS BANCORPORATION,Financials,Equity,United States
+FRPT,FRESHPET INC,Consumer Staples,Equity,United States
+RDNT,RADNET INC,Health Care,Equity,United States
+LKFN,LAKELAND FINANCIAL CORP,Financials,Equity,United States
+WGS,GENEDX HOLDINGS CORP CLASS A,Health Care,Equity,United States
+CNXN,PC CONNECTION INC,Information Technology,Equity,United States
+APEI,AMERICAN PUBLIC EDUCATION INC,Consumer Discretionary,Equity,United States
+ANAB,ANAPTYSBIO INC,Health Care,Equity,United States
+ARWR,ARROWHEAD PHARMACEUTICALS INC,Health Care,Equity,United States
+HTO,H2O AMERICA,Utilities,Equity,United States
+MDLZ,MONDELEZ INTERNATIONAL INC CLASS A,Consumer Staples,Equity,United States
+ON,ON SEMICONDUCTOR CORP,Information Technology,Equity,United States
+INBX,INHIBRX BIOSCIENCES INC,Health Care,Equity,United States
+UCTT,ULTRA CLEAN HOLDINGS INC,Information Technology,Equity,United States
+FOXA,FOX CORP CLASS A,Communication,Equity,United States
+CHEF,CHEFS WAREHOUSE INC,Consumer Staples,Equity,United States
+PSIX,POWER SOLUTIONS INTERNATIONAL INC,Industrials,Equity,United States
+CTSH,COGNIZANT TECHNOLOGY SOLUTIONS COR,Information Technology,Equity,United States
+AVT,AVNET INC,Information Technology,Equity,United States
+BANR,BANNER CORP,Financials,Equity,United States
+CTBI,COMMUNITY TRUST BANCORP INC,Financials,Equity,United States
+BHF,BRIGHTHOUSE FINANCIAL INC,Financials,Equity,United States
+IRON,DISC MEDICINE INC,Health Care,Equity,United States
+HBCP,HOME BANCORP INC,Financials,Equity,United States
+CZFS,CITIZENS FINANCIAL SERVICES INC,Financials,Equity,United States
+BHRB,BURKE HERBERT FINANCIAL SERVICES C,Financials,Equity,United States
+RKLB,ROCKET LAB CORP,Industrials,Equity,United States
+CECO,CECO ENVIRONMENTAL CORP,Industrials,Equity,United States
+URBN,URBAN OUTFITTERS INC,Consumer Discretionary,Equity,United States
+UTMD,UTAH MEDICAL PRODUCTS INC,Health Care,Equity,United States
+SEZL,SEZZLE INC,Financials,Equity,United States
+HALO,HALOZYME THERAPEUTICS INC,Health Care,Equity,United States
+LIVN,LIVANOVA PLC,Health Care,Equity,United States
+THFF,FIRST FINANCIAL CORPORATION CORP,Financials,Equity,United States
+MCHP,MICROCHIP TECHNOLOGY INC,Information Technology,Equity,United States
+GSBC,GREAT SOUTHERN BANCORP INC,Financials,Equity,United States
+DXCM,DEXCOM INC,Health Care,Equity,United States
+HWC,HANCOCK WHITNEY CORP,Financials,Equity,United States
+ALNT,ALLIENT INC,Industrials,Equity,United States
+SMBC,SOUTHERN MISSOURI BANCORP INC,Financials,Equity,United States
+CYTK,CYTOKINETICS INC,Health Care,Equity,United States
+TRMB,TRIMBLE INC,Information Technology,Equity,United States
+BKR,BAKER HUGHES CLASS A,Energy,Equity,United States
+RUSHB,RUSH ENTERPRISES INC CLASS B,Industrials,Equity,United States
+WSFS,WSFS FINANCIAL CORP,Financials,Equity,United States
+SYBT,STOCK YARDS BANCORP INC,Financials,Equity,United States
+GSAT,GLOBALSTAR VOTING INC,Communication,Equity,United States
+IBKR,INTERACTIVE BROKERS GROUP INC CLAS,Financials,Equity,United States
+DOX,AMDOCS LTD,Information Technology,Equity,United States
+LASR,NLIGHT INC,Information Technology,Equity,United States
+EXPO,EXPONENT INC,Industrials,Equity,United States
+CGON,CG ONCOLOGY INC,Health Care,Equity,United States
+KLIC,KULICKE AND SOFFA INDUSTRIES INC,Information Technology,Equity,United States
+ICFI,ICF INTERNATIONAL INC,Industrials,Equity,United States
+ATRO,ASTRONICS CORP,Industrials,Equity,United States
+FLEX,FLEX LTD,Information Technology,Equity,United States
+EEFT,EURONET WORLDWIDE INC,Financials,Equity,United States
+TEAM,ATLASSIAN CORP CLASS A,Information Technology,Equity,United States
+VCTR,VICTORY CAPITAL HOLDINGS CLASS A I,Financials,Equity,United States
+NWE,NORTHWESTERN ENERGY GROUP INC,Utilities,Equity,United States
+SSNC,SS AND C TECHNOLOGIES HOLDINGS INC,Industrials,Equity,United States
+NVEC,NVE CORP,Information Technology,Equity,United States
+NSIT,INSIGHT ENTERPRISES INC,Information Technology,Equity,United States
+HOOD,ROBINHOOD MARKETS INC CLASS A,Financials,Equity,United States
+KRUS,KURA SUSHI USA INC,Consumer Discretionary,Equity,United States
+RUSHA,RUSH ENTERPRISES INC CLASS A,Industrials,Equity,United States
+PTCT,PTC THERAPEUTICS INC,Health Care,Equity,United States
+TARS,TARSUS PHARMACEUTICALS INC,Health Care,Equity,United States
+IBOC,INTERNATIONAL BANCSHARES CORP,Financials,Equity,United States
+SRCE,1ST SOURCE CORP,Financials,Equity,United States
+DIOD,DIODES INC,Information Technology,Equity,United States
+SYNA,SYNAPTICS INC,Information Technology,Equity,United States
+MMSI,MERIT MEDICAL SYSTEMS INC,Health Care,Equity,United States
+ECPG,ENCORE CAPITAL GROUP INC,Financials,Equity,United States
+RBCAA,REPUBLIC BANCORP INC CLASS A,Financials,Equity,United States
+GEHC,GE HEALTHCARE TECHNOLOGIES INC,Health Care,Equity,United States
+BBIO,BRIDGEBIO PHARMA INC,Health Care,Equity,United States
+COO,COOPER INC,Health Care,Equity,United States
+DRUG,BRIGHT MINDS BIOSCIENCES INC,Health Care,Equity,United States
+AGYS,AGILYSYS INC,Information Technology,Equity,United States
+LNT,ALLIANT ENERGY CORP,Utilities,Equity,United States
+TRNS,TRANSCAT INC,Industrials,Equity,United States
+MRCY,MERCURY SYSTEMS INC,Industrials,Equity,United States
+MNST,MONSTER BEVERAGE CORP,Consumer Staples,Equity,United States
+KTOS,KRATOS DEFENSE AND SECURITY SOLUTI,Industrials,Equity,United States
+HSIC,HENRY SCHEIN INC,Health Care,Equity,United States
+IONS,IONIS PHARMACEUTICALS INC,Health Care,Equity,United States
+SMTC,SEMTECH CORP,Information Technology,Equity,United States
+CMPR,CIMPRESS PLC,Industrials,Equity,United States
+IOSP,INNOSPEC INC,Materials,Equity,United States
+SAFT,SAFETY INSURANCE GROUP INC,Financials,Equity,United States
+ANIP,ANI PHARMACEUTICALS INC,Health Care,Equity,United States
+ANDE,ANDERSONS INC,Consumer Staples,Equity,United States
+OKTA,OKTA INC CLASS A,Information Technology,Equity,United States
+CCB,COASTAL FINANCIAL CORP,Financials,Equity,United States
+INDB,INDEPENDENT BANK CORP,Financials,Equity,United States
+REG,REGENCY CENTERS REIT CORP,Real Estate,Equity,United States
+LNTH,LANTHEUS HOLDINGS INC,Health Care,Equity,United States
+SIGI,SELECTIVE INSURANCE GROUP INC,Financials,Equity,United States
+PLUS,EPLUS,Information Technology,Equity,United States
+CWST,CASELLA WASTE SYSTEMS INC CLASS A,Industrials,Equity,United States
+SOLS,SOLSTICE ADVANCED MATERIALS INC,Materials,Equity,United States
+FWONA,LIBERTY MEDIA FORMULA ONE SERIES A,Communication,Equity,United States
+TIGO,MILLICOM INTERNATIONAL CELLULAR SA,Communication,Equity,Sweden
+HOLX,HOLOGIC INC,Health Care,Equity,United States
+SEIC,SEI INVESTMENTS,Financials,Equity,United States
+RYTM,RHYTHM PHARMACEUTICALS INC,Health Care,Equity,United States
+CVLT,COMMVAULT SYSTEMS INC,Information Technology,Equity,United States
+MGEE,MGE ENERGY INC,Utilities,Equity,United States
+NWPX,NWPX INFRASTRUCTURE INC,Industrials,Equity,United States
+CALM,CAL MAINE FOODS INC,Consumer Staples,Equity,United States
+QRVO,QORVO INC,Information Technology,Equity,United States
+SFM,SPROUTS FARMERS MARKET INC,Consumer Staples,Equity,United States
+JBSS,JOHN B SANFILIPPO AND SON INC,Consumer Staples,Equity,United States
+ZM,ZOOM COMMUNICATIONS INC CLASS A,Information Technology,Equity,United States
+APGE,APOGEE THERAPEUTICS INC,Health Care,Equity,United States
+XEL,XCEL ENERGY INC,Utilities,Equity,United States
+KYMR,KYMERA THERAPEUTICS INC,Health Care,Equity,United States
+FTNT,FORTINET INC,Information Technology,Equity,United States
+SNEX,STONEX GROUP INC,Financials,Equity,United States
+ASTS,AST SPACEMOBILE INC CLASS A,Communication,Equity,United States
+ALGT,ALLEGIANT TRAVEL,Industrials,Equity,United States
+CROX,CROCS INC,Consumer Discretionary,Equity,United States
+WLDN,WILLDAN GROUP INC,Industrials,Equity,United States
+JJSF,J AND J SNACK FOODS CORP,Consumer Staples,Equity,United States
+CSCO,CISCO SYSTEMS INC,Information Technology,Equity,United States
+CSGS,CSG SYSTEMS INTERNATIONAL INC,Industrials,Equity,United States
+LMB,LIMBACH HOLDINGS INC,Industrials,Equity,United States
+EVRG,EVERGY INC,Utilities,Equity,United States
+DNTH,DIANTHUS THERAPEUTICS INC,Health Care,Equity,United States
+STRA,STRATEGIC EDUCATION INC,Consumer Discretionary,Equity,United States
+NDAQ,NASDAQ INC,Financials,Equity,United States
+AAON,AAON INC,Industrials,Equity,United States
+FWONK,LIBERTY MEDIA FORMULA ONE SERIES C,Communication,Equity,United States
+MLAB,MESA LABORATORIES INC,Health Care,Equity,United States
+HQY,HEALTHEQUITY INC,Health Care,Equity,United States
+QCRH,QCR HOLDINGS INC,Financials,Equity,United States
+CHDN,CHURCHILL DOWNS INC,Consumer Discretionary,Equity,United States
+GH,GUARDANT HEALTH INC,Health Care,Equity,United States
+ITRI,ITRON INC,Information Technology,Equity,United States
+QLYS,QUALYS INC,Information Technology,Equity,United States
+OTTR,OTTER TAIL CORP,Utilities,Equity,United States
+LLYVA,LIBERTY LIVE HOLDINGS INC,Consumer Discretionary,Equity,United States
+SBUX,STARBUCKS CORP,Consumer Discretionary,Equity,United States
+PFG,PRINCIPAL FINANCIAL GROUP INC,Financials,Equity,United States
+ROKU,ROKU INC CLASS A,Communication,Equity,United States
+VC,VISTEON CORP,Consumer Discretionary,Equity,United States
+CASH,PATHWARD FINANCIAL INC,Financials,Equity,United States
+EBAY,EBAY INC,Consumer Discretionary,Equity,United States
+UAL,UNITED AIRLINES HOLDINGS INC,Industrials,Equity,United States
+MIRM,MIRUM PHARMACEUTICALS INC,Health Care,Equity,United States
+TROW,T ROWE PRICE GROUP INC,Financials,Equity,United States
+HAS,HASBRO INC,Consumer Discretionary,Equity,United States
+LLYVK,LIBERTY LIVE HOLDINGS INC,Consumer Discretionary,Equity,United States
+IMKTA,INGLES MARKETS INC CLASS A,Consumer Staples,Equity,United States
+OLLI,OLLIES BARGAIN OUTLET HOLDINGS INC,Consumer Discretionary,Equity,United States
+PFBC,PREFERRED BANK,Financials,Equity,United States
+SKYW,SKYWEST INC,Industrials,Equity,United States
+UFPI,UFP INDUSTRIES INC,Industrials,Equity,United States
+RMBS,RAMBUS INC,Information Technology,Equity,United States
+RRBI,RED RIVER BANCSHARES INC,Financials,Equity,United States
+ORLY,OREILLY AUTOMOTIVE INC,Consumer Discretionary,Equity,United States
+INCY,INCYTE CORP,Health Care,Equity,United States
+LSCC,LATTICE SEMICONDUCTOR CORP,Information Technology,Equity,United States
+FELE,FRANKLIN ELECTRIC INC,Industrials,Equity,United States
+IPAR,INTERPARFUMS INC,Consumer Staples,Equity,United States
+PAYX,PAYCHEX INC,Industrials,Equity,United States
+OLED,UNIVERSAL DISPLAY CORP,Information Technology,Equity,United States
+ARCB,ARCBEST CORP,Industrials,Equity,United States
+RVMD,REVOLUTION MEDICINES INC,Health Care,Equity,United States
+TCBI,TEXAS CAPITAL BANCSHARES INC,Financials,Equity,United States
+ACGL,ARCH CAPITAL GROUP LTD,Financials,Equity,United States
+NFLX,NETFLIX INC,Communication,Equity,United States
+NUTX,NUTEX HEALTH INC,Health Care,Equity,United States
+MCRI,MONARCH CASINO AND RESORT INC,Consumer Discretionary,Equity,United States
+HLNE,HAMILTON LANE INC CLASS A,Financials,Equity,United States
+MRVL,MARVELL TECHNOLOGY INC,Information Technology,Equity,United States
+ADUS,ADDUS HOMECARE CORP,Health Care,Equity,United States
+CRDO,CREDO TECHNOLOGY GROUP HOLDING LTD,Information Technology,Equity,United States
+DUOL,DUOLINGO INC CLASS A,Consumer Discretionary,Equity,United States
+TTMI,TTM TECHNOLOGIES INC,Information Technology,Equity,United States
+WFRD,WEATHERFORD INTERNATIONAL PLC,Energy,Equity,United States
+WYNN,WYNN RESORTS LTD,Consumer Discretionary,Equity,United States
+NUVL,NUVALENT INC CLASS A,Health Care,Equity,United States
+SAIC,SCIENCE APPLICATIONS INTERNATIONAL,Industrials,Equity,United States
+ACLS,AXCELIS TECHNOLOGIES INC,Information Technology,Equity,United States
+IRMD,IRADIMED CORP,Health Care,Equity,United States
+FORM,FORMFACTOR INC,Information Technology,Equity,United States
+AAOI,APPLIED OPTOELECTRONICS INC,Information Technology,Equity,United States
+KMB,KIMBERLY CLARK CORP,Consumer Staples,Equity,United States
+PI,IMPINJ INC,Information Technology,Equity,United States
+PTGX,PROTAGONIST THERAPEUTICS INC,Health Care,Equity,United States
+TMDX,TRANSMEDICS GROUP INC,Health Care,Equity,United States
+NTAP,NETAPP INC,Information Technology,Equity,United States
+EWBC,EAST WEST BANCORP INC,Financials,Equity,United States
+DORM,DORMAN PRODUCTS INC,Consumer Discretionary,Equity,United States
+PCTY,PAYLOCITY HOLDING CORP,Industrials,Equity,United States
+CELC,CELCUITY INC,Health Care,Equity,United States
+ESQ,ESQUIRE FINANCIAL HOLDINGS INC,Financials,Equity,United States
+LMAT,LEMAITRE VASCULAR INC,Health Care,Equity,United States
+BANF,BANCFIRST CORP,Financials,Equity,United States
+DLTR,DOLLAR TREE INC,Consumer Staples,Equity,United States
+PATK,PATRICK INDUSTRIES INC,Consumer Discretionary,Equity,United States
+NBN,NORTHEAST BANK,Financials,Equity,United States
+UMBF,UMB FINANCIAL CORP,Financials,Equity,United States
+ROAD,CONSTRUCTION PARTNERS INC CLASS A,Industrials,Equity,United States
+MGRC,MCGRATH RENT,Industrials,Equity,United States
+RGEN,REPLIGEN CORP,Health Care,Equity,United States
+PVLA,PALVELLA THERAPEUTICS INC,Health Care,Equity,United States
+ALAB,ASTERA LABS INC,Information Technology,Equity,United States
+PCAR,PACCAR INC,Industrials,Equity,United States
+NOVT,NOVANTA INC,Information Technology,Equity,United States
+EXE,EXPAND ENERGY CORP,Energy,Equity,United States
+ENTG,ENTEGRIS INC,Information Technology,Equity,United States
+DDOG,DATADOG INC CLASS A,Information Technology,Equity,United States
+AKAM,AKAMAI TECHNOLOGIES INC,Information Technology,Equity,United States
+KALU,KAISER ALUMINIUM CORP,Materials,Equity,United States
+ACLX,ARCELLX INC,Health Care,Equity,United States
+SATS,ECHOSTAR CORP CLASS A,Communication,Equity,United States
+IPGP,IPG PHOTONICS CORP,Information Technology,Equity,United States
+TW,TRADEWEB MARKETS INC CLASS A,Financials,Equity,United States
+PLMR,PALOMAR HOLDINGS INC,Financials,Equity,United States
+ILMN,ILLUMINA INC,Health Care,Equity,United States
+IRTC,IRHYTHM HOLDINGS INC,Health Care,Equity,United States
+CDW,CDW CORP,Information Technology,Equity,United States
+CHCO,CITY HOLDING,Financials,Equity,United States
+NXT,NEXTPOWER INC CLASS A,Industrials,Equity,United States
+HURN,HURON CONSULTING GROUP INC,Industrials,Equity,United States
+ABNB,AIRBNB INC CLASS A,Consumer Discretionary,Equity,United States
+WMT,WALMART INC,Consumer Staples,Equity,United States
+LAMR,LAMAR ADVERTISING COMPANY CLAS,Real Estate,Equity,United States
+USLM,UNITED STATES LIME AND MINERALS IN,Materials,Equity,United States
+WDAY,WORKDAY INC CLASS A,Information Technology,Equity,United States
+ICUI,ICU MEDICAL INC,Health Care,Equity,United States
+BOKF,BOK FINANCIAL CORP,Financials,Equity,United States
+MSTR,STRATEGY INC CLASS A,Information Technology,Equity,United States
+QCOM,QUALCOMM INC,Information Technology,Equity,United States
+MANH,MANHATTAN ASSOCIATES INC,Information Technology,Equity,United States
+NBIX,NEUROCRINE BIOSCIENCES INC,Health Care,Equity,United States
+MIDD,MIDDLEBY CORP,Industrials,Equity,United States
+BPOP,POPULAR INC,Financials,Equity,United States
+AEP,AMERICAN ELECTRIC POWER INC,Utilities,Equity,United States
+WRLD,WORLD ACCEPTANCE CORP,Financials,Equity,United States
+SANM,SANMINA CORP,Information Technology,Equity,United States
+BFC,BANK FIRST CORP,Financials,Equity,United States
+WTFC,WINTRUST FINANCIAL CORP,Financials,Equity,United States
+ZS,ZSCALER INC,Information Technology,Equity,United States
+GILD,GILEAD SCIENCES INC,Health Care,Equity,United States
+NTRS,NORTHERN TRUST CORP,Financials,Equity,United States
+DXPE,DXP ENTERPRISES INC,Industrials,Equity,United States
+MZTI,MARZETTI,Consumer Staples,Equity,United States
+PTC,PTC INC,Information Technology,Equity,United States
+FRHC,FREEDOM HOLDING CORP,Financials,Equity,United States
+PLTR,PALANTIR TECHNOLOGIES INC CLASS A,Information Technology,Equity,United States
+CRUS,CIRRUS LOGIC INC,Information Technology,Equity,United States
+INSM,INSMED INC,Health Care,Equity,United States
+CHRD,CHORD ENERGY CORP,Energy,Equity,United States
+LULU,LULULEMON ATHLETICA INC,Consumer Discretionary,Equity,United States
+DASH,DOORDASH INC CLASS A,Consumer Discretionary,Equity,United States
+PANW,PALO ALTO NETWORKS INC,Information Technology,Equity,United States
+PSMT,PRICESMART INC,Consumer Staples,Equity,United States
+CAR,AVIS BUDGET GROUP INC,Industrials,Equity,United States
+SENEA,SENECA FOODS CORP CLASS A,Consumer Staples,Equity,United States
+HWKN,HAWKINS INC,Materials,Equity,United States
+VICR,VICOR CORP,Industrials,Equity,United States
+PEP,PEPSICO INC,Consumer Staples,Equity,United States
+CRAI,CRA INTERNATIONAL INC,Industrials,Equity,United States
+JKHY,JACK HENRY AND ASSOCIATES INC,Financials,Equity,United States
+CINF,CINCINNATI FINANCIAL CORP,Financials,Equity,United States
+WING,WINGSTOP INC,Consumer Discretionary,Equity,United States
+APPF,APPFOLIO INC CLASS A,Information Technology,Equity,United States
+AXSM,AXSOME THERAPEUTICS INC,Health Care,Equity,United States
+LSTR,LANDSTAR SYSTEM INC,Industrials,Equity,United States
+MORN,MORNINGSTAR INC,Financials,Equity,United States
+TXRH,TEXAS ROADHOUSE INC,Consumer Discretionary,Equity,United States
+COIN,COINBASE GLOBAL INC CLASS A,Financials,Equity,United States
+CHRW,CH ROBINSON WORLDWIDE INC,Industrials,Equity,United States
+MKTX,MARKETAXESS HOLDINGS INC,Financials,Equity,United States
+CTAS,CINTAS CORP,Industrials,Equity,United States
+ALGN,ALIGN TECHNOLOGY INC,Health Care,Equity,United States
+LOPE,GRAND CANYON EDUCATION INC,Consumer Discretionary,Equity,United States
+BCPC,BALCHEM CORP,Materials,Equity,United States
+SBAC,SBA COMMUNICATIONS REIT CORP CLASS,Real Estate,Equity,United States
+NVDA,NVIDIA CORP,Information Technology,Equity,United States
+WLFC,WILLIS LEASE FINANCE CORP,Industrials,Equity,United States
+VSEC,VSE CORP,Industrials,Equity,United States
+STLD,STEEL DYNAMICS INC,Materials,Equity,United States
+DHIL,DIAMOND HILL INVESTMENT GROUP INC,Financials,Equity,United States
+DAVE,DAVE INC CLASS A,Financials,Equity,United States
+MASI,MASIMO CORP,Health Care,Equity,United States
+COKE,COCA COLA CONSOLIDATED INC,Consumer Staples,Equity,United States
+NTRA,NATERA INC,Health Care,Equity,United States
+JAZZ,JAZZ PHARMACEUTICALS PLC,Health Care,Equity,United States
+VRSK,VERISK ANALYTICS INC,Industrials,Equity,United States
+BIIB,BIOGEN INC,Health Care,Equity,United States
+AVAV,AEROVIRONMENT INC,Industrials,Equity,United States
+ODFL,OLD DOMINION FREIGHT LINE INC,Industrials,Equity,United States
+UFPT,UFP TECHNOLOGIES INC,Health Care,Equity,United States
+TTWO,TAKE TWO INTERACTIVE SOFTWARE INC,Communication,Equity,United States
+FSLR,FIRST SOLAR INC,Information Technology,Equity,United States
+TXN,TEXAS INSTRUMENT INC,Information Technology,Equity,United States
+FCFS,FIRSTCASH HOLDINGS INC,Financials,Equity,United States
+LGND,LIGAND PHARMACEUTICALS INC,Health Care,Equity,United States
+POOL,POOL CORP,Consumer Discretionary,Equity,United States
+PLXS,PLEXUS CORP,Information Technology,Equity,United States
+AMZN,AMAZON COM INC,Consumer Discretionary,Equity,United States
+ENSG,ENSIGN GROUP INC,Health Care,Equity,United States
+WDFC,WD-40,Consumer Staples,Equity,United States
+ADP,AUTOMATIC DATA PROCESSING INC,Industrials,Equity,United States
+FANG,DIAMONDBACK ENERGY INC,Energy,Equity,United States
+AMD,ADVANCED MICRO DEVICES INC,Information Technology,Equity,United States
+EA,ELECTRONIC ARTS INC,Communication,Equity,United States
+ZBRA,ZEBRA TECHNOLOGIES CORP CLASS A,Information Technology,Equity,United States
+BELFB,BEL FUSE INC CLASS B,Information Technology,Equity,United States
+JBHT,JB HUNT TRANSPORT SERVICES INC,Industrials,Equity,United States
+SLAB,SILICON LABORATORIES INC,Information Technology,Equity,United States
+PODD,INSULET CORP,Health Care,Equity,United States
+TMUS,T MOBILE US INC,Communication,Equity,United States
+LRCX,LAM RESEARCH CORP,Information Technology,Equity,United States
+ROST,ROSS STORES INC,Consumer Discretionary,Equity,United States
+NXST,NEXSTAR MEDIA GROUP INC,Communication,Equity,United States
+ITIC,INVESTORS TITLE,Financials,Equity,United States
+CHTR,CHARTER COMMUNICATIONS INC CLASS A,Communication,Equity,United States
+FIVE,FIVE BELOW INC,Consumer Discretionary,Equity,United States
+HON,HONEYWELL INTERNATIONAL INC,Industrials,Equity,United States
+MKSI,MKS,Information Technology,Equity,United States
+MTSI,MACOM TECHNOLOGY SOLUTIONS INC,Information Technology,Equity,United States
+EXPE,EXPEDIA GROUP INC,Consumer Discretionary,Equity,United States
+ADSK,AUTODESK INC,Information Technology,Equity,United States
+ADBE,ADOBE INC,Information Technology,Equity,United States
+MDB,MONGODB INC CLASS A,Information Technology,Equity,United States
+RGLD,ROYAL GOLD INC,Materials,Equity,United States
+FTAI,FTAI AVIATION LTD,Industrials,Equity,United States
+KRYS,KRYSTAL BIOTECH INC,Health Care,Equity,United States
+VRSN,VERISIGN INC,Information Technology,Equity,United States
+LECO,LINCOLN ELECTRIC HOLDINGS INC,Industrials,Equity,United States
+AAPL,APPLE INC,Information Technology,Equity,United States
+NDSN,NORDSON CORP,Industrials,Equity,United States
+CDNS,CADENCE DESIGN SYSTEMS INC,Information Technology,Equity,United States
+OSIS,OSI SYSTEMS INC,Information Technology,Equity,United States
+MYRG,MYR GROUP INC,Industrials,Equity,United States
+HIFS,HINGHAM INSTITUTION FOR SAVINGS,Financials,Equity,United States
+GOOG,ALPHABET INC CLASS C,Communication,Equity,United States
+GOOGL,ALPHABET INC CLASS A,Communication,Equity,United States
+WDC,WESTERN DIGITAL CORP,Information Technology,Equity,United States
+PLPC,PREFORMED LINE PRODUCTS,Industrials,Equity,United States
+FFIV,F5 INC,Information Technology,Equity,United States
+WTW,WILLIS TOWERS WATSON PLC,Financials,Equity,United States
+PRAX,PRAXIS PRECISION MEDICINES INC,Health Care,Equity,United States
+CME,CME GROUP INC CLASS A,Financials,Equity,United States
+TER,TERADYNE INC,Information Technology,Equity,United States
+LPLA,LPL FINANCIAL HOLDINGS INC,Financials,Equity,United States
+AVGO,BROADCOM INC,Information Technology,Equity,United States
+IDCC,INTERDIGITAL INC,Information Technology,Equity,United States
+CEG,CONSTELLATION ENERGY CORP,Utilities,Equity,United States
+ADI,ANALOG DEVICES INC,Information Technology,Equity,United States
+AEIS,ADVANCED ENERGY INDUSTRIES INC,Information Technology,Equity,United States
+ALNY,ALNYLAM PHARMACEUTICALS INC,Health Care,Equity,United States
+MAR,MARRIOTT INTERNATIONAL INC CLASS A,Consumer Discretionary,Equity,United States
+TLN,TALEN ENERGY CORP,Utilities,Equity,United States
+SITM,SITIME CORP,Information Technology,Equity,United States
+LFUS,LITTELFUSE INC,Information Technology,Equity,United States
+SAIA,SAIA INC,Industrials,Equity,United States
+AMAT,APPLIED MATERIAL INC,Information Technology,Equity,United States
+ROP,ROPER TECHNOLOGIES INC,Information Technology,Equity,United States
+DPZ,DOMINOS PIZZA INC,Consumer Discretionary,Equity,United States
+AMGN,AMGEN INC,Health Care,Equity,United States
+WWD,WOODWARD INC,Industrials,Equity,United States
+MSFT,MICROSOFT CORP,Information Technology,Equity,United States
+MU,MICRON TECHNOLOGY INC,Information Technology,Equity,United States
+TSLA,TESLA INC,Consumer Discretionary,Equity,United States
+CRWD,CROWDSTRIKE HOLDINGS INC CLASS A,Information Technology,Equity,United States
+SNPS,SYNOPSYS INC,Information Technology,Equity,United States
+APP,APPLOVIN CORP CLASS A,Information Technology,Equity,United States
+INTU,INTUIT INC,Information Technology,Equity,United States
+WINA,WINMARK CORP,Consumer Discretionary,Equity,United States
+CACC,CREDIT ACCEPTANCE CORP,Financials,Equity,United States
+STRL,STERLING INFRASTRUCTURE INC,Industrials,Equity,United States
+AXON,AXON ENTERPRISE INC,Industrials,Equity,United States
+VRTX,VERTEX PHARMACEUTICALS INC,Health Care,Equity,United States
+MEDP,MEDPACE HOLDINGS INC,Health Care,Equity,United States
+ISRG,INTUITIVE SURGICAL INC,Health Care,Equity,United States
+CVCO,CAVCO INDUSTRIES INC,Consumer Discretionary,Equity,United States
+IESC,IES INC,Industrials,Equity,United States
+LIN,LINDE PLC,Materials,Equity,United States
+DJCO,DAILY JOURNAL CORP,Information Technology,Equity,United States
+ULTA,ULTA BEAUTY INC,Consumer Discretionary,Equity,United States
+MDGL,MADRIGAL PHARMACEUTICALS INC,Health Care,Equity,United States
+UTHR,UNITED THERAPEUTICS CORP,Health Care,Equity,United States
+META,META PLATFORMS INC CLASS A,Communication,Equity,United States
+POWL,POWELL INDUSTRIES INC,Industrials,Equity,United States
+IDXX,IDEXX LABORATORIES INC,Health Care,Equity,United States
+SNDK,SANDISK CORP,Information Technology,Equity,United States
+LITE,LUMENTUM HOLDINGS INC,Information Technology,Equity,United States
+CASY,CASEYS GENERAL STORES INC,Consumer Staples,Equity,United States
+REGN,REGENERON PHARMACEUTICALS INC,Health Care,Equity,United States
+EQIX,EQUINIX REIT INC,Real Estate,Equity,United States
+COST,COSTCO WHOLESALE CORP,Consumer Staples,Equity,United States
+MPWR,MONOLITHIC POWER SYSTEMS INC,Information Technology,Equity,United States
+KLAC,KLA CORP,Information Technology,Equity,United States
+FCNCA,FIRST CITIZENS BANCSHARES INC CLAS,Financials,Equity,United States
+BKNG,BOOKING HOLDINGS INC,Consumer Discretionary,Equity,United States
+ ,,,,
