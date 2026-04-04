@@ -654,6 +654,10 @@ def layout():
             # 10. Function Key Bar
             function_key_bar("F1"),
         ], style={"padding": "0 12px"}),
+
+        # --- Cell flash animation infrastructure (Task 12) ---
+        dcc.Interval(id="refresh-interval", interval=60 * 1000, n_intervals=0),
+        dcc.Store(id="prev-prices", storage_type="memory"),
     ], style=CONTAINER_STYLE)
 
 
@@ -725,3 +729,11 @@ def rotate_movers(n, gainers_data, losers_data):
         ]
 
     return _make_items(gainers_data, C["green"]), _make_items(losers_data, C["red"])
+
+
+# TODO: implement price comparison callback for cell flash
+# This callback should:
+#   - fire on Input("refresh-interval", "n_intervals")
+#   - compare current prices against State("prev-prices", "data")
+#   - apply flash-green / flash-red CSS classes to changed cells
+#   - update prev-prices store with the new snapshot
