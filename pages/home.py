@@ -75,24 +75,31 @@ def _build_headline_bar():
     })
 
     # --- Row 2: Combined news (stock-specific + market) ---
+    def _shorten(headline, max_len=80):
+        """Truncate headline to max_len chars, cut at last word boundary."""
+        if not headline or len(headline) <= max_len:
+            return headline
+        cut = headline[:max_len].rsplit(" ", 1)[0]
+        return cut + "..."
+
     all_news = []
 
     # Stock-specific news
     for article in getattr(startup, "news_cache", []):
         age = article.get("age", "")
+        title = _shorten(article.get("title", ""))
         all_news.append(
             html.Span([
                 html.Span(article["symbol"], style={"color": C["yellow"], "fontWeight": "bold", "marginRight": "4px"}),
-                html.A(article["title"], href=article["link"], target="_blank",
+                html.A(title, href=article["link"], target="_blank",
                        style={"color": "#6699cc", "textDecoration": "none"}),
-                html.Span(f"  {article['publisher']}", style={"color": "#555"}),
                 html.Span(f"  {age}", style={"color": "#444"}) if age else None,
-            ], style={"marginRight": "40px", "whiteSpace": "nowrap", "fontSize": "10px"})
+            ], style={"marginRight": "30px", "whiteSpace": "nowrap", "fontSize": "10px"})
         )
 
     # General market news (Finnhub)
     for article in getattr(startup, "market_news_cache", []):
-        headline = article.get("headline", article.get("title", ""))
+        headline = _shorten(article.get("headline", article.get("title", "")))
         source = article.get("source", article.get("publisher", ""))
         url = article.get("url", article.get("link", "#"))
         age = article.get("age", "")
@@ -102,15 +109,14 @@ def _build_headline_bar():
                     html.Span("\u25cf ", style={"color": C["cyan"], "fontSize": "6px"}),
                     html.A(headline, href=url, target="_blank",
                            style={"color": "#88aacc", "textDecoration": "none"}),
-                    html.Span(f"  {source}", style={"color": "#555"}),
                     html.Span(f"  {age}", style={"color": "#444"}) if age else None,
-                ], style={"marginRight": "40px", "whiteSpace": "nowrap", "fontSize": "10px"})
+                ], style={"marginRight": "30px", "whiteSpace": "nowrap", "fontSize": "10px"})
             )
 
     news_row = html.Div([
         html.Div(
             html.Div(all_news + all_news, style={
-                "display": "flex", "animation": "marquee 80s linear infinite", "whiteSpace": "nowrap",
+                "display": "flex", "animation": "marquee 40s linear infinite", "whiteSpace": "nowrap",
             }),
             style={"overflow": "hidden", "flex": "1"},
         ),

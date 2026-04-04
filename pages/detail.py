@@ -30,8 +30,8 @@ WINDOW_MAP = {"5Y": 5 * 365, "2Y": 2 * 365, "6M": 182}
 WINDOW_OPTIONS = [{"label": w, "value": w} for w in WINDOW_MAP]
 
 PRICE_PERIODS = {
-    "1D": 1, "5D": 5, "1M": 21, "3M": 63, "YTD": None,
-    "6M": 126, "1Y": 252, "2Y": 504, "5Y": 1260, "MAX": None,
+    "1D": 1, "5D": 5, "1M": 21, "3M": 63, "6M": 126,
+    "YTD": None, "1Y": 252, "2Y": 504, "5Y": 1260, "MAX": None,
 }
 
 OVERLAY_OPTIONS = [
