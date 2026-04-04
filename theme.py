@@ -44,11 +44,18 @@ def header_bar(title, subtitle="", timestamp=""):
     return html.Div(className="bbg-top-header", children=[
         html.Span(title, className="title"),
         html.Span(subtitle, className="subtitle"),
-        dcc.Input(id="search-bar", placeholder="Search ticker...",
-                  style={"backgroundColor": "#000", "color": C["yellow"],
-                         "border": f"1px solid {C['border']}", "padding": "3px 8px",
-                         "fontSize": "11px", "fontFamily": FONT_FAMILY,
-                         "marginRight": "12px", "outline": "none", "width": "140px"}),
+        html.Div([
+            dcc.Input(id="search-bar", placeholder="Search ticker...",
+                      style={"backgroundColor": "#000", "color": C["yellow"],
+                             "border": f"1px solid {C['border']}", "padding": "3px 8px",
+                             "fontSize": "11px", "fontFamily": FONT_FAMILY,
+                             "outline": "none", "width": "200px"}),
+            html.Div(id="search-suggestions", style={
+                "position": "absolute", "top": "100%", "left": 0, "right": 0,
+                "zIndex": 1000, "backgroundColor": "#1a1a1a", "border": "1px solid #444",
+                "display": "none",
+            }),
+        ], style={"position": "relative", "width": "200px", "marginRight": "12px"}),
         html.Span(id="live-clock", children=timestamp, style={"color": C["gray"], "fontSize": "10px"}),
         dcc.Interval(id="clock-interval", interval=1000, n_intervals=0),
     ])

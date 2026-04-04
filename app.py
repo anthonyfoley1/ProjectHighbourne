@@ -39,6 +39,54 @@ def search_navigate(n_submit, value):
 
 
 # ---------------------------------------------------------------------------
+# Company-name search suggestions
+# ---------------------------------------------------------------------------
+
+@app.callback(
+    Output("search-suggestions", "children"),
+    Output("search-suggestions", "style"),
+    Input("search-bar", "value"),
+    prevent_initial_call=True,
+)
+def update_search_suggestions(query):
+    if not query or len(query) < 2:
+        return [], {"display": "none"}
+
+    query_lower = query.lower()
+    matches = []
+
+    for ticker, name in startup.ticker_name.items():
+        if query_lower in ticker.lower() or query_lower in (name or "").lower():
+            matches.append((ticker, name or ""))
+        if len(matches) >= 8:
+            break
+
+    if not matches:
+        return [], {"display": "none"}
+
+    suggestions = []
+    for ticker, name in matches:
+        suggestions.append(
+            html.A(
+                f"{ticker} — {name}",
+                href=f"/detail/{ticker}",
+                style={
+                    "display": "block", "padding": "6px 10px", "color": "#e0e0e0",
+                    "textDecoration": "none", "fontSize": "10px",
+                    "borderBottom": "1px solid #222",
+                },
+            )
+        )
+
+    return suggestions, {
+        "display": "block", "position": "absolute", "top": "100%",
+        "left": 0, "right": 0, "zIndex": 1000,
+        "backgroundColor": "#1a1a1a", "border": "1px solid #444",
+        "maxHeight": "250px", "overflowY": "auto",
+    }
+
+
+# ---------------------------------------------------------------------------
 # Live Clock
 # ---------------------------------------------------------------------------
 from datetime import datetime
