@@ -44,5 +44,8 @@ def display_page(pathname):
         return detail.layout(symbol)
     return home.layout()
 
+import data.startup as startup
+startup.init()
+
 if __name__ == "__main__":
     app.run(debug=True, port=8050)
