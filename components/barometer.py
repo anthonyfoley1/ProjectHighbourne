@@ -5,7 +5,6 @@ import pandas as pd
 import numpy as np
 
 import data.startup as startup
-from data.market_data import fetch_earnings_history
 from data.technicals import compute_rsi, compute_macd, compute_sma, detect_crossovers, macd_signal_label
 from theme import C, FONT_FAMILY
 
@@ -226,7 +225,7 @@ FACTOR_WEIGHTS = {
     "Momentum":    0.15,
     "Short Int":   0.10,
     "Analysts":    0.10,
-    "Earnings":    0.10,
+    "Mkt Risk":    0.10,
 }
 
 
@@ -254,7 +253,7 @@ def compute_barometer(symbol, info=None):
     mom_score, mom_label = _score_momentum(prices)
     si_score, si_label = _score_short_interest(symbol, val_score, tech_score)
     ana_score, ana_label = _score_analysts(info, price_val)
-    earn_score, earn_label = _score_earnings(symbol)
+    mr_score, mr_label = _score_market_risk()
 
     factors = {
         "Valuation":  {"score": val_score,  "label": val_label,  "weight": FACTOR_WEIGHTS["Valuation"]},
@@ -262,7 +261,7 @@ def compute_barometer(symbol, info=None):
         "Momentum":   {"score": mom_score,  "label": mom_label,  "weight": FACTOR_WEIGHTS["Momentum"]},
         "Short Int":  {"score": si_score,   "label": si_label,   "weight": FACTOR_WEIGHTS["Short Int"]},
         "Analysts":   {"score": ana_score,  "label": ana_label,  "weight": FACTOR_WEIGHTS["Analysts"]},
-        "Earnings":   {"score": earn_score, "label": earn_label, "weight": FACTOR_WEIGHTS["Earnings"]},
+        "Mkt Risk":   {"score": mr_score,   "label": mr_label,   "weight": FACTOR_WEIGHTS["Mkt Risk"]},
     }
 
     # Weighted composite
