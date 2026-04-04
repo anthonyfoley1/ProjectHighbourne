@@ -1,6 +1,6 @@
 """Bloomberg-terminal-inspired theme constants and Dash component factories."""
 
-from dash import html
+from dash import html, dcc
 
 # ---------------------------------------------------------------------------
 # Color palette
@@ -93,7 +93,7 @@ def header_bar(title: str, subtitle: str, timestamp: str) -> html.Div:
                     "fontFamily": FONT_FAMILY,
                 },
             ),
-            html.Input(
+            dcc.Input(
                 id="search-bar",
                 placeholder="Search...",
                 style={
