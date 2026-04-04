@@ -5,6 +5,24 @@ from datetime import datetime, timedelta
 
 FINNHUB_API_KEY = "d78hojpr01qsbhvtsqo0d78hojpr01qsbhvtsqog"
 
+# ---------------------------------------------------------------------------
+# Source quality scoring for news prioritization
+# ---------------------------------------------------------------------------
+PREFERRED_SOURCES = ["Reuters", "Bloomberg", "CNBC", "Dow Jones", "WSJ",
+                     "Wall Street Journal", "Financial Times", "Barron's", "MarketWatch"]
+DEPRIORITIZED = ["Yahoo", "Motley Fool", "Seeking Alpha", "Benzinga"]
+
+
+def _source_score(source):
+    source_lower = source.lower()
+    for i, pref in enumerate(PREFERRED_SOURCES):
+        if pref.lower() in source_lower:
+            return 100 - i  # higher = better
+    for dep in DEPRIORITIZED:
+        if dep.lower() in source_lower:
+            return 10
+    return 50  # unknown source gets middle priority
+
 _client = None
 
 def _get_client():
@@ -38,6 +56,7 @@ def fetch_market_news(category="general", limit=20):
                 "age": age,
                 "summary": a.get("summary", ""),
             })
+        results.sort(key=lambda x: _source_score(x.get("source", "")), reverse=True)
         return results
     except Exception as e:
         print(f"  Warning: Finnhub market news failed: {e}")
@@ -71,6 +90,7 @@ def fetch_company_news(symbol, days_back=3, limit=5):
                 "age": age,
                 "summary": a.get("summary", ""),
             })
+        results.sort(key=lambda x: _source_score(x.get("source", "")), reverse=True)
         return results
     except Exception as e:
         print(f"  Warning: Finnhub company news for {symbol} failed: {e}")

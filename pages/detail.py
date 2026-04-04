@@ -615,13 +615,106 @@ def _build_market_data_table(info, prices):
 
 
 def _build_earnings_section(symbol):
-    """Earnings surprise chart section."""
+    """Earnings surprise chart section with expandable data table."""
+    earnings_table = _build_earnings_data_table(symbol)
+
     return html.Div([
         html.Div("EARNINGS SURPRISE", style={"color": C["orange"], "fontSize": "9px", "fontWeight": "bold",
                                               "letterSpacing": "1px", "marginBottom": "4px"}),
         dcc.Graph(id="earnings-chart", figure=_build_earnings_chart(symbol),
                   config={"displayModeBar": False}, style={"height": "300px"}),
+        earnings_table,
     ], style=PANEL_STYLE)
+
+
+def _build_earnings_data_table(symbol):
+    """Build an expandable HTML table with full earnings history."""
+    try:
+        earnings = fetch_earnings_history(symbol)
+    except Exception:
+        earnings = []
+    if not earnings:
+        return html.Div()
+
+    prices = startup.price_cache.get(symbol)
+
+    hdr_style = {
+        "color": C["orange"], "fontSize": "8px", "fontWeight": "bold",
+        "padding": "4px 6px", "textAlign": "right",
+        "borderBottom": f"1px solid {C['orange']}",
+        "fontFamily": FONT_FAMILY,
+    }
+
+    header = html.Tr([
+        html.Th("Quarter", style={**hdr_style, "textAlign": "left"}),
+        html.Th("Date", style=hdr_style),
+        html.Th("EPS Actual", style=hdr_style),
+        html.Th("EPS Est", style=hdr_style),
+        html.Th("Surprise %", style=hdr_style),
+        html.Th("Px Surp (3D)", style=hdr_style),
+        html.Th("Beat/Miss", style=hdr_style),
+    ])
+
+    rows = []
+    for e in reversed(earnings):  # most recent first
+        act = e.get("actual")
+        est = e.get("estimate")
+        surp = e.get("surprise_pct")
+        q_label = e.get("quarter", "")
+
+        beat = act is not None and est is not None and act >= est
+        beat_label = "BEAT" if beat else "MISS" if (act is not None and est is not None) else "--"
+        beat_color = C["green"] if beat else C["red"] if beat_label == "MISS" else C["gray"]
+        row_bg = "rgba(0,255,0,0.04)" if beat else "rgba(255,68,68,0.04)" if beat_label == "MISS" else "transparent"
+
+        # 3-day price reaction
+        px_3d = None
+        if q_label and prices is not None and len(prices) > 5:
+            try:
+                er_date = pd.Timestamp(q_label)
+                mask = prices.index >= er_date
+                if mask.any():
+                    idx_start = prices.index[mask][0]
+                    pos = prices.index.get_loc(idx_start)
+                    if pos + 3 < len(prices):
+                        p_start = float(prices.iloc[pos])
+                        p_end = float(prices.iloc[pos + 3])
+                        px_3d = (p_end - p_start) / p_start * 100
+            except Exception:
+                pass
+
+        cell = {
+            "padding": "3px 6px", "fontSize": "9px",
+            "borderBottom": f"1px solid {C['border']}",
+            "textAlign": "right", "fontFamily": FONT_FAMILY,
+        }
+
+        rows.append(html.Tr([
+            html.Td(q_label, style={**cell, "color": C["white"], "textAlign": "left"}),
+            html.Td(q_label, style={**cell, "color": C["gray"]}),
+            html.Td(f"${act:.2f}" if act is not None else "--", style={**cell, "color": C["white"]}),
+            html.Td(f"${est:.2f}" if est is not None else "--", style={**cell, "color": C["gray"]}),
+            html.Td(f"{surp:+.1f}%" if surp is not None else "--",
+                     style={**cell, "color": C["green"] if surp and surp >= 0 else C["red"] if surp else C["gray"]}),
+            html.Td(f"{px_3d:+.1f}%" if px_3d is not None else "--",
+                     style={**cell, "color": C["green"] if px_3d and px_3d >= 0 else C["red"] if px_3d else C["gray"]}),
+            html.Td(beat_label, style={**cell, "color": beat_color, "fontWeight": "bold"}),
+        ], style={"backgroundColor": row_bg}))
+
+    table = html.Table(
+        [html.Thead(header), html.Tbody(rows)],
+        style={"width": "100%", "borderCollapse": "collapse"},
+    )
+
+    return html.Details([
+        html.Summary("View Data Table", style={
+            "color": C["orange"], "fontSize": "10px", "cursor": "pointer",
+            "fontFamily": FONT_FAMILY, "padding": "6px 0", "fontWeight": "bold",
+        }),
+        html.Div(table, style={
+            "maxHeight": "300px", "overflowY": "auto", "marginTop": "6px",
+        }),
+    ], style={"marginTop": "6px"})
 
 
 def _build_financials_placeholder():
@@ -674,6 +767,7 @@ def _build_rv_controls():
             ],
         ),
         dcc.Graph(id="rv-chart", config={"displayModeBar": False}, style={"height": "320px"}),
+        html.Div(id="rv-sector-attribution"),
     ], style=PANEL_STYLE)
 
 
@@ -1128,6 +1222,7 @@ def update_price_chart(period, overlays, pathname):
 
 @callback(
     Output("rv-chart", "figure"),
+    Output("rv-sector-attribution", "children"),
     Input("ratio-dropdown", "value"),
     Input("window-toggle", "value"),
     State("url", "pathname"),
@@ -1135,12 +1230,12 @@ def update_price_chart(period, overlays, pathname):
 def update_rv_chart(ratio_name, window_name, pathname):
     """Update the RV chart based on ratio and window selection."""
     if not pathname or "/detail/" not in pathname:
-        return empty_fig()
+        return empty_fig(), html.Div()
     symbol = pathname.split("/detail/")[-1].upper()
 
     ticker_obj = startup.universe.get(symbol)
     if ticker_obj is None:
-        return empty_fig(f"{symbol} not found")
+        return empty_fig(f"{symbol} not found"), html.Div()
 
     window_days = WINDOW_MAP.get(window_name)
     try:
@@ -1149,27 +1244,27 @@ def update_rv_chart(ratio_name, window_name, pathname):
         series = pd.Series(dtype=float)
 
     if series is None or len(series) < 10:
-        return empty_fig(f"Insufficient {ratio_name} data for {symbol}")
+        return empty_fig(f"Insufficient {ratio_name} data for {symbol}"), html.Div()
 
     # Filter out negative and extreme values (e.g., EV/EBITDA when EBITDA near zero)
     # Only keep positive values and cap at a reasonable ceiling
     series = series[series > 0]
     if len(series) < 10:
-        return empty_fig(f"Insufficient positive {ratio_name} data for {symbol}")
+        return empty_fig(f"Insufficient positive {ratio_name} data for {symbol}"), html.Div()
 
     # Remove extreme outliers: cap at 99th percentile to avoid chart distortion
     p99 = series.quantile(0.99)
     p01 = series.quantile(0.01)
     series = series[(series <= p99 * 1.5) & (series >= p01 * 0.5)]
     if len(series) < 10:
-        return empty_fig(f"Insufficient {ratio_name} data for {symbol}")
+        return empty_fig(f"Insufficient {ratio_name} data for {symbol}"), html.Div()
 
     # Recompute stats on the cleaned series
     current = float(series.iloc[-1])
     mean = float(series.mean())
     std = float(series.std())
     if std == 0:
-        return empty_fig(f"No variation in {ratio_name} for {symbol}")
+        return empty_fig(f"No variation in {ratio_name} for {symbol}"), html.Div()
 
     fig = go.Figure()
 
@@ -1283,4 +1378,56 @@ def update_rv_chart(ratio_name, window_name, pathname):
             margin=dict(l=55, r=80, t=40, b=40),
         ),
     )
-    return fig
+
+    # --- Sector attribution ---
+    sector_attr = html.Div()
+    try:
+        sector = startup.ticker_sector.get(symbol, "Unknown")
+        sector_medians_df = startup.universe.sector_medians(ratio_name, window_name)
+        if not sector_medians_df.empty and sector in sector_medians_df["Sector"].values:
+            sector_row = sector_medians_df[sector_medians_df["Sector"] == sector].iloc[0]
+            sector_median = float(sector_row["Median"])
+
+            premium_discount = (current - sector_median) / sector_median * 100 if sector_median != 0 else 0
+            pd_label = "premium" if premium_discount > 0 else "discount"
+            pd_color = C["red"] if premium_discount > 0 else C["green"]
+
+            # Attribution: how much of the stock's deviation from its own mean is
+            # sector-wide vs stock-specific
+            stock_dev = current - mean
+            sector_dev = sector_median - mean
+            if abs(stock_dev) > 0.001:
+                sector_pct = min(100, max(0, abs(sector_dev / stock_dev) * 100))
+                stock_pct = 100 - sector_pct
+            else:
+                sector_pct = 0
+                stock_pct = 0
+
+            attr_style = {
+                "display": "flex", "gap": "16px", "alignItems": "center",
+                "marginTop": "6px", "padding": "4px 8px",
+                "borderTop": f"1px solid {C['border']}",
+            }
+            label_s = {"color": C["orange"], "fontSize": "9px", "fontWeight": "bold",
+                       "fontFamily": FONT_FAMILY, "textTransform": "uppercase"}
+            value_s = {"color": C["white"], "fontSize": "10px", "fontFamily": FONT_FAMILY,
+                       "marginLeft": "4px"}
+
+            sector_attr = html.Div([
+                html.Span([
+                    html.Span(f"Sector {ratio_name}: ", style=label_s),
+                    html.Span(f"{sector_median:.1f}x", style=value_s),
+                ]),
+                html.Span([
+                    html.Span("vs Sector: ", style=label_s),
+                    html.Span(f"{premium_discount:+.1f}% {pd_label}", style={**value_s, "color": pd_color}),
+                ]),
+                html.Span([
+                    html.Span("Attribution: ", style=label_s),
+                    html.Span(f"Sector {sector_pct:.0f}% / Stock {stock_pct:.0f}%", style=value_s),
+                ]),
+            ], style=attr_style)
+    except Exception:
+        pass
+
+    return fig, sector_attr
