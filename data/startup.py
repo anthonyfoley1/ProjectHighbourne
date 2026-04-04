@@ -60,7 +60,7 @@ def init():
     # 3. Compute valuation ratios
     # ------------------------------------------------------------------
     print("Computing ratios...")
-    ratio_dfs = compute_all_ratios(mktcap)
+    ratio_dfs = compute_all_ratios(mktcap, ticker_list=tickers_df["Ticker"].tolist())
 
     # ------------------------------------------------------------------
     # 4. Build Universe
