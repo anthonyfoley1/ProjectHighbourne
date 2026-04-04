@@ -40,7 +40,7 @@ FLASH_CSS = ""  # Now in assets/style.css
 # ---------------------------------------------------------------------------
 
 def header_bar(title, subtitle="", timestamp=""):
-    """Top header bar with title, subtitle, search input, and timestamp."""
+    """Top header bar with title, subtitle, search input, and live clock."""
     return html.Div(className="bbg-top-header", children=[
         html.Span(title, className="title"),
         html.Span(subtitle, className="subtitle"),
@@ -49,7 +49,8 @@ def header_bar(title, subtitle="", timestamp=""):
                          "border": f"1px solid {C['border']}", "padding": "3px 8px",
                          "fontSize": "11px", "fontFamily": FONT_FAMILY,
                          "marginRight": "12px", "outline": "none", "width": "140px"}),
-        html.Span(timestamp, style={"color": C["gray"], "fontSize": "10px"}),
+        html.Span(id="live-clock", children=timestamp, style={"color": C["gray"], "fontSize": "10px"}),
+        dcc.Interval(id="clock-interval", interval=1000, n_intervals=0),
     ])
 
 
