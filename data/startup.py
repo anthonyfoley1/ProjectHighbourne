@@ -11,7 +11,7 @@ from data.technicals import (
     macd_signal_label, ma_trend_label,
 )
 from data.risk import (
-    fetch_vix, fetch_fear_greed, compute_breadth_stats,
+    fetch_vix, fetch_fear_greed, compute_fear_greed, compute_breadth_stats,
     compute_new_highs_lows, compute_advancers_decliners, compute_risk_verdict,
 )
 from data.sectors import (
@@ -31,13 +31,14 @@ sector_data: dict = {}
 price_cache: dict = {}
 ticker_info_cache: dict = {}
 ticker_sector: dict = {}
+ticker_name: dict = {}
 close_prices: pd.DataFrame = pd.DataFrame()
 
 
 def init():
     """Load all data, build Universe, compute technicals / screener / risk."""
     global universe, screener_df, risk_stats, sector_data
-    global price_cache, ticker_info_cache, ticker_sector, close_prices
+    global price_cache, ticker_info_cache, ticker_sector, ticker_name, close_prices
 
     # ------------------------------------------------------------------
     # 1. Load tickers
@@ -45,6 +46,7 @@ def init():
     print("Loading tickers...")
     tickers_df = load_tickers()
     ticker_sector = dict(zip(tickers_df["Ticker"], tickers_df["Sector"]))
+    ticker_name = dict(zip(tickers_df["Ticker"], tickers_df["Name"]))
 
     # ------------------------------------------------------------------
     # 2. Load market data (SimFin)
@@ -143,13 +145,14 @@ def init():
 
         screener_rows.append({
             "symbol": sym,
+            "name": ticker_name.get(sym, ""),
             "sector": ticker_sector.get(sym, "Unknown"),
             "rv_sig": best_ratio,
             "z_score": round(best_z, 2),
             "rsi": round(float(current_rsi), 1),
             "macd": round(float(current_macd), 4),
-            "ret_1d": round(ret_1d, 4),
-            "ret_3d": round(ret_3d, 4),
+            "ret_1d": round(ret_1d * 100, 2),
+            "ret_3d": round(ret_3d * 100, 2),
             "signal": signal,
             "alert_type": alert["type"],
             "alert_reason": alert["reason"],
@@ -160,7 +163,7 @@ def init():
             "price": round(float(current_price), 2),
         })
 
-    screener_df = pd.DataFrame(screener_rows)
+    screener_df = pd.DataFrame(screener_rows).sort_values("z_score", ascending=True)
     print(f"  Screener built: {len(screener_df)} tickers")
 
     # ------------------------------------------------------------------
@@ -181,6 +184,11 @@ def init():
     breadth = compute_breadth_stats(above_200sma, above_50sma, rsi_values)
     adv, dec, unch = compute_advancers_decliners(returns_1d)
     new_highs, new_lows = compute_new_highs_lows(price_cache)
+
+    # If CNN scrape failed, compute our own fear/greed from breadth data
+    if fear_greed.get("value") is None:
+        fear_greed = compute_fear_greed(breadth, vix.get("value"), new_highs, new_lows)
+        print(f"  Computed Fear & Greed: {fear_greed['value']} ({fear_greed['label']})")
 
     risk_input = {
         "vix": vix.get("value") or 0,
