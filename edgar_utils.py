@@ -137,9 +137,67 @@ def _reconcile_quarterly_with_annual(quarterly_entries, annual_entries):
     return result
 
 
+# Alternative XBRL concept names — try primary first, then alternatives
+CONCEPT_ALTERNATIVES = {
+    "Revenues": [
+        "RevenueFromContractWithCustomerExcludingAssessedTax",
+        "SalesRevenueNet",
+        "RevenueFromContractWithCustomerIncludingAssessedTax",
+    ],
+    "DepreciationDepletionAndAmortization": [
+        "DepreciationAndAmortization",
+        "Depreciation",
+    ],
+    "LongTermDebt": [
+        "LongTermDebtNoncurrent",
+    ],
+    "CashAndCashEquivalentsAtCarryingValue": [
+        "CashCashEquivalentsAndShortTermInvestments",
+    ],
+    "StockholdersEquity": [
+        "StockholdersEquityIncludingPortionAttributableToNoncontrollingInterest",
+    ],
+}
+
+
+def _fetch_single_concept(ticker, cik, concept, concept_type):
+    """Fetch a single concept for a single ticker from EDGAR. Returns {date: value} or {}."""
+    url = f"https://data.sec.gov/api/xbrl/companyconcept/CIK{cik}/us-gaap/{concept}.json"
+    try:
+        resp = requests.get(url, headers=SEC_HEADERS)
+        if resp.status_code != 200:
+            return {}
+        data = resp.json()
+        entries = data.get("units", {}).get("USD", [])
+        if concept_type == "duration":
+            quarterly_entries = []
+            annual_entries = []
+            for e in entries:
+                if e["form"] in ("10-Q", "10-K") and "frame" in e and "start" in e:
+                    frame = e["frame"]
+                    if "Q" in frame and not frame.endswith("I"):
+                        quarterly_entries.append({"start": e["start"], "end": e["end"], "val": e["val"]})
+                    elif frame.startswith("CY") and "Q" not in frame and not frame.endswith("I"):
+                        annual_entries.append({"start": e["start"], "end": e["end"], "val": e["val"]})
+            return _reconcile_quarterly_with_annual(quarterly_entries, annual_entries)
+        else:  # instant
+            by_date = {}
+            for e in entries:
+                if e["form"] in ("10-Q", "10-K") and "frame" in e:
+                    frame = e["frame"]
+                    if frame.endswith("I"):
+                        by_date[e["end"]] = e["val"]
+            return by_date
+    except Exception:
+        return {}
+
+
 def fetch_concept(tickers, concept, cache_file, cik_lookup, concept_type="instant"):
     """
     Fetch a US-GAAP concept from EDGAR for a list of tickers.
+
+    Tries the primary concept first. If a ticker's data is empty or stale
+    (latest entry > 2 years old), tries alternative XBRL concept names.
 
     For duration concepts (income statement), fetches both quarterly and annual
     frames. Uses audited annual (10-K) figures to reconcile Q4 values:
@@ -167,6 +225,7 @@ def fetch_concept(tickers, concept, cache_file, cik_lookup, concept_type="instan
 
     print(f"[{concept}] Total: {len(tickers)} | Cached: {cached} | No CIK: {no_cik} | To fetch: {len(remaining)}")
 
+    # --- Pass 1: Fetch primary concept for uncached tickers ---
     batch_size = 50
     for i in range(0, len(remaining), batch_size):
         batch = remaining[i:i + batch_size]
@@ -175,44 +234,52 @@ def fetch_concept(tickers, concept, cache_file, cik_lookup, concept_type="instan
         got = 0
         for t in batch:
             cik = cik_lookup[t]
-            url = f"https://data.sec.gov/api/xbrl/companyconcept/CIK{cik}/us-gaap/{concept}.json"
-            try:
-                resp = requests.get(url, headers=SEC_HEADERS)
-                if resp.status_code == 200:
-                    data = resp.json()
-                    entries = data.get("units", {}).get("USD", [])
-                    by_date = {}
-                    if concept_type == "duration":
-                        quarterly_entries = []
-                        annual_entries = []
-                        for e in entries:
-                            if e["form"] in ("10-Q", "10-K") and "frame" in e and "start" in e:
-                                frame = e["frame"]
-                                if "Q" in frame and not frame.endswith("I"):
-                                    quarterly_entries.append({"start": e["start"], "end": e["end"], "val": e["val"]})
-                                elif frame.startswith("CY") and "Q" not in frame and not frame.endswith("I"):
-                                    annual_entries.append({"start": e["start"], "end": e["end"], "val": e["val"]})
-                        by_date = _reconcile_quarterly_with_annual(quarterly_entries, annual_entries)
-                    else:  # instant
-                        for e in entries:
-                            if e["form"] in ("10-Q", "10-K") and "frame" in e:
-                                frame = e["frame"]
-                                if frame.endswith("I"):
-                                    by_date[e["end"]] = e["val"]
-
-                    cache[t] = by_date
-                    if by_date:
-                        got += 1
-                else:
-                    cache[t] = {}
-            except Exception:
-                cache[t] = {}
-
+            by_date = _fetch_single_concept(t, cik, concept, concept_type)
+            cache[t] = by_date
+            if by_date:
+                got += 1
             time.sleep(0.125)
 
         with open(cache_file, "w") as f:
             json.dump(cache, f)
         print(f"got {got}/{len(batch)}")
+
+    # --- Pass 2: Try alternative concepts for empty/stale tickers ---
+    alternatives = CONCEPT_ALTERNATIVES.get(concept, [])
+    if alternatives:
+        from datetime import datetime as dt
+        cutoff = (dt.now() - pd.Timedelta(days=730)).strftime("%Y-%m-%d")  # 2 years ago
+
+        stale_tickers = []
+        for t in tickers:
+            if t not in cik_lookup:
+                continue
+            data = cache.get(t, {})
+            if not data:
+                stale_tickers.append(t)
+            else:
+                latest = max(data.keys()) if data else ""
+                if latest < cutoff:
+                    stale_tickers.append(t)
+
+        if stale_tickers:
+            print(f"  Trying alternatives for {len(stale_tickers)} stale/empty tickers...")
+            fixed = 0
+            for t in stale_tickers:
+                cik = cik_lookup[t]
+                for alt_concept in alternatives:
+                    by_date = _fetch_single_concept(t, cik, alt_concept, concept_type)
+                    if by_date:
+                        latest = max(by_date.keys())
+                        if latest >= cutoff:
+                            cache[t] = by_date
+                            fixed += 1
+                            break
+                    time.sleep(0.125)
+            if fixed:
+                print(f"    -> fixed {fixed} tickers with alternative concepts")
+                with open(cache_file, "w") as f:
+                    json.dump(cache, f)
 
     has_data = sum(1 for t in tickers if cache.get(t))
     print(f"  Result: {has_data}/{len(tickers)} tickers with data\n")
