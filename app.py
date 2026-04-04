@@ -12,26 +12,19 @@ app = dash.Dash(__name__, suppress_callback_exceptions=True)
 # Dark-theme CSS (injected into index_string)
 # ---------------------------------------------------------------------------
 _DARK_DROPDOWN_CSS = """
-/* Force ALL dropdowns dark — nuclear approach */
-.dash-dropdown * { color: #e0e0e0 !important; }
-.dash-dropdown div[class*="control"] { background-color: #1a1a1a !important; border-color: #444 !important; }
-.dash-dropdown div[class*="menu"] { background-color: #1a1a1a !important; border-color: #444 !important; }
-.dash-dropdown div[class*="option"] { background-color: #1a1a1a !important; }
-.dash-dropdown div[class*="option"]:hover { background-color: #333 !important; }
-.dash-dropdown div[class*="singleValue"] { color: #e0e0e0 !important; }
-.dash-dropdown div[class*="placeholder"] { color: #777 !important; }
-.dash-dropdown input { color: #e0e0e0 !important; background: transparent !important; }
-.dash-dropdown div[class*="indicatorSeparator"] { background-color: #444 !important; }
-.dash-dropdown svg { fill: #999 !important; }
-/* Also catch the search input inside dropdown */
-.dash-dropdown div[class*="Input"] input { color: #e0e0e0 !important; background: transparent !important; }
-/* Virtualized select (older Dash) */
-.Select-control { background-color: #1a1a1a !important; border-color: #444 !important; }
-.Select-menu-outer { background-color: #1a1a1a !important; }
-.Select-option { background-color: #1a1a1a !important; color: #e0e0e0 !important; }
-.Select-option.is-focused { background-color: #333 !important; }
-.Select-value-label { color: #e0e0e0 !important; }
-.Select-input input { color: #e0e0e0 !important; }
+/* Global dark dropdown — targets all react-select elements regardless of class hash */
+div[class*="-control"] { background-color: #1a1a1a !important; border-color: #444 !important; }
+div[class*="-menu"] { background-color: #1a1a1a !important; border-color: #444 !important; z-index: 1000 !important; }
+div[class*="-menuList"] { background-color: #1a1a1a !important; }
+div[class*="-option"] { background-color: #1a1a1a !important; color: #e0e0e0 !important; }
+div[class*="-option"]:hover { background-color: #333 !important; }
+div[class*="-singleValue"] { color: #e0e0e0 !important; }
+div[class*="-placeholder"] { color: #777 !important; }
+div[class*="-indicatorSeparator"] { background-color: #444 !important; }
+div[class*="-indicatorContainer"] svg { fill: #999 !important; color: #999 !important; }
+div[class*="-input"] input { color: #e0e0e0 !important; }
+/* Plotly hover labels — dark theme */
+.hoverlabel { background-color: #1a1a1a !important; }
 """
 
 app.index_string = '''
@@ -99,4 +92,4 @@ import data.startup as startup
 startup.init()
 
 if __name__ == "__main__":
-    app.run(debug=True, use_reloader=False, port=8050)
+    app.run(debug=False, port=8050)

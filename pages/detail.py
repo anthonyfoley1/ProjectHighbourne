@@ -517,13 +517,13 @@ def _build_earnings_chart(symbol):
     estimates = [e.get("estimate") for e in earnings]
     prices = startup.price_cache.get(symbol)
 
-    # Estimate markers (hollow circles)
+    # Estimate markers (hollow circles) — hover disabled, shown via Actual hover
     fig.add_trace(go.Scatter(
         x=quarters, y=estimates, mode="markers",
         marker=dict(color="rgba(0,0,0,0)", size=14,
                     line=dict(color=C["gray"], width=2.5)),
         name="Estimate",
-        hovertemplate="Estimate: $%{y:.2f}<extra></extra>",
+        hoverinfo="skip",
     ))
 
     # Actual markers (filled, green=beat, red=miss)
@@ -548,7 +548,7 @@ def _build_earnings_chart(symbol):
             lines.append(f"Estimate: ${est:.2f}")
         if surp is not None:
             arrow = "▲" if surp >= 0 else "▼"
-            lines.append(f"Surprise: {arrow} {surp:+.1f}%")
+            lines.append(f"Px Surprise: {arrow} {surp:+.1f}%")
 
         # 3-day price reaction
         q_date = e.get("quarter")
@@ -574,8 +574,8 @@ def _build_earnings_chart(symbol):
         x=quarters, y=actuals, mode="markers",
         marker=dict(color=colors, size=sizes, line=dict(color="#0a0a0a", width=1)),
         name="Actual",
-        hovertemplate="%{customdata}<extra></extra>",
-        customdata=hover_texts,
+        text=hover_texts,
+        hoverinfo="text",
     ))
 
     # Connect estimates to actuals with thin lines
@@ -598,6 +598,9 @@ def _build_earnings_chart(symbol):
                        title=dict(text="EPS ($)", font=dict(size=10, color=C["gray"]))),
             height=280,
             margin=dict(l=60, r=20, t=40, b=40),
+            hovermode="closest",
+            hoverlabel=dict(bgcolor="#1a1a1a", bordercolor=C["border"],
+                            font=dict(color=C["white"], family=FONT_FAMILY, size=11)),
             showlegend=True,
             legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="left", x=0,
                         font=dict(size=9, color=C["gray"])),
@@ -863,17 +866,31 @@ def update_rv_chart(ratio_name, window_name, pathname):
     window_days = WINDOW_MAP.get(window_name)
     try:
         series = ticker_obj.window_series(ratio_name, window_days)
-        st = ticker_obj.stats(ratio_name, window_days)
     except Exception:
         series = pd.Series(dtype=float)
-        st = None
 
-    if st is None or series is None or len(series) < 10:
+    if series is None or len(series) < 10:
         return empty_fig(f"Insufficient {ratio_name} data for {symbol}")
 
-    mean = st["mean"]
-    std = st["std"]
-    current = st["current"]
+    # Filter out negative and extreme values (e.g., EV/EBITDA when EBITDA near zero)
+    # Only keep positive values and cap at a reasonable ceiling
+    series = series[series > 0]
+    if len(series) < 10:
+        return empty_fig(f"Insufficient positive {ratio_name} data for {symbol}")
+
+    # Remove extreme outliers: cap at 99th percentile to avoid chart distortion
+    p99 = series.quantile(0.99)
+    p01 = series.quantile(0.01)
+    series = series[(series <= p99 * 1.5) & (series >= p01 * 0.5)]
+    if len(series) < 10:
+        return empty_fig(f"Insufficient {ratio_name} data for {symbol}")
+
+    # Recompute stats on the cleaned series
+    current = float(series.iloc[-1])
+    mean = float(series.mean())
+    std = float(series.std())
+    if std == 0:
+        return empty_fig(f"No variation in {ratio_name} for {symbol}")
 
     fig = go.Figure()
 
@@ -971,9 +988,9 @@ def update_rv_chart(ratio_name, window_name, pathname):
             showlegend=False,
         ))
 
-    # Y-axis range
-    y_min = max(0, min(series.min() * 0.9, mean - 2.5 * std))
-    y_max = max(series.max(), mean + 2.5 * std) * 1.05
+    # Y-axis range — use the cleaned series range, padded slightly
+    y_min = max(0, series.min() * 0.9)
+    y_max = series.max() * 1.1
 
     fig.update_layout(
         **make_chart_layout(
