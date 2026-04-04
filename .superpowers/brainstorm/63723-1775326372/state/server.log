@@ -1,0 +1,6 @@
+{"type":"server-started","port":53105,"host":"127.0.0.1","url_host":"localhost","url":"http://localhost:53105","screen_dir":"/Users/anthonyfoley/Documents/CPSC_Courses/ProjectHighbourne/.superpowers/brainstorm/63723-1775326372/content","state_dir":"/Users/anthonyfoley/Documents/CPSC_Courses/ProjectHighbourne/.superpowers/brainstorm/63723-1775326372/state"}
+{"type":"screen-added","file":"/Users/anthonyfoley/Documents/CPSC_Courses/ProjectHighbourne/.superpowers/brainstorm/63723-1775326372/content/01-price-chart-mockup.html"}
+{"type":"screen-updated","file":"/Users/anthonyfoley/Documents/CPSC_Courses/ProjectHighbourne/.superpowers/brainstorm/63723-1775326372/content/01-price-chart-mockup.html"}
+{"type":"screen-updated","file":"/Users/anthonyfoley/Documents/CPSC_Courses/ProjectHighbourne/.superpowers/brainstorm/63723-1775326372/content/01-price-chart-mockup.html"}
+{"type":"screen-updated","file":"/Users/anthonyfoley/Documents/CPSC_Courses/ProjectHighbourne/.superpowers/brainstorm/63723-1775326372/content/01-price-chart-mockup.html"}
+{"type":"server-stopped","reason":"idle timeout"}

@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:#000; color:#e0e0e0; font-family:'Lucida Console','Monaco','Courier New',monospace; font-size:11px; padding:16px; }
+  .container { max-width:900px; margin:0 auto; }
+
+  .chart-panel { background:#0a0a0a; border:1px solid #333; margin-bottom:2px; }
+  .chart-header { background:#1a1a1a; padding:6px 10px; border-bottom:1px solid #333; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:6px; }
+  .chart-title { color:#ff8c00; font-weight:bold; font-size:12px; }
+
+  .time-btns { display:flex; gap:2px; }
+  .tb { background:#000; color:#999; padding:2px 6px; border:1px solid #444; font-size:9px; cursor:pointer; font-family:inherit; }
+  .tb.active { background:#ff8c00; color:#000; font-weight:bold; border-color:#ff8c00; }
+
+  /* Dropdown menu */
+  .dropdown-container { position:relative; }
+  .dropdown-btn {
+    background:#1a1a1a; color:#ff8c00; border:1px solid #444;
+    padding:3px 8px; font-size:9px; cursor:pointer; font-family:inherit;
+    display:flex; align-items:center; gap:4px;
+  }
+  .dropdown-btn:hover { background:#222; }
+  .dropdown-menu {
+    position:absolute; top:100%; right:0; z-index:100;
+    background:#1a1a1a; border:1px solid #444; min-width:200px;
+    padding:6px 0; margin-top:2px; border-radius:2px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+  }
+  .dropdown-item {
+    padding:5px 12px; display:flex; align-items:center; gap:8px;
+    cursor:pointer; font-size:10px; color:#e0e0e0;
+    transition: background 0.1s;
+  }
+  .dropdown-item:hover { background:#333; }
+  .dropdown-item input[type="checkbox"] { accent-color:#ff8c00; }
+  .dropdown-item .desc { color:#666; font-size:8px; margin-left:auto; }
+  .dropdown-divider { border-top:1px solid #333; margin:4px 0; }
+</style>
+</head>
+<body>
+<div class="container">
+
+<h2 style="color:#ff8c00; margin-bottom:6px;">Enhanced Price Chart v2</h2>
+<p style="color:#666; margin-bottom:12px;">Dropdown overlay selector (like Capital IQ). SMAs auto-adapt to time period.</p>
+
+<!-- PRICE CHART -->
+<div class="chart-panel">
+  <div class="chart-header">
+    <span class="chart-title">MSFT STOCK PRICE</span>
+
+    <div style="display:flex; align-items:center; gap:8px;">
+      <!-- Studies dropdown -->
+      <div class="dropdown-container">
+        <div class="dropdown-btn" onclick="this.nextElementSibling.style.display = this.nextElementSibling.style.display === 'block' ? 'none' : 'block'">
+          <span style="font-size:12px;">fx</span> Studies &#9662;
+        </div>
+        <div class="dropdown-menu" style="display:block;">
+          <label class="dropdown-item">
+            <input type="checkbox" checked>
+            <span>Bollinger Bands</span>
+            <span class="desc">20, 2σ</span>
+          </label>
+          <label class="dropdown-item">
+            <input type="checkbox" checked>
+            <span>Moving Averages</span>
+            <span class="desc">50 / 200</span>
+          </label>
+          <label class="dropdown-item">
+            <input type="checkbox">
+            <span>MA Crossovers</span>
+            <span class="desc">GC / DC</span>
+          </label>
+          <div class="dropdown-divider"></div>
+          <label class="dropdown-item">
+            <input type="checkbox">
+            <span>Volume</span>
+            <span class="desc">bars</span>
+          </label>
+          <label class="dropdown-item">
+            <input type="checkbox">
+            <span>VWAP</span>
+            <span class="desc">intraday</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Time periods -->
+      <div class="time-btns">
+        <span class="tb">1D</span>
+        <span class="tb">5D</span>
+        <span class="tb">1M</span>
+        <span class="tb">3M</span>
+        <span class="tb">YTD</span>
+        <span class="tb">6M</span>
+        <span class="tb active">1Y</span>
+        <span class="tb">2Y</span>
+        <span class="tb">5Y</span>
+        <span class="tb">MAX</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Chart body -->
+  <div style="position:relative; height:360px; padding:10px 60px 30px 50px;">
+
+    <!-- Y-axis -->
+    <div style="position:absolute; left:8px; top:10%; font-size:9px; color:#666;">$550</div>
+    <div style="position:absolute; left:8px; top:28%; font-size:9px; color:#666;">$500</div>
+    <div style="position:absolute; left:8px; top:46%; font-size:9px; color:#666;">$450</div>
+    <div style="position:absolute; left:8px; top:64%; font-size:9px; color:#666;">$400</div>
+    <div style="position:absolute; left:8px; top:82%; font-size:9px; color:#666;">$350</div>
+
+    <!-- Grid -->
+    <div style="position:absolute; left:45px; right:55px; top:10%; border-top:1px solid #1a1a1a;"></div>
+    <div style="position:absolute; left:45px; right:55px; top:28%; border-top:1px solid #1a1a1a;"></div>
+    <div style="position:absolute; left:45px; right:55px; top:46%; border-top:1px solid #1a1a1a;"></div>
+    <div style="position:absolute; left:45px; right:55px; top:64%; border-top:1px solid #1a1a1a;"></div>
+    <div style="position:absolute; left:45px; right:55px; top:82%; border-top:1px solid #1a1a1a;"></div>
+
+    <svg style="position:absolute; left:45px; right:55px; top:10px; bottom:25px; width:calc(100% - 100px); height:calc(100% - 35px);" viewBox="0 0 800 330" preserveAspectRatio="none">
+
+      <!-- Bollinger Band fill -->
+      <polygon points="
+        0,175 40,165 80,150 120,125 160,95 200,65 240,45 280,35 320,30 360,45
+        400,60 440,75 480,95 520,110 560,125 600,135 640,150 680,165 720,185 760,205 800,225
+        800,285 760,270 720,255 680,240 640,225 600,210 560,200 520,185 480,170 440,155
+        400,140 360,125 320,110 280,115 240,125 200,145 160,175 120,205 80,230 40,245 0,255
+      " fill="rgba(0,188,212,0.06)" stroke="none"/>
+
+      <!-- Upper BBand -->
+      <polyline points="0,175 40,165 80,150 120,125 160,95 200,65 240,45 280,35 320,30 360,45 400,60 440,75 480,95 520,110 560,125 600,135 640,150 680,165 720,185 760,205 800,225"
+        fill="none" stroke="rgba(0,188,212,0.3)" stroke-width="1" stroke-dasharray="4,3"/>
+
+      <!-- Lower BBand -->
+      <polyline points="0,255 40,245 80,230 120,205 160,175 200,145 240,125 280,115 320,110 360,125 400,140 440,155 480,170 520,185 560,200 600,210 640,225 680,240 720,255 760,270 800,285"
+        fill="none" stroke="rgba(0,188,212,0.3)" stroke-width="1" stroke-dasharray="4,3"/>
+
+      <!-- 200 SMA -->
+      <polyline points="0,225 40,220 80,213 120,203 160,190 200,175 240,163 280,153 320,145 360,143 400,145 440,150 480,157 520,165 560,173 600,180 640,187 680,193 720,200 760,207 800,213"
+        fill="none" stroke="#ff4444" stroke-width="1.2" stroke-dasharray="6,3"/>
+
+      <!-- 50 SMA -->
+      <polyline points="0,230 40,220 80,205 120,183 160,155 200,125 240,103 280,90 320,83 360,90 400,105 440,123 480,143 520,160 560,175 600,187 640,200 680,213 720,227 760,243 800,257"
+        fill="none" stroke="#ff8c00" stroke-width="1.2" stroke-dasharray="6,3"/>
+
+      <!-- Price area fill -->
+      <polygon points="
+        0,235 40,230 80,215 120,190 160,150 200,110 240,80 280,55 320,40 360,75
+        400,90 440,105 480,130 520,150 560,170 600,180 640,195 680,215 720,240 760,260 800,275
+        800,330 0,330
+      " fill="rgba(0,188,212,0.12)" stroke="none"/>
+
+      <!-- Price line -->
+      <polyline points="0,235 40,230 80,215 120,190 160,150 200,110 240,80 280,55 320,40 360,75 400,90 440,105 480,130 520,150 560,170 600,180 640,195 680,215 720,240 760,260 800,275"
+        fill="none" stroke="#00bcd4" stroke-width="2"/>
+    </svg>
+
+    <!-- Current price badge -->
+    <div style="position:absolute; right:0; top:77%; background:#00bcd4; color:#000; padding:2px 6px; font-size:10px; font-weight:bold; border-radius:2px;">$373.46</div>
+
+    <!-- Legend -->
+    <div style="position:absolute; top:8px; left:50px; display:flex; gap:12px; font-size:9px;">
+      <span><span style="color:#00bcd4;">━</span> Price</span>
+      <span><span style="color:#ff8c00;">╌</span> 50 SMA</span>
+      <span><span style="color:#ff4444;">╌</span> 200 SMA</span>
+      <span><span style="color:rgba(0,188,212,0.4);">╌</span> BBands</span>
+    </div>
+
+    <!-- X-axis -->
+    <div style="position:absolute; bottom:5px; left:45px; right:55px; display:flex; justify-content:space-between; font-size:8px; color:#555;">
+      <span>Apr 25</span><span>Jun</span><span>Aug</span><span>Oct</span><span>Dec</span><span>Feb 26</span><span>Apr</span>
+    </div>
+  </div>
+</div>
+
+<!-- Adaptive SMA table -->
+<div style="margin-top:16px; padding:10px; background:#111; border:1px solid #333;">
+  <div style="color:#ff8c00; font-size:10px; font-weight:bold; margin-bottom:6px;">ADAPTIVE OVERLAYS BY TIME PERIOD</div>
+  <table style="width:100%; border-collapse:collapse; font-size:9px;">
+    <tr style="border-bottom:1px solid #333;">
+      <th style="text-align:left; padding:3px 6px; color:#ff8c00;">PERIOD</th>
+      <th style="text-align:center; padding:3px 6px; color:#ff8c00;">SHORT SMA</th>
+      <th style="text-align:center; padding:3px 6px; color:#ff8c00;">LONG SMA</th>
+      <th style="text-align:center; padding:3px 6px; color:#ff8c00;">BBAND PERIOD</th>
+      <th style="text-align:center; padding:3px 6px; color:#ff8c00;">BBAND σ</th>
+    </tr>
+    <tr style="border-bottom:1px solid #222;"><td style="padding:3px 6px;">1D — 5D</td><td style="text-align:center;">5</td><td style="text-align:center;">20</td><td style="text-align:center;">10</td><td style="text-align:center;">1.5</td></tr>
+    <tr style="border-bottom:1px solid #222;"><td style="padding:3px 6px;">1M</td><td style="text-align:center;">10</td><td style="text-align:center;">30</td><td style="text-align:center;">10</td><td style="text-align:center;">1.5</td></tr>
+    <tr style="border-bottom:1px solid #222;"><td style="padding:3px 6px;">3M</td><td style="text-align:center;">20</td><td style="text-align:center;">50</td><td style="text-align:center;">20</td><td style="text-align:center;">2.0</td></tr>
+    <tr style="border-bottom:1px solid #222; background:#1a1a00;"><td style="padding:3px 6px; color:#ffff00;">YTD — 1Y (selected)</td><td style="text-align:center; color:#ffff00;">50</td><td style="text-align:center; color:#ffff00;">200</td><td style="text-align:center; color:#ffff00;">20</td><td style="text-align:center; color:#ffff00;">2.0</td></tr>
+    <tr style="border-bottom:1px solid #222;"><td style="padding:3px 6px;">2Y — 5Y</td><td style="text-align:center;">100</td><td style="text-align:center;">200</td><td style="text-align:center;">50</td><td style="text-align:center;">2.0</td></tr>
+    <tr><td style="padding:3px 6px;">MAX</td><td style="text-align:center;">200</td><td style="text-align:center;">500</td><td style="text-align:center;">100</td><td style="text-align:center;">2.5</td></tr>
+  </table>
+  <div style="color:#555; font-size:8px; margin-top:4px;">Industry standard: 20-period BBand with 2σ. Shorter periods for shorter windows to avoid oversmoothing.</div>
+</div>
+
+</div>
+</body>
+</html>

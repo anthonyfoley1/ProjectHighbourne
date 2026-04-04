@@ -104,6 +104,12 @@ def fetch_ticker_info(symbol: str) -> dict:
     except Exception:
         next_earnings = None
 
+    # Forward estimates
+    forward_eps = info.get("forwardEps")
+    forward_pe = info.get("forwardPE")
+    earnings_growth = info.get("earningsGrowth")
+    revenue_growth = info.get("revenueGrowth")
+
     return {
         "description": info.get("longBusinessSummary"),
         "sector": info.get("sector"),
@@ -126,6 +132,18 @@ def fetch_ticker_info(symbol: str) -> dict:
         "52w_low": info.get("fiftyTwoWeekLow"),
         "next_earnings": next_earnings,
         "news": news,
+        # Company details
+        "website": info.get("website"),
+        "city": info.get("city"),
+        "state": info.get("state"),
+        "country": info.get("country"),
+        "fullTimeEmployees": info.get("fullTimeEmployees"),
+        "companyOfficers": info.get("companyOfficers", []),
+        # Forward estimates
+        "forward_eps": forward_eps,
+        "forward_pe": forward_pe,
+        "earnings_growth": earnings_growth,
+        "revenue_growth": revenue_growth,
     }
 
 

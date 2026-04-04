@@ -287,36 +287,163 @@ def _build_ticker_header(symbol, sector, industry, price_val, daily_chg,
 
 
 def _build_description(info, symbol):
-    """Description text + competitors panel."""
+    """Description text with company details + peers ratio comparison panel."""
     description_text = info.get("description", "No description available.")
+
+    # Company details from yfinance info
+    details = []
+    website = info.get("website")
+    if website:
+        details.append(html.Div([
+            html.Span("Website: ", style={"color": C["dim"], "fontSize": "9px"}),
+            html.A(website, href=website, target="_blank", style={"color": C["cyan"], "fontSize": "9px"}),
+        ]))
+
+    hq_city = info.get("city", "")
+    hq_state = info.get("state", "")
+    hq_country = info.get("country", "")
+    hq_parts = [p for p in [hq_city, hq_state, hq_country] if p]
+    if hq_parts:
+        details.append(html.Div([
+            html.Span("HQ: ", style={"color": C["dim"], "fontSize": "9px"}),
+            html.Span(", ".join(hq_parts), style={"color": C["gray"], "fontSize": "9px"}),
+        ]))
+
+    employees = info.get("fullTimeEmployees")
+    if employees:
+        details.append(html.Div([
+            html.Span("Employees: ", style={"color": C["dim"], "fontSize": "9px"}),
+            html.Span(f"{employees:,}", style={"color": C["gray"], "fontSize": "9px"}),
+        ]))
+
+    # C-suite officers from yfinance
+    officers = info.get("companyOfficers", [])
+    if officers:
+        exec_items = []
+        for off in officers[:5]:
+            name = off.get("name", "")
+            title = off.get("title", "")
+            if name and title:
+                exec_items.append(html.Div([
+                    html.Span(name, style={"color": C["white"], "fontSize": "9px", "fontWeight": "bold"}),
+                    html.Span(f" — {title}", style={"color": C["dim"], "fontSize": "9px"}),
+                ]))
+        if exec_items:
+            details.append(html.Div([
+                html.Span("Leadership: ", style={"color": C["dim"], "fontSize": "9px"}),
+            ], style={"marginTop": "4px"}))
+            details.extend(exec_items)
+
     try:
         competitors = fetch_competitors(symbol, startup.universe.symbols, startup.ticker_sector)
     except Exception:
         competitors = []
 
-    comp_links = [html.Div(
-        html.A(c, href=f"/detail/{c}", style={"color": C["cyan"], "textDecoration": "none", "fontSize": "11px"}),
-        style={"marginBottom": "4px"},
-    ) for c in competitors]
-
-    peers_content = ([
-        html.Div("PEERS", style={"color": C["orange"], "fontSize": "9px", "fontWeight": "bold",
-                                  "letterSpacing": "1px", "marginBottom": "6px"}),
-        *comp_links,
-    ] if comp_links else [
-        html.Div("No peers", style={"color": C["gray"], "fontSize": "10px"}),
-    ])
+    peers_content = _build_peers_ratios(symbol, competitors)
 
     return html.Div(
         style={"display": "flex", "gap": "10px", "marginBottom": "8px"},
         children=[
-            html.Div(
+            html.Div([
                 html.P(description_text, style={"color": C["gray"], "fontSize": "10px", "lineHeight": "1.5", "margin": 0}),
-                style={**PANEL_STYLE, "flex": "1", "marginBottom": 0},
-            ),
-            html.Div(peers_content, style={**PANEL_STYLE, "width": "200px", "flexShrink": "0", "marginBottom": 0}),
+                html.Div(details, style={"marginTop": "6px", "borderTop": f"1px solid {C['border']}", "paddingTop": "6px"}) if details else None,
+            ], style={**PANEL_STYLE, "flex": "1", "marginBottom": 0}),
+            html.Div(peers_content, style={**PANEL_STYLE, "width": "340px", "flexShrink": "0", "marginBottom": 0, "overflowX": "auto"}),
         ],
     )
+
+
+def _build_peers_ratios(symbol, competitors):
+    """Build peer comparison table showing ratios with premium/discount %."""
+    ratio_names = ["P/E", "P/S", "P/B", "EV/EBITDA"]
+
+    # Get current ratios for this ticker
+    ticker_obj = startup.universe.get(symbol)
+    my_ratios = {}
+    for r in ratio_names:
+        if ticker_obj:
+            s = ticker_obj.get_ratio(r)
+            my_ratios[r] = float(s.iloc[-1]) if len(s) > 0 else None
+        else:
+            my_ratios[r] = None
+
+    # Get ratios for peers
+    peer_data = {}
+    for comp in competitors[:5]:
+        comp_obj = startup.universe.get(comp)
+        if comp_obj:
+            peer_data[comp] = {}
+            for r in ratio_names:
+                s = comp_obj.get_ratio(r)
+                peer_data[comp][r] = float(s.iloc[-1]) if len(s) > 0 else None
+
+    # Compute peer average
+    peer_avg = {}
+    for r in ratio_names:
+        vals = [peer_data[c][r] for c in peer_data if peer_data[c].get(r) is not None]
+        peer_avg[r] = sum(vals) / len(vals) if vals else None
+
+    # Header row
+    hdr_style = {"color": C["orange"], "fontSize": "8px", "fontWeight": "bold", "padding": "3px 5px",
+                 "textAlign": "right", "borderBottom": f"1px solid {C['orange']}"}
+    header = html.Tr([
+        html.Th("", style={**hdr_style, "textAlign": "left"}),
+        *[html.Th(r, style=hdr_style) for r in ratio_names],
+    ])
+
+    cell = {"padding": "3px 5px", "fontSize": "9px", "borderBottom": "1px solid #111", "textAlign": "right"}
+    rows = []
+
+    # Company row (highlighted)
+    my_cells = [html.Td(symbol, style={**cell, "color": C["white"], "fontWeight": "bold", "textAlign": "left"})]
+    for r in ratio_names:
+        v = my_ratios.get(r)
+        my_cells.append(html.Td(f"{v:.1f}x" if v else "—", style={**cell, "color": C["cyan"], "fontWeight": "bold"}))
+    rows.append(html.Tr(my_cells, style={"background": "rgba(0,188,212,0.06)"}))
+
+    # Peer rows
+    for comp in competitors[:5]:
+        if comp not in peer_data:
+            continue
+        peer_cells = [html.Td(
+            html.A(comp, href=f"/detail/{comp}", style={"color": C["white"], "textDecoration": "none"}),
+            style={**cell, "textAlign": "left"},
+        )]
+        for r in ratio_names:
+            v = peer_data[comp].get(r)
+            peer_cells.append(html.Td(f"{v:.1f}x" if v else "—", style={**cell, "color": C["gray"]}))
+        rows.append(html.Tr(peer_cells))
+
+    # Peer average row
+    avg_cells = [html.Td("Peer Avg", style={**cell, "color": C["orange"], "fontWeight": "bold", "textAlign": "left",
+                                             "borderTop": f"1px solid {C['border']}"})]
+    for r in ratio_names:
+        v = peer_avg.get(r)
+        avg_cells.append(html.Td(f"{v:.1f}x" if v else "—",
+                                 style={**cell, "color": C["orange"], "fontWeight": "bold",
+                                        "borderTop": f"1px solid {C['border']}"}))
+    rows.append(html.Tr(avg_cells))
+
+    # Premium/Discount row
+    disc_cells = [html.Td("vs Peers", style={**cell, "color": C["dim"], "textAlign": "left", "fontSize": "8px"})]
+    for r in ratio_names:
+        my_v = my_ratios.get(r)
+        avg_v = peer_avg.get(r)
+        if my_v and avg_v and avg_v != 0:
+            pct = (my_v - avg_v) / avg_v * 100
+            color = C["red"] if pct > 0 else C["green"]  # premium = red (expensive), discount = green (cheap)
+            label = f"+{pct:.0f}%" if pct > 0 else f"{pct:.0f}%"
+            disc_cells.append(html.Td(label, style={**cell, "color": color, "fontWeight": "bold", "fontSize": "9px"}))
+        else:
+            disc_cells.append(html.Td("—", style={**cell, "color": C["dim"]}))
+    rows.append(html.Tr(disc_cells))
+
+    return [
+        html.Div("PEER COMPARISON", style={"color": C["orange"], "fontSize": "9px", "fontWeight": "bold",
+                                            "letterSpacing": "1px", "marginBottom": "6px"}),
+        html.Table([html.Thead(header), html.Tbody(rows)],
+                   style={"width": "100%", "borderCollapse": "collapse"}),
+    ]
 
 
 def _build_news(info, symbol=None):
@@ -363,36 +490,75 @@ def _build_news(info, symbol=None):
 
 def _build_price_section(info, prices):
     """Price chart + market data table side by side."""
+
+    # Time period buttons (rectangular, not radio circles)
+    period_buttons = []
+    for p in PRICE_PERIODS:
+        btn_style = {
+            "padding": "3px 8px", "fontSize": "9px", "cursor": "pointer",
+            "fontFamily": FONT_FAMILY, "border": f"1px solid {C['border']}",
+            "background": C["orange"] if p == "1Y" else "#000",
+            "color": "#000" if p == "1Y" else C["gray"],
+            "fontWeight": "bold" if p == "1Y" else "normal",
+        }
+        period_buttons.append(html.Span(p, id={"type": "period-btn", "index": p}, style=btn_style))
+
+    # Studies dropdown
+    studies_dropdown = html.Div([
+        html.Details([
+            html.Summary("fx Studies \u25be", style={
+                "color": C["orange"], "fontSize": "10px", "cursor": "pointer",
+                "padding": "3px 8px", "border": f"1px solid {C['border']}",
+                "background": "#1a1a1a", "fontFamily": FONT_FAMILY,
+                "listStyle": "none",
+            }),
+            html.Div([
+                dcc.Checklist(
+                    id="overlay-toggles",
+                    options=OVERLAY_OPTIONS,
+                    value=["Moving Averages"],
+                    inputStyle={"marginRight": "6px", "accentColor": C["orange"]},
+                    labelStyle={
+                        "display": "block", "padding": "5px 12px", "fontSize": "10px",
+                        "color": C["white"], "cursor": "pointer", "fontFamily": FONT_FAMILY,
+                    },
+                    style={"padding": "4px 0"},
+                ),
+            ], style={
+                "position": "absolute", "top": "100%", "right": "0", "zIndex": "100",
+                "background": "#1a1a1a", "border": f"1px solid {C['border']}",
+                "minWidth": "180px", "borderRadius": "2px",
+                "boxShadow": "0 4px 12px rgba(0,0,0,0.5)",
+            }),
+        ], style={"position": "relative"}),
+    ])
+
     return html.Div(
         style={"display": "flex", "gap": "10px", "marginBottom": "8px"},
         children=[
             html.Div([
                 html.Div(
                     style={"display": "flex", "justifyContent": "space-between", "alignItems": "center",
-                           "marginBottom": "4px", "flexWrap": "wrap", "gap": "4px"},
+                           "marginBottom": "4px"},
                     children=[
-                        dcc.RadioItems(
-                            id="price-period",
-                            options=[{"label": p, "value": p} for p in PRICE_PERIODS],
-                            value="1Y",
-                            inline=True,
-                            inputStyle={"marginRight": "3px"},
-                            labelStyle={"marginRight": "8px", "color": C["gray"], "fontSize": "9px", "cursor": "pointer"},
-                        ),
-                        dcc.Checklist(
-                            id="overlay-toggles",
-                            options=OVERLAY_OPTIONS,
-                            value=["Moving Averages"],
-                            inline=True,
-                            inputStyle={"marginRight": "3px"},
-                            labelStyle={
-                                "marginRight": "10px", "color": C["orange"], "fontSize": "9px",
-                                "cursor": "pointer", "backgroundColor": "#1a1a1a",
-                                "padding": "2px 6px", "borderRadius": "3px",
-                                "border": f"1px solid {C['border']}",
-                            },
-                            style={"display": "flex", "gap": "2px"},
-                        ),
+                        # Period buttons
+                        html.Div([
+                            dcc.RadioItems(
+                                id="price-period",
+                                options=[{"label": p, "value": p} for p in PRICE_PERIODS],
+                                value="1Y",
+                                inline=True,
+                                inputStyle={"display": "none"},
+                                labelStyle={
+                                    "padding": "3px 8px", "fontSize": "9px", "cursor": "pointer",
+                                    "fontFamily": FONT_FAMILY, "border": f"1px solid {C['border']}",
+                                    "marginRight": "2px", "color": C["gray"], "background": "#000",
+                                },
+                                className="bbg-period-selector",
+                            ),
+                        ]),
+                        # Studies dropdown
+                        studies_dropdown,
                     ],
                 ),
                 dcc.Graph(id="price-chart", config={"displayModeBar": False}, style={"height": "350px"}),
@@ -454,7 +620,7 @@ def _build_earnings_section(symbol):
         html.Div("EARNINGS SURPRISE", style={"color": C["orange"], "fontSize": "9px", "fontWeight": "bold",
                                               "letterSpacing": "1px", "marginBottom": "4px"}),
         dcc.Graph(id="earnings-chart", figure=_build_earnings_chart(symbol),
-                  config={"displayModeBar": False}, style={"height": "220px"}),
+                  config={"displayModeBar": False}, style={"height": "300px"}),
     ], style=PANEL_STYLE)
 
 
@@ -513,13 +679,29 @@ def _build_rv_controls():
 
 def _build_technicals_section(prices, symbol):
     """Technical analysis charts: RSI, MACD (price+MA is now in the enhanced price chart)."""
+
+    rsi_tooltip = ("RSI (Relative Strength Index) measures momentum on a 0-100 scale. "
+                   "Above 70 = overbought (may pull back). Below 30 = oversold (may bounce). "
+                   "Uses 14-period lookback.")
+    macd_tooltip = ("MACD tracks trend momentum using two moving averages. "
+                    "When MACD crosses above Signal = bullish. Below = bearish. "
+                    "Green histogram = bullish momentum. Red = bearish.")
+
     return html.Div([
         html.Div("TECHNICAL ANALYSIS", style={"color": C["orange"], "fontSize": "9px", "fontWeight": "bold",
                                                "letterSpacing": "1px", "marginBottom": "4px"}),
+        html.Div([
+            html.Span("RSI ", style={"color": C["orange"], "fontSize": "9px", "fontWeight": "bold"}),
+            html.Span("ⓘ", title=rsi_tooltip, style={"color": C["dim"], "fontSize": "10px", "cursor": "help"}),
+        ], style={"marginBottom": "2px"}),
         dcc.Graph(id="ta-rsi-chart", figure=_build_ta_rsi_chart(prices, symbol),
-                  config={"displayModeBar": False}, style={"height": "180px", "marginBottom": "4px"}),
+                  config={"displayModeBar": False}, style={"height": "300px", "marginBottom": "4px"}),
+        html.Div([
+            html.Span("MACD ", style={"color": C["orange"], "fontSize": "9px", "fontWeight": "bold"}),
+            html.Span("ⓘ", title=macd_tooltip, style={"color": C["dim"], "fontSize": "10px", "cursor": "help"}),
+        ], style={"marginBottom": "2px"}),
         dcc.Graph(id="ta-macd-chart", figure=_build_ta_macd_chart(prices, symbol),
-                  config={"displayModeBar": False}, style={"height": "180px"}),
+                  config={"displayModeBar": False}, style={"height": "300px"}),
     ], style=PANEL_STYLE)
 
 
@@ -588,7 +770,7 @@ def _build_earnings_chart(symbol):
                         p_start = float(prices.iloc[pos])
                         p_end = float(prices.iloc[pos + 3])
                         ret_3d = (p_end - p_start) / p_start * 100
-                        lines.append(f"3-Day Move: {ret_3d:+.1f}%")
+                        lines.append(f"Px Surprise (3D): {ret_3d:+.1f}%")
             except Exception:
                 pass
 
@@ -676,7 +858,7 @@ def _build_ta_rsi_chart(prices, symbol):
             xaxis=dict(gridcolor=C["border"], tickfont=dict(size=9, color=C["gray"])),
             yaxis=dict(gridcolor=C["border"], tickfont=dict(size=9, color=C["gray"]),
                        range=[0, 100], dtick=10),
-            height=220,
+            height=300,
             margin=dict(l=50, r=80, t=35, b=30),
         ),
     )
@@ -734,7 +916,7 @@ def _build_ta_macd_chart(prices, symbol):
             title=dict(text=f"{symbol} MACD (6M)", font=dict(size=11, color=C["orange"]), x=0.01),
             xaxis=dict(gridcolor=C["border"], tickfont=dict(size=9, color=C["gray"])),
             yaxis=dict(gridcolor=C["border"], tickfont=dict(size=9, color=C["gray"])),
-            height=220,
+            height=300,
             margin=dict(l=50, r=80, t=35, b=30),
             showlegend=True,
             legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="left", x=0,

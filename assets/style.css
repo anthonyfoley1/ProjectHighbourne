@@ -518,17 +518,41 @@ a:hover { color: #88bbee; text-decoration: underline; }
 .right { text-align: right !important; }
 .center { text-align: center !important; }
 
-/* --- Dropdowns (react-select dark override) -------------------- */
-div[class*="-control"] { background-color: var(--header) !important; border-color: #444 !important; }
-div[class*="-menu"] { background-color: var(--header) !important; border-color: #444 !important; z-index: 1000 !important; }
-div[class*="-menuList"] { background-color: var(--header) !important; }
-div[class*="-option"] { background-color: var(--header) !important; color: var(--white) !important; }
+/* --- Dropdowns — FORCE dark on everything ---------------------- */
+/* Target the Dash dropdown wrapper and ALL children */
+.dash-dropdown .Select-control,
+.dash-dropdown .Select-menu-outer,
+.dash-dropdown .Select-option,
+.dash-dropdown .Select-value-label,
+.Select-control,
+.Select-menu-outer,
+.Select-option {
+    background-color: #1a1a1a !important;
+    color: #e0e0e0 !important;
+    border-color: #444 !important;
+}
+.Select-option.is-focused,
+.Select-option:hover { background-color: #333 !important; }
+.Select-value-label { color: #e0e0e0 !important; }
+.Select-input input { color: #e0e0e0 !important; }
+.Select-placeholder { color: #777 !important; }
+
+/* React-select (newer Dash versions) — match by partial class name */
+div[class*="-control"] { background-color: #1a1a1a !important; border-color: #444 !important; }
+div[class*="-menu"] { background-color: #1a1a1a !important; border-color: #444 !important; z-index: 1000 !important; }
+div[class*="-menuList"] { background-color: #1a1a1a !important; }
+div[class*="-option"] { background-color: #1a1a1a !important; color: #e0e0e0 !important; }
 div[class*="-option"]:hover { background-color: #333 !important; }
-div[class*="-singleValue"] { color: var(--white) !important; }
-div[class*="-placeholder"] { color: var(--dim) !important; }
+div[class*="-singleValue"] { color: #e0e0e0 !important; }
+div[class*="-placeholder"] { color: #777 !important; }
 div[class*="-indicatorSeparator"] { background-color: #444 !important; }
-div[class*="-indicatorContainer"] svg { fill: var(--gray) !important; }
-div[class*="-input"] input { color: var(--white) !important; }
+div[class*="-indicatorContainer"] svg { fill: #999 !important; color: #999 !important; }
+div[class*="-input"] input { color: #e0e0e0 !important; background: transparent !important; }
+div[class*="-ValueContainer"] { color: #e0e0e0 !important; }
+
+/* Nuclear: any input inside any Dash component */
+.dash-dropdown input,
+.dash-dropdown div { background-color: #1a1a1a; color: #e0e0e0; }
 
 /* --- Marquee Animation ----------------------------------------- */
 @keyframes marquee {
@@ -555,6 +579,36 @@ div[class*="-input"] input { color: var(--white) !important; }
 ::-webkit-scrollbar-track { background: var(--bg); }
 ::-webkit-scrollbar-thumb { background: #444; border-radius: 3px; }
 ::-webkit-scrollbar-thumb:hover { background: #666; }
+
+/* --- Period Selector (rectangular buttons, not circles) ---------- */
+.bbg-period-selector label {
+    padding: 3px 8px !important;
+    font-size: 9px !important;
+    cursor: pointer !important;
+    border: 1px solid var(--border) !important;
+    margin-right: 2px !important;
+    color: var(--gray) !important;
+    background: #000 !important;
+    transition: all 0.15s ease;
+}
+
+.bbg-period-selector label:hover {
+    background: #222 !important;
+    color: var(--white) !important;
+}
+
+.bbg-period-selector input:checked + label,
+.bbg-period-selector label:has(input:checked) {
+    background: var(--orange) !important;
+    color: #000 !important;
+    font-weight: bold !important;
+    border-color: var(--orange) !important;
+}
+
+/* Hide the radio circle */
+.bbg-period-selector input[type="radio"] {
+    display: none !important;
+}
 
 /* --- Container ------------------------------------------------- */
 .bbg-container {
