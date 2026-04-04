@@ -105,6 +105,35 @@ ebitda = operating_income + depreciation_amortization
 free_cash_flow = operating_cash_flow - capex
 ```
 
+## Validation Step
+
+After ingestion, run quality checks before the data feeds into ratio calculations:
+
+```python
+def validate_quarterly(store):
+    """Flag and optionally null out suspect data points."""
+
+    # 1. Revenue drop >80% QoQ — likely bad data or restatement
+    #    Flag row, null the value, log warning
+
+    # 2. Negative values where they shouldn't be
+    #    - revenue < 0 → null
+    #    - stockholders_equity < 0 → null (for P/B purposes)
+    #    - total_assets < 0 → null
+
+    # 3. Gap detection — missing quarters in the middle of a series
+    #    e.g., Q1 2023, Q3 2023 (Q2 missing) → log warning
+    #    Don't null anything, just flag for review
+
+    # 4. Extreme outliers — values >10x the ticker's median for that field
+    #    Likely a units mismatch (thousands vs millions)
+    #    Flag and null
+
+    # Returns: DataFrame of flagged rows with reason
+```
+
+This catches garbage data before it hits the ratio calculations. Print a summary at startup: "Validated 2,219 tickers — flagged 43 suspect data points across 28 tickers."
+
 ## Computation Layer
 
 ### TTM (Trailing Twelve Months)
