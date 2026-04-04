@@ -80,11 +80,12 @@ def _score_technicals(prices, symbol):
     if len(prices) > 200:
         sma50 = compute_sma(prices, 50)
         if not sma50.empty and not sma200.empty:
-            crossovers = detect_crossovers(sma50, sma200)
-            # Check last 20 days for golden cross
-            recent = crossovers.tail(20)
-            if not recent.empty and (recent > 0).any():
-                points += 10
+            golden_dates, death_dates = detect_crossovers(sma50, sma200)
+            # Check if a golden cross happened in the last 20 trading days
+            if golden_dates:
+                last_golden = pd.Timestamp(golden_dates[-1])
+                if (prices.index[-1] - last_golden).days <= 30:
+                    points += 10
 
     # Normalize: max theoretical = 70+10 = 80
     score = min(100, int(points / 70 * 100))
