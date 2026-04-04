@@ -211,10 +211,105 @@ def validate(store):
         print("  No issues found")
 
 
+def ingest_simfin_gaps(store):
+    """Fill gaps using SimFin bulk financial statements.
+
+    SimFin downloads the entire US market in one call per statement type,
+    so this is fast and doesn't have per-ticker API limits.
+    Priority: EDGAR first, SimFin fills gaps, yfinance fills remaining.
+    """
+    try:
+        import simfin as sf
+        from simfin.names import TICKER, FISCAL_PERIOD, REPORT_DATE
+    except ImportError:
+        print("  SimFin not installed, skipping")
+        return
+
+    sf.set_api_key("4e0d0ff7-a1af-4333-9f4b-55d97e801b35")
+    sf.set_data_dir("~/simfin_data/")
+
+    SIMFIN_MAP = {
+        "income": {
+            "Revenue": "revenue",
+            "Operating Income (Loss)": "operating_income",
+            "Net Income": "net_income",
+            "Depreciation & Amortization": "depreciation_amortization",
+        },
+        "balance": {
+            "Total Assets": "total_assets",
+            "Total Equity": "stockholders_equity",
+            "Total Debt": "total_debt",
+            "Cash, Cash Equivalents & Short Term Investments": "cash",
+        },
+        "cashflow": {
+            "Net Cash from Operating Activities": "operating_cash_flow",
+            "Capital Expenditures": "capex",
+            "Free Cash Flow": "free_cash_flow",
+        },
+    }
+
+    stmt_loaders = {
+        "income": lambda: sf.load_income(market="us", variant="quarterly"),
+        "balance": lambda: sf.load_balance(market="us", variant="quarterly"),
+        "cashflow": lambda: sf.load_cashflow(market="us", variant="quarterly"),
+    }
+
+    print("Filling gaps from SimFin...")
+    for stmt_name, field_map in SIMFIN_MAP.items():
+        try:
+            print(f"  Loading SimFin {stmt_name}...")
+            df = stmt_loaders[stmt_name]()
+            if df is None or df.empty:
+                continue
+        except Exception as e:
+            print(f"  SimFin {stmt_name} failed: {e}")
+            continue
+
+        rows = []
+        for our_field, sf_col in field_map.items():
+            if sf_col not in df.columns:
+                # Try without exact match
+                matches = [c for c in df.columns if sf_col.lower() in c.lower()]
+                if matches:
+                    sf_col = matches[0]
+                else:
+                    continue
+
+            # Find tickers missing this field in the store
+            if our_field in store.df.columns:
+                has = set(store.df.dropna(subset=[our_field])["ticker"].unique())
+            else:
+                has = set()
+
+            for ticker_val, group in df.groupby(level=TICKER):
+                ticker = str(ticker_val)
+                if ticker in has:
+                    continue  # Already have data from EDGAR
+                for idx, row in group.iterrows():
+                    val = row.get(sf_col)
+                    if pd.notna(val):
+                        # Use Report Date as period_end
+                        date = idx[1] if isinstance(idx, tuple) else row.get(REPORT_DATE)
+                        if date is not None:
+                            rows.append({
+                                "ticker": ticker,
+                                "period_end": str(pd.Timestamp(date).date()),
+                                our_field: float(val),
+                                "source": "simfin",
+                            })
+
+        if rows:
+            store.bulk_upsert(rows)
+            print(f"    -> added {len(rows)} data points from {stmt_name}")
+
+    store.save()
+
+
 def full_refresh(tickers):
-    """Run complete ingestion pipeline."""
+    """Run complete ingestion pipeline: EDGAR → SimFin → yfinance → derive → validate."""
     store = FinancialsStore()
     ingest_edgar(store)
+    ingest_simfin_gaps(store)
     ingest_yfinance_gaps(store, tickers, max_per_field=100)
     compute_derived_fields(store)
     validate(store)
