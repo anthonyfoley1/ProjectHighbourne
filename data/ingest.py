@@ -67,8 +67,12 @@ def ingest_edgar(store):
 
 
 def ingest_yfinance_gaps(store, tickers, max_per_field=100):
-    """Fill gaps in the store from yfinance. Only fills fields that are completely
-    missing for a ticker — never partially fills."""
+    """Fill gaps in the store from yfinance.
+
+    Two passes:
+    1. Tickers completely missing a field → fetch all quarters from yfinance
+    2. Tickers that HAVE the field but have NaN quarters → fill just those gaps
+    """
     print("Filling gaps from yfinance...")
 
     all_maps = {}
@@ -77,17 +81,29 @@ def ingest_yfinance_gaps(store, tickers, max_per_field=100):
     all_maps.update({f: ("cashflow", col) for f, col in YF_CASHFLOW_MAP.items()})
 
     for field, (stmt_type, col_name) in all_maps.items():
+        # Pass 1: completely missing tickers
         if field not in store.df.columns:
             missing = tickers
         else:
             has = store.df.dropna(subset=[field])["ticker"].unique()
             missing = [t for t in tickers if t not in has]
 
-        if not missing:
+        # Pass 2: tickers with partial data (have some quarters but NaN in others)
+        partial = []
+        if field in store.df.columns and not store.df.empty:
+            ticker_groups = store.df.groupby("ticker")[field]
+            for ticker, vals in ticker_groups:
+                if vals.notna().any() and vals.isna().any():
+                    if ticker in tickers:
+                        partial.append(ticker)
+
+        need_fetch = list(set(missing + partial))
+        if not need_fetch:
             continue
 
-        batch = missing[:max_per_field]
-        print(f"  {field}: filling {len(batch)}/{len(missing)} missing tickers...")
+        batch = need_fetch[:max_per_field]
+        label = f"{len(missing)} missing + {len(partial)} partial"
+        print(f"  {field}: filling {len(batch)}/{len(need_fetch)} tickers ({label})...")
         rows = []
         filled = 0
         for sym in batch:
@@ -105,7 +121,6 @@ def ingest_yfinance_gaps(store, tickers, max_per_field=100):
 
                 col_name_actual = col_name
                 if col_name not in q.index:
-                    # Try alternative column names
                     alt_names = _alt_col_names(col_name)
                     found = None
                     for alt in alt_names:
@@ -119,13 +134,20 @@ def ingest_yfinance_gaps(store, tickers, max_per_field=100):
                 row = q.loc[col_name_actual]
                 for date_col, val in row.items():
                     if pd.notna(val):
-                        rows.append({
-                            "ticker": sym,
-                            "period_end": str(pd.Timestamp(date_col).date()),
-                            field: float(val),
-                            "source": "yfinance",
-                        })
-                        filled += 1
+                        date_str = str(pd.Timestamp(date_col).date())
+                        # Only fill if this specific quarter is missing
+                        existing = store.df[
+                            (store.df["ticker"] == sym) &
+                            (store.df["period_end"] == pd.Timestamp(date_str))
+                        ]
+                        if existing.empty or (field in existing.columns and existing[field].isna().all()):
+                            rows.append({
+                                "ticker": sym,
+                                "period_end": date_str,
+                                field: float(val),
+                                "source": "yfinance",
+                            })
+                            filled += 1
             except Exception:
                 continue
         if rows:
