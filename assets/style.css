@@ -1,0 +1,564 @@
+/* ============================================================
+   HIGHBOURNE TERMINAL — Bloomberg Dark Theme
+   ============================================================
+   Dash auto-loads everything in assets/. No imports needed.
+   ============================================================ */
+
+/* --- Base ------------------------------------------------------- */
+:root {
+    --bg: #000000;
+    --panel: #0a0a0a;
+    --header: #1a1a1a;
+    --border: #333333;
+    --orange: #ff8c00;
+    --green: #00ff00;
+    --red: #ff4444;
+    --yellow: #ffff00;
+    --white: #e0e0e0;
+    --gray: #999999;
+    --dim: #777777;
+    --cyan: #00bcd4;
+    --purple: #bb86fc;
+    --font: 'Lucida Console', 'Monaco', 'Courier New', monospace;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    background: var(--bg);
+    font-family: var(--font);
+    color: var(--white);
+    font-size: 11px;
+}
+
+a { color: #6699cc; text-decoration: none; }
+a:hover { color: #88bbee; text-decoration: underline; }
+
+/* --- Panels & Cards -------------------------------------------- */
+.bbg-panel {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    padding: 10px;
+    margin-bottom: 8px;
+    font-family: var(--font);
+    border-radius: 2px;
+}
+
+.bbg-panel-header {
+    color: var(--orange);
+    font-size: 11px;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 6px;
+}
+
+/* --- Top Header Bar -------------------------------------------- */
+.bbg-top-header {
+    background: var(--header);
+    border-bottom: 2px solid var(--orange);
+    display: flex;
+    align-items: center;
+    padding: 6px 12px;
+}
+
+.bbg-top-header .title {
+    color: var(--orange);
+    font-weight: bold;
+    font-size: 14px;
+    margin-right: 10px;
+}
+
+.bbg-top-header .subtitle {
+    color: var(--gray);
+    font-size: 11px;
+    margin-right: auto;
+}
+
+/* --- Headline / Ticker Bar ------------------------------------- */
+.bbg-headline-bar {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--orange);
+    padding: 2px 10px;
+    margin-bottom: 8px;
+}
+
+.bbg-marquee-row {
+    display: flex;
+    align-items: center;
+    padding: 4px 0;
+    overflow: hidden;
+}
+
+.bbg-marquee-row + .bbg-marquee-row {
+    border-top: 1px solid var(--border);
+}
+
+.bbg-marquee-content {
+    display: flex;
+    white-space: nowrap;
+    animation: marquee 25s linear infinite;
+}
+
+.bbg-marquee-content.slow {
+    animation-duration: 80s;
+}
+
+/* --- Screener Table -------------------------------------------- */
+.bbg-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.bbg-table th {
+    background: #1a2030;
+    color: var(--orange);
+    font-size: 8px;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 6px;
+    border-bottom: 1px solid var(--orange);
+    text-align: left;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+}
+
+.bbg-table th.right { text-align: right; }
+.bbg-table th.center { text-align: center; }
+
+.bbg-table td {
+    padding: 5px 6px;
+    font-size: 10px;
+    border-bottom: 1px solid #111;
+    white-space: nowrap;
+}
+
+.bbg-table tr {
+    cursor: pointer;
+    transition: background-color 0.15s ease;
+}
+
+.bbg-table tr:hover {
+    background: #111 !important;
+}
+
+/* Alert row highlights */
+.bbg-table tr.row-buy {
+    background: rgba(0, 255, 0, 0.04);
+    border-left: 3px solid var(--green);
+}
+
+.bbg-table tr.row-sell {
+    background: rgba(255, 68, 68, 0.04);
+    border-left: 3px solid var(--red);
+}
+
+/* --- Signal Badges --------------------------------------------- */
+.bbg-badge {
+    display: inline-block;
+    padding: 1px 5px;
+    font-size: 8px;
+    font-weight: bold;
+    border-radius: 2px;
+    font-family: var(--font);
+}
+
+.bbg-badge-buy { background: var(--green); color: #000; }
+.bbg-badge-sell { background: var(--red); color: #fff; }
+.bbg-badge-cheap { border: 1px solid var(--green); color: var(--green); background: transparent; }
+.bbg-badge-rich { color: var(--orange); background: transparent; }
+.bbg-badge-fair { color: var(--dim); background: transparent; }
+
+.bbg-badge-overweight { background: var(--green); color: #000; padding: 2px 8px; font-size: 10px; }
+.bbg-badge-underweight { background: var(--red); color: #fff; padding: 2px 8px; font-size: 10px; }
+.bbg-badge-marketweight { border: 1px solid var(--gray); color: var(--gray); padding: 2px 8px; font-size: 10px; }
+
+/* --- Risk Verdict ---------------------------------------------- */
+.bbg-verdict {
+    text-align: center;
+    padding: 4px 10px;
+    border-radius: 3px;
+    font-weight: bold;
+    font-size: 11px;
+    margin-top: 6px;
+}
+
+.bbg-verdict-extreme { background: #880000; color: #fff; border: 1px solid #aa0000; }
+.bbg-verdict-elevated { background: rgba(255,68,68,0.2); color: var(--red); border: 1px solid var(--red); }
+.bbg-verdict-moderate { background: rgba(255,255,0,0.1); color: var(--yellow); border: 1px solid var(--yellow); }
+.bbg-verdict-low { background: rgba(0,255,0,0.1); color: var(--green); border: 1px solid var(--green); }
+
+/* --- Stat Row -------------------------------------------------- */
+.bbg-stat-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 3px 0;
+    border-bottom: 1px solid #111;
+}
+
+.bbg-stat-row:last-child { border-bottom: none; }
+
+.bbg-stat-label {
+    color: var(--gray);
+    font-size: 9px;
+    text-transform: uppercase;
+}
+
+.bbg-stat-value {
+    font-weight: bold;
+    font-size: 11px;
+}
+
+/* --- Stat Cards ------------------------------------------------ */
+.bbg-stat-cards {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 6px;
+}
+
+.bbg-stat-card {
+    flex: 1;
+    background: #111;
+    border: 1px solid var(--border);
+    padding: 5px 8px;
+}
+
+.bbg-stat-card .label {
+    color: var(--orange);
+    font-size: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.bbg-stat-card .value {
+    font-size: 14px;
+    font-weight: bold;
+    margin-top: 2px;
+}
+
+/* --- Gauge Bar ------------------------------------------------- */
+.bbg-gauge {
+    position: relative;
+    height: 10px;
+    background: #222;
+    border-radius: 3px;
+    margin: 4px 0 8px 0;
+    overflow: hidden;
+}
+
+.bbg-gauge-fill {
+    height: 100%;
+    border-radius: 3px;
+    transition: width 0.5s ease;
+}
+
+.bbg-gauge-needle {
+    position: absolute;
+    top: -2px;
+    width: 3px;
+    height: 14px;
+    background: var(--yellow);
+    border-radius: 1px;
+    z-index: 2;
+    transition: left 0.5s ease;
+}
+
+/* --- Gainers/Losers Bar ---------------------------------------- */
+.bbg-breadth-bar {
+    display: flex;
+    margin-bottom: 8px;
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    overflow: hidden;
+}
+
+.bbg-breadth-bar > div {
+    text-align: center;
+    font-size: 10px;
+    padding: 3px 0;
+    transition: width 0.5s ease;
+}
+
+/* --- Movers Panel ---------------------------------------------- */
+.bbg-movers-grid {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 8px;
+}
+
+.bbg-mover-item {
+    display: flex;
+    align-items: center;
+    padding: 2px 0;
+    font-size: 10px;
+}
+
+.bbg-mover-item .arrow {
+    font-size: 8px;
+    margin-right: 4px;
+}
+
+.bbg-mover-item .symbol {
+    color: #fff;
+    font-weight: bold;
+    width: 50px;
+    display: inline-block;
+}
+
+.bbg-mover-item .price {
+    color: var(--gray);
+    margin-right: 8px;
+    width: 65px;
+    display: inline-block;
+    text-align: right;
+}
+
+.bbg-mover-item .change {
+    font-weight: bold;
+}
+
+/* --- 52W Range Bar --------------------------------------------- */
+.bbg-range-bar {
+    display: flex;
+    align-items: center;
+    width: 80px;
+}
+
+.bbg-range-bar .lo, .bbg-range-bar .hi {
+    font-size: 7px;
+    color: var(--dim);
+}
+
+.bbg-range-bar .track {
+    position: relative;
+    flex: 1;
+    height: 4px;
+    background: #333;
+    border-radius: 2px;
+    margin: 0 3px;
+}
+
+.bbg-range-bar .dot {
+    position: absolute;
+    top: -2px;
+    width: 6px;
+    height: 10px;
+    background: var(--cyan);
+    border-radius: 1px;
+    transform: translateX(-50%);
+}
+
+/* --- Function Key Bar ------------------------------------------ */
+.bbg-fn-bar {
+    background: var(--header);
+    border-top: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    padding: 4px 12px;
+    margin-top: 8px;
+}
+
+.bbg-fn-key {
+    color: var(--yellow);
+    padding: 3px 10px;
+    font-size: 10px;
+    margin-right: 4px;
+    cursor: pointer;
+    transition: background-color 0.15s ease;
+}
+
+.bbg-fn-key:hover { background: #333; }
+.bbg-fn-key.active { background: var(--gray); }
+
+/* --- Ticker Header (Detail Page) ------------------------------- */
+.bbg-ticker-header {
+    background: var(--header);
+    border: 1px solid var(--border);
+    padding: 6px 10px;
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.bbg-ticker-header .symbol {
+    color: #fff;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.bbg-ticker-header .meta {
+    color: var(--gray);
+    font-size: 11px;
+}
+
+/* --- Back Button ----------------------------------------------- */
+.bbg-back {
+    display: inline-block;
+    color: var(--yellow);
+    text-decoration: none;
+    border: 1px solid #444;
+    padding: 2px 8px;
+    background: #111;
+    font-size: 10px;
+    margin-bottom: 6px;
+    transition: background-color 0.15s ease;
+}
+
+.bbg-back:hover { background: #222; text-decoration: none; }
+
+/* --- Company Description --------------------------------------- */
+.bbg-description {
+    background: var(--panel);
+    border: 1px solid #222;
+    padding: 8px 12px;
+    font-size: 10px;
+    color: var(--gray);
+    line-height: 1.6;
+}
+
+.bbg-description .label {
+    color: var(--orange);
+    font-size: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 4px;
+}
+
+/* --- Competitors Panel ----------------------------------------- */
+.bbg-competitors {
+    background: var(--panel);
+    border: 1px solid #222;
+    padding: 6px 10px;
+    width: 200px;
+    flex-shrink: 0;
+}
+
+.bbg-competitor-link {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 3px 4px;
+    border: 1px solid #222;
+    margin-bottom: 3px;
+    color: #6699cc;
+    text-decoration: none;
+    font-size: 10px;
+    transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.bbg-competitor-link:hover {
+    background: #111;
+    border-color: #444;
+    text-decoration: none;
+}
+
+.bbg-competitor-link .sym { color: #fff; font-weight: bold; }
+.bbg-competitor-link .name { color: var(--gray); font-size: 9px; }
+
+/* --- Market Data Table ----------------------------------------- */
+.bbg-mkt-data {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    width: 260px;
+    flex-shrink: 0;
+}
+
+.bbg-mkt-data .mkt-title {
+    background: var(--header);
+    padding: 4px 8px;
+    border-bottom: 1px solid var(--orange);
+    color: var(--orange);
+    font-weight: bold;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.bbg-mkt-data table { width: 100%; border-collapse: collapse; }
+.bbg-mkt-data td {
+    padding: 2px 8px;
+    font-size: 10px;
+    border-bottom: 1px solid #111;
+}
+.bbg-mkt-data td:first-child { color: var(--gray); }
+.bbg-mkt-data td:last-child { text-align: right; font-weight: bold; }
+.bbg-mkt-data tr:hover { background: #111; }
+
+/* --- News Section ---------------------------------------------- */
+.bbg-news-item {
+    margin-bottom: 3px;
+    padding-bottom: 3px;
+    border-bottom: 1px solid var(--border);
+}
+
+.bbg-news-item:last-child { border-bottom: none; }
+
+.bbg-news-item .source { color: var(--gray); font-size: 9px; }
+.bbg-news-item .age { color: #555; font-size: 9px; }
+
+/* --- Color Utilities ------------------------------------------- */
+.clr-green { color: var(--green) !important; }
+.clr-red { color: var(--red) !important; }
+.clr-orange { color: var(--orange) !important; }
+.clr-yellow { color: var(--yellow) !important; }
+.clr-cyan { color: var(--cyan) !important; }
+.clr-gray { color: var(--gray) !important; }
+.clr-dim { color: var(--dim) !important; }
+.clr-white { color: var(--white) !important; }
+
+.bg-green { background-color: var(--green) !important; }
+.bg-red { background-color: var(--red) !important; }
+
+.bold { font-weight: bold !important; }
+.right { text-align: right !important; }
+.center { text-align: center !important; }
+
+/* --- Dropdowns (react-select dark override) -------------------- */
+div[class*="-control"] { background-color: var(--header) !important; border-color: #444 !important; }
+div[class*="-menu"] { background-color: var(--header) !important; border-color: #444 !important; z-index: 1000 !important; }
+div[class*="-menuList"] { background-color: var(--header) !important; }
+div[class*="-option"] { background-color: var(--header) !important; color: var(--white) !important; }
+div[class*="-option"]:hover { background-color: #333 !important; }
+div[class*="-singleValue"] { color: var(--white) !important; }
+div[class*="-placeholder"] { color: var(--dim) !important; }
+div[class*="-indicatorSeparator"] { background-color: #444 !important; }
+div[class*="-indicatorContainer"] svg { fill: var(--gray) !important; }
+div[class*="-input"] input { color: var(--white) !important; }
+
+/* --- Marquee Animation ----------------------------------------- */
+@keyframes marquee {
+    0% { transform: translateX(0%); }
+    100% { transform: translateX(-50%); }
+}
+
+/* --- Cell Flash Animation -------------------------------------- */
+@keyframes cellFlash {
+    0% { background-color: transparent; }
+    15% { background-color: rgba(255, 255, 0, 0.3); }
+    30% { background-color: transparent; }
+    45% { background-color: rgba(255, 255, 0, 0.3); }
+    60% { background-color: transparent; }
+}
+
+.cell-flash { animation: cellFlash 1s ease-out; }
+
+/* --- Plotly Hover Labels --------------------------------------- */
+.hoverlabel { background-color: var(--header) !important; }
+
+/* --- Scrollbar (Bloomberg-style thin dark) --------------------- */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: #444; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #666; }
+
+/* --- Container ------------------------------------------------- */
+.bbg-container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 8px;
+}
