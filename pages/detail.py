@@ -18,6 +18,7 @@ from data.technicals import (
 )
 from data.loader import get_filing_dates
 from models.ticker import compute_alert, compute_composite_score, compute_signal_label
+from components.barometer import compute_barometer, build_barometer
 from theme import C, FONT_FAMILY, CONTAINER_STYLE, header_bar, function_key_bar, stat_card
 from components.charts import make_chart_layout, empty_fig
 from utils.formatters import fmt_val, fmt_large, fmt_pct, fmt_price, fmt_date_friendly, fmt_volume
@@ -139,7 +140,9 @@ def layout(symbol="AAPL"):
     if info.get("PT") and price_val:
         pt_upside = (info["PT"] - price_val) / price_val
 
-    composite = compute_composite_score(best_z, current_rsi, macd_sig, 0.0, pt_upside)
+    composite_old = compute_composite_score(best_z, current_rsi, macd_sig, 0.0, pt_upside)
+    barometer_data = compute_barometer(symbol, info=info)
+    composite = {"label": barometer_data["label"], "color": barometer_data["color"], "score": barometer_data["composite"]}
     chg_color = C["green"] if daily_chg and daily_chg >= 0 else C["red"]
 
     # ----- Build sections -----
@@ -154,7 +157,7 @@ def layout(symbol="AAPL"):
         chg_color, volume, mkt_cap, ytd_ret, y1_ret, next_er, composite,
     )
 
-    sec_desc = _build_description(info, symbol)
+    sec_desc = _build_description(info, symbol, barometer_data)
     sec_news = _build_news(info, symbol=symbol)
     sec_price = _build_price_section(info, prices)
     sec_earnings = _build_earnings_section(symbol)
@@ -286,8 +289,8 @@ def _build_ticker_header(symbol, sector, industry, price_val, daily_chg,
     })
 
 
-def _build_description(info, symbol):
-    """Description text with company details + peers ratio comparison panel."""
+def _build_description(info, symbol, barometer_data=None):
+    """Description text with company details + peers ratio comparison panel + barometer."""
     description_text = info.get("description", "No description available.")
 
     # Company details from yfinance info
@@ -341,6 +344,9 @@ def _build_description(info, symbol):
 
     peers_content = _build_peers_ratios(symbol, competitors)
 
+    # Build barometer visual if data available
+    barometer_el = build_barometer(barometer_data) if barometer_data else None
+
     return html.Div(
         style={"display": "flex", "gap": "10px", "marginBottom": "8px"},
         children=[
@@ -348,7 +354,10 @@ def _build_description(info, symbol):
                 html.P(description_text, style={"color": C["gray"], "fontSize": "10px", "lineHeight": "1.5", "margin": 0}),
                 html.Div(details, style={"marginTop": "6px", "borderTop": f"1px solid {C['border']}", "paddingTop": "6px"}) if details else None,
             ], style={**PANEL_STYLE, "flex": "1", "marginBottom": 0}),
-            html.Div(peers_content, style={**PANEL_STYLE, "width": "340px", "flexShrink": "0", "marginBottom": 0, "overflowX": "auto"}),
+            html.Div([
+                peers_content,
+                html.Div(barometer_el, style={"marginTop": "10px", "borderTop": f"1px solid {C['border']}", "paddingTop": "10px"}) if barometer_el else None,
+            ], style={**PANEL_STYLE, "width": "340px", "flexShrink": "0", "marginBottom": 0, "overflowX": "auto"}),
         ],
     )
 
