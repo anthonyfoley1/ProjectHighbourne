@@ -80,3 +80,27 @@ def ma_trend_label(price: float, sma_200: float) -> str:
     if price >= sma_200:
         return "Above"
     return "Below"
+
+
+def compute_bollinger_bands(prices, period=20, std_dev=2):
+    """Compute Bollinger Bands. Returns (upper, middle, lower) as pd.Series."""
+    middle = prices.rolling(window=period).mean()
+    std = prices.rolling(window=period).std()
+    upper = middle + std_dev * std
+    lower = middle - std_dev * std
+    return upper, middle, lower
+
+
+# Adaptive overlay parameters lookup based on time period
+OVERLAY_PARAMS = {
+    "1D": {"short_sma": 5, "long_sma": 20, "bb_period": 10, "bb_std": 1.5},
+    "5D": {"short_sma": 5, "long_sma": 20, "bb_period": 10, "bb_std": 1.5},
+    "1M": {"short_sma": 10, "long_sma": 30, "bb_period": 10, "bb_std": 1.5},
+    "3M": {"short_sma": 20, "long_sma": 50, "bb_period": 20, "bb_std": 2.0},
+    "YTD": {"short_sma": 50, "long_sma": 200, "bb_period": 20, "bb_std": 2.0},
+    "6M": {"short_sma": 50, "long_sma": 200, "bb_period": 20, "bb_std": 2.0},
+    "1Y": {"short_sma": 50, "long_sma": 200, "bb_period": 20, "bb_std": 2.0},
+    "2Y": {"short_sma": 100, "long_sma": 200, "bb_period": 50, "bb_std": 2.0},
+    "5Y": {"short_sma": 100, "long_sma": 200, "bb_period": 50, "bb_std": 2.0},
+    "MAX": {"short_sma": 200, "long_sma": 500, "bb_period": 100, "bb_std": 2.5},
+}

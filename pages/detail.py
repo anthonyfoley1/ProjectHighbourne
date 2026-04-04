@@ -14,6 +14,7 @@ from data.market_data import (
 from data.technicals import (
     compute_rsi, compute_macd, compute_sma, detect_crossovers,
     macd_signal_label, rsi_label, ma_trend_label,
+    compute_bollinger_bands, OVERLAY_PARAMS,
 )
 from data.loader import get_filing_dates
 from models.ticker import compute_alert, compute_composite_score, compute_signal_label
@@ -32,6 +33,13 @@ PRICE_PERIODS = {
     "1D": 1, "5D": 5, "1M": 21, "3M": 63, "YTD": None,
     "6M": 126, "1Y": 252, "2Y": 504, "5Y": 1260, "MAX": None,
 }
+
+OVERLAY_OPTIONS = [
+    {"label": "Bollinger Bands", "value": "Bollinger Bands"},
+    {"label": "Moving Averages", "value": "Moving Averages"},
+    {"label": "MA Crossovers", "value": "MA Crossovers"},
+    {"label": "Volume", "value": "Volume"},
+]
 
 PANEL_STYLE = {
     "backgroundColor": C["panel"],
@@ -359,21 +367,40 @@ def _build_price_section(info, prices):
         style={"display": "flex", "gap": "10px", "marginBottom": "8px"},
         children=[
             html.Div([
-                dcc.RadioItems(
-                    id="price-period",
-                    options=[{"label": p, "value": p} for p in PRICE_PERIODS],
-                    value="1Y",
-                    inline=True,
-                    inputStyle={"marginRight": "3px"},
-                    labelStyle={"marginRight": "8px", "color": C["gray"], "fontSize": "9px", "cursor": "pointer"},
-                    style={"marginBottom": "4px"},
+                html.Div(
+                    style={"display": "flex", "justifyContent": "space-between", "alignItems": "center",
+                           "marginBottom": "4px", "flexWrap": "wrap", "gap": "4px"},
+                    children=[
+                        dcc.RadioItems(
+                            id="price-period",
+                            options=[{"label": p, "value": p} for p in PRICE_PERIODS],
+                            value="1Y",
+                            inline=True,
+                            inputStyle={"marginRight": "3px"},
+                            labelStyle={"marginRight": "8px", "color": C["gray"], "fontSize": "9px", "cursor": "pointer"},
+                        ),
+                        dcc.Checklist(
+                            id="overlay-toggles",
+                            options=OVERLAY_OPTIONS,
+                            value=["Moving Averages"],
+                            inline=True,
+                            inputStyle={"marginRight": "3px"},
+                            labelStyle={
+                                "marginRight": "10px", "color": C["orange"], "fontSize": "9px",
+                                "cursor": "pointer", "backgroundColor": "#1a1a1a",
+                                "padding": "2px 6px", "borderRadius": "3px",
+                                "border": f"1px solid {C['border']}",
+                            },
+                            style={"display": "flex", "gap": "2px"},
+                        ),
+                    ],
                 ),
-                dcc.Graph(id="price-chart", config={"displayModeBar": False}, style={"height": "280px"}),
+                dcc.Graph(id="price-chart", config={"displayModeBar": False}, style={"height": "350px"}),
             ], style={**PANEL_STYLE, "flex": "1", "marginBottom": 0}),
             html.Div(
                 _build_market_data_table(info, prices),
                 style={**PANEL_STYLE, "width": "260px", "flexShrink": "0", "marginBottom": 0,
-                       "overflowY": "auto", "maxHeight": "340px"},
+                       "overflowY": "auto", "maxHeight": "400px"},
             ),
         ],
     )
@@ -485,12 +512,10 @@ def _build_rv_controls():
 
 
 def _build_technicals_section(prices, symbol):
-    """Technical analysis charts: price+MA, RSI, MACD."""
+    """Technical analysis charts: RSI, MACD (price+MA is now in the enhanced price chart)."""
     return html.Div([
         html.Div("TECHNICAL ANALYSIS", style={"color": C["orange"], "fontSize": "9px", "fontWeight": "bold",
                                                "letterSpacing": "1px", "marginBottom": "4px"}),
-        dcc.Graph(id="ta-price-chart", figure=_build_ta_price_chart(prices, symbol),
-                  config={"displayModeBar": False}, style={"height": "280px", "marginBottom": "4px"}),
         dcc.Graph(id="ta-rsi-chart", figure=_build_ta_rsi_chart(prices, symbol),
                   config={"displayModeBar": False}, style={"height": "180px", "marginBottom": "4px"}),
         dcc.Graph(id="ta-macd-chart", figure=_build_ta_macd_chart(prices, symbol),
@@ -604,79 +629,6 @@ def _build_earnings_chart(symbol):
             showlegend=True,
             legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="left", x=0,
                         font=dict(size=9, color=C["gray"])),
-        ),
-    )
-    return fig
-
-
-def _build_ta_price_chart(prices, symbol):
-    """Price + SMA 50/200 with golden/death cross annotations (1Y)."""
-    if prices is None or len(prices) < 50:
-        return empty_fig("Insufficient price data")
-
-    p1y = prices.iloc[-252:] if len(prices) >= 252 else prices
-    sma50 = compute_sma(prices, 50).reindex(p1y.index)
-    sma200 = compute_sma(prices, 200).reindex(p1y.index)
-
-    fig = go.Figure()
-    fig.add_trace(go.Scatter(x=p1y.index, y=p1y.values, mode="lines",
-                             line=dict(color=C["white"], width=1.5), name="Close"))
-    fig.add_trace(go.Scatter(x=p1y.index, y=sma50.values, mode="lines",
-                             line=dict(color=C["orange"], width=1, dash="dash"), name="SMA 50"))
-    fig.add_trace(go.Scatter(x=p1y.index, y=sma200.values, mode="lines",
-                             line=dict(color=C["red"], width=1, dash="dash"), name="SMA 200"))
-
-    # Detect crossovers on full series, filter to 1Y window
-    if len(prices) >= 200:
-        full_sma50 = compute_sma(prices, 50)
-        full_sma200 = compute_sma(prices, 200)
-        golden, death = detect_crossovers(full_sma50, full_sma200)
-        window_start = p1y.index[0]
-        for d in golden:
-            if d >= window_start:
-                fig.add_annotation(x=d, y=float(prices.loc[d]) if d in prices.index else None,
-                                   text="GC", showarrow=True, arrowhead=2, arrowcolor=C["green"],
-                                   font=dict(size=8, color=C["green"]))
-        for d in death:
-            if d >= window_start:
-                fig.add_annotation(x=d, y=float(prices.loc[d]) if d in prices.index else None,
-                                   text="DC", showarrow=True, arrowhead=2, arrowcolor=C["red"],
-                                   font=dict(size=8, color=C["red"]))
-
-    # Background tint: green when price above both MAs, red when below both
-    for i in range(1, len(p1y)):
-        s50 = sma50.iloc[i] if i < len(sma50) and not np.isnan(sma50.iloc[i]) else None
-        s200 = sma200.iloc[i] if i < len(sma200) and not np.isnan(sma200.iloc[i]) else None
-        price_val_i = p1y.iloc[i]
-        if s50 is not None and s200 is not None:
-            if price_val_i > s50 and price_val_i > s200:
-                fig.add_vrect(x0=p1y.index[i - 1], x1=p1y.index[i],
-                              fillcolor="rgba(0,255,0,0.03)", line_width=0, layer="below")
-            elif price_val_i < s50 and price_val_i < s200:
-                fig.add_vrect(x0=p1y.index[i - 1], x1=p1y.index[i],
-                              fillcolor="rgba(255,68,68,0.03)", line_width=0, layer="below")
-
-    # Current price badge annotation
-    last_price = float(p1y.iloc[-1])
-    last_sma200 = float(sma200.iloc[-1]) if not sma200.empty and not np.isnan(sma200.iloc[-1]) else None
-    badge_color = C["green"] if last_sma200 is not None and last_price > last_sma200 else C["red"]
-    fig.add_annotation(
-        x=p1y.index[-1], y=last_price,
-        text=f"${last_price:.2f}",
-        showarrow=True, arrowhead=2, arrowcolor=badge_color,
-        font=dict(size=9, color="#000", family=FONT_FAMILY),
-        bgcolor=badge_color, bordercolor=badge_color, borderwidth=1,
-    )
-
-    fig.update_layout(
-        **make_chart_layout(
-            title=dict(text=f"{symbol} PRICE + MOVING AVERAGES (1Y)", font=dict(size=11, color=C["orange"]), x=0.01),
-            xaxis=dict(gridcolor=C["border"], tickfont=dict(size=9, color=C["gray"])),
-            yaxis=dict(gridcolor=C["border"], tickfont=dict(size=9, color=C["gray"]), tickprefix="$"),
-            height=280,
-            showlegend=True,
-            legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="left", x=0,
-                        font=dict(size=8, color=C["gray"])),
         ),
     )
     return fig
@@ -800,10 +752,11 @@ def _build_ta_macd_chart(prices, symbol):
 @callback(
     Output("price-chart", "figure"),
     Input("price-period", "value"),
+    Input("overlay-toggles", "value"),
     State("url", "pathname"),
 )
-def update_price_chart(period, pathname):
-    """Update price chart based on selected time period."""
+def update_price_chart(period, overlays, pathname):
+    """Update enhanced price chart with toggleable overlays and adaptive parameters."""
     if not pathname or "/detail/" not in pathname:
         return empty_fig()
     symbol = pathname.split("/detail/")[-1].upper()
@@ -811,14 +764,15 @@ def update_price_chart(period, pathname):
     if prices is None or prices.empty:
         return empty_fig("No price data")
 
+    overlays = overlays or []
+
+    # Slice prices to selected period
     if period == "YTD":
         start = pd.Timestamp(f"{datetime.now().year}-01-01")
-        # Strip timezone if prices have tz-naive index
         if prices.index.tz is not None:
             start = start.tz_localize(prices.index.tz)
         p = prices[prices.index >= start]
         if p.empty:
-            # Fallback: use last 60 trading days
             p = prices.iloc[-60:] if len(prices) >= 60 else prices
     elif period == "MAX":
         p = prices
@@ -829,21 +783,164 @@ def update_price_chart(period, pathname):
     if p.empty:
         return empty_fig("No data for period")
 
-    fig = go.Figure()
-    fig.add_trace(go.Scatter(
-        x=p.index, y=p.values, mode="lines",
-        line=dict(color=C["cyan"], width=1.5),
-        fill="tozeroy", fillcolor="rgba(0,188,212,0.08)",
-        hovertemplate="%{x|%b %d, %Y}<br>$%{y:.2f}<extra></extra>",
-    ))
+    # Get adaptive parameters
+    params = OVERLAY_PARAMS.get(period, OVERLAY_PARAMS["1Y"])
 
-    fig.update_layout(
-        **make_chart_layout(
-            title=dict(text=f"{symbol} ({period})", font=dict(size=11, color=C["orange"]), x=0.01),
-            xaxis=dict(gridcolor=C["border"], tickfont=dict(size=9, color=C["gray"])),
-            yaxis=dict(gridcolor=C["border"], tickfont=dict(size=9, color=C["gray"]), tickprefix="$"),
-        ),
+    from plotly.subplots import make_subplots
+
+    has_volume = "Volume" in overlays
+    if has_volume:
+        fig = make_subplots(
+            rows=2, cols=1, shared_xaxes=True, vertical_spacing=0.03,
+            row_heights=[0.8, 0.2],
+        )
+    else:
+        fig = go.Figure()
+
+    row = 1 if has_volume else None
+
+    # --- Bollinger Bands (behind the price line) ---
+    if "Bollinger Bands" in overlays:
+        bb_upper, bb_mid, bb_lower = compute_bollinger_bands(
+            prices, period=params["bb_period"], std_dev=params["bb_std"],
+        )
+        bb_upper = bb_upper.reindex(p.index)
+        bb_lower = bb_lower.reindex(p.index)
+
+        # Upper band
+        upper_kwargs = dict(
+            x=p.index, y=bb_upper.values, mode="lines",
+            line=dict(color="rgba(0,188,212,0.3)", width=1, dash="dash"),
+            name=f"BB Upper ({params['bb_period']},{params['bb_std']})",
+            hoverinfo="skip",
+        )
+        # Lower band with fill to upper
+        lower_kwargs = dict(
+            x=p.index, y=bb_lower.values, mode="lines",
+            line=dict(color="rgba(0,188,212,0.3)", width=1, dash="dash"),
+            fill="tonexty", fillcolor="rgba(0,188,212,0.06)",
+            name="BB Lower",
+            hoverinfo="skip",
+        )
+        if has_volume:
+            fig.add_trace(go.Scatter(**upper_kwargs), row=1, col=1)
+            fig.add_trace(go.Scatter(**lower_kwargs), row=1, col=1)
+        else:
+            fig.add_trace(go.Scatter(**upper_kwargs))
+            fig.add_trace(go.Scatter(**lower_kwargs))
+
+    # --- Price line with area fill ---
+    price_kwargs = dict(
+        x=p.index, y=p.values, mode="lines",
+        line=dict(color="#00bcd4", width=2),
+        fill="tozeroy", fillcolor="rgba(0,188,212,0.12)",
+        name="Close",
+        hovertemplate="%{x|%b %d, %Y}<br>$%{y:.2f}<extra></extra>",
     )
+    if has_volume:
+        fig.add_trace(go.Scatter(**price_kwargs), row=1, col=1)
+    else:
+        fig.add_trace(go.Scatter(**price_kwargs))
+
+    # --- Moving Averages ---
+    if "Moving Averages" in overlays:
+        short_sma = compute_sma(prices, params["short_sma"]).reindex(p.index)
+        long_sma = compute_sma(prices, params["long_sma"]).reindex(p.index)
+
+        short_kwargs = dict(
+            x=p.index, y=short_sma.values, mode="lines",
+            line=dict(color="#ff8c00", width=1.5, dash="dash"),
+            name=f"SMA {params['short_sma']}",
+        )
+        long_kwargs = dict(
+            x=p.index, y=long_sma.values, mode="lines",
+            line=dict(color="#ff4444", width=1.5, dash="dash"),
+            name=f"SMA {params['long_sma']}",
+        )
+        if has_volume:
+            fig.add_trace(go.Scatter(**short_kwargs), row=1, col=1)
+            fig.add_trace(go.Scatter(**long_kwargs), row=1, col=1)
+        else:
+            fig.add_trace(go.Scatter(**short_kwargs))
+            fig.add_trace(go.Scatter(**long_kwargs))
+
+    # --- MA Crossovers ---
+    if "MA Crossovers" in overlays:
+        full_short = compute_sma(prices, params["short_sma"])
+        full_long = compute_sma(prices, params["long_sma"])
+        if not full_short.dropna().empty and not full_long.dropna().empty:
+            golden, death = detect_crossovers(full_short, full_long)
+            window_start = p.index[0]
+            window_end = p.index[-1]
+            for d in golden:
+                if d >= window_start and d <= window_end:
+                    y_val = float(prices.loc[d]) if d in prices.index else None
+                    if y_val is not None:
+                        fig.add_annotation(
+                            x=d, y=y_val, text="GC", showarrow=True, arrowhead=2,
+                            arrowcolor=C["green"], font=dict(size=8, color=C["green"]),
+                        )
+            for d in death:
+                if d >= window_start and d <= window_end:
+                    y_val = float(prices.loc[d]) if d in prices.index else None
+                    if y_val is not None:
+                        fig.add_annotation(
+                            x=d, y=y_val, text="DC", showarrow=True, arrowhead=2,
+                            arrowcolor=C["red"], font=dict(size=8, color=C["red"]),
+                        )
+
+    # --- Volume bars (secondary y-axis) ---
+    if has_volume:
+        try:
+            import yfinance as yf
+            tk = yf.Ticker(symbol)
+            hist = tk.history(period="max")
+            if "Volume" in hist.columns:
+                vol = hist["Volume"].reindex(p.index, method="nearest")
+                vol = vol.fillna(0)
+                vol_colors = ["#555"] * len(vol)
+                fig.add_trace(go.Bar(
+                    x=p.index, y=vol.values,
+                    marker_color=vol_colors, name="Volume", opacity=0.4,
+                    hovertemplate="%{x|%b %d, %Y}<br>Vol: %{y:,.0f}<extra></extra>",
+                ), row=2, col=1)
+        except Exception:
+            pass
+
+    # --- Current price badge (always shown) ---
+    last_price = float(p.iloc[-1])
+    fig.add_annotation(
+        x=p.index[-1], y=last_price,
+        text=f"${last_price:.2f}",
+        showarrow=True, arrowhead=2, arrowcolor="#00bcd4",
+        font=dict(size=9, color="#000", family=FONT_FAMILY),
+        bgcolor="#00bcd4", bordercolor="#00bcd4", borderwidth=1,
+    )
+
+    # --- Layout ---
+    layout_kwargs = dict(
+        paper_bgcolor="#0a0a0a",
+        plot_bgcolor="#0a0a0a",
+        title=dict(text=f"{symbol} ({period})", font=dict(size=11, color=C["orange"]), x=0.01),
+        xaxis=dict(gridcolor=C["border"], tickfont=dict(size=9, color=C["gray"])),
+        yaxis=dict(gridcolor=C["border"], tickfont=dict(size=9, color=C["gray"]), tickprefix="$"),
+        height=350,
+        margin=dict(l=50, r=80, t=35, b=30),
+        hovermode="x unified",
+        showlegend=True,
+        legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="left", x=0,
+                    font=dict(size=8, color=C["gray"])),
+        font=dict(family=FONT_FAMILY),
+    )
+    if has_volume:
+        layout_kwargs["yaxis2"] = dict(
+            gridcolor=C["border"], tickfont=dict(size=8, color=C["gray"]),
+        )
+        layout_kwargs["xaxis2"] = dict(
+            gridcolor=C["border"], tickfont=dict(size=9, color=C["gray"]),
+        )
+
+    fig.update_layout(**layout_kwargs)
     return fig
 
 
