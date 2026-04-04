@@ -186,7 +186,7 @@ def layout(symbol="AAPL"):
         ],
     )
 
-    sec_rv = _build_rv_controls()
+    sec_rv = _build_rv_controls(symbol)
     sec_technicals = _build_technicals_section(prices, symbol)
 
     return html.Div([
@@ -737,9 +737,129 @@ def _build_financials_placeholder():
     ], style=PANEL_STYLE)
 
 
-def _build_rv_controls():
-    """Ratio dropdown + window toggle + RV chart placeholder."""
+def _build_rv_summary_table(symbol):
+    """Bloomberg-style RV summary: all ratios at a glance with current, hist avg, range, implied price."""
+    ticker_obj = startup.universe.get(symbol)
+    prices = startup.price_cache.get(symbol)
+    current_price = float(prices.iloc[-1]) if prices is not None and len(prices) > 0 else None
+
+    cell = {"padding": "3px 6px", "fontSize": "10px", "fontFamily": FONT_FAMILY,
+            "borderBottom": "1px solid #111", "whiteSpace": "nowrap"}
+    hdr = {**cell, "color": C["orange"], "fontSize": "8px", "fontWeight": "bold",
+           "textTransform": "uppercase", "borderBottom": f"1px solid {C['orange']}"}
+
+    header = html.Tr([
+        html.Th("Metric", style={**hdr, "textAlign": "left"}),
+        html.Th("Current", style={**hdr, "textAlign": "right"}),
+        html.Th("Hist Avg", style={**hdr, "textAlign": "right"}),
+        html.Th("Diff", style={**hdr, "textAlign": "right"}),
+        html.Th("# SD", style={**hdr, "textAlign": "right"}),
+        html.Th("", style={**hdr, "width": "120px", "textAlign": "center"}),
+        html.Th("Low", style={**hdr, "textAlign": "right"}),
+        html.Th("High", style={**hdr, "textAlign": "right"}),
+        html.Th("Implied Px", style={**hdr, "textAlign": "right"}),
+    ])
+
+    rows = []
+    for ratio_name in RATIO_NAMES:
+        if ticker_obj is None:
+            continue
+        try:
+            st = ticker_obj.stats(ratio_name)
+        except Exception:
+            st = None
+        if st is None:
+            rows.append(html.Tr([
+                html.Td(ratio_name, style={**cell, "color": C["white"]}),
+                *[html.Td("—", style={**cell, "color": C["dim"], "textAlign": "right"}) for _ in range(7)],
+                html.Td("—", style={**cell, "color": C["dim"], "textAlign": "right"}),
+            ]))
+            continue
+
+        current = st["current"]
+        mean = st["mean"]
+        std = st["std"]
+        z = st["z_score"]
+        low = st["low"]
+        high = st["high"]
+        diff_pct = ((current - mean) / mean * 100) if mean != 0 else 0
+
+        # Color: green if cheap (below mean), red if rich (above mean)
+        val_color = C["green"] if current < mean else C["red"]
+        z_color = C["green"] if z < 0 else C["red"]
+
+        # Implied price at historical average: if ratio returns to mean, what's the stock price?
+        implied_px = None
+        if current_price and current != 0:
+            implied_px = current_price * (mean / current)
+
+        # Range bar: position of current between low and high
+        pct_in_range = max(0, min(100, (current - low) / (high - low) * 100)) if high != low else 50
+        range_bar = html.Div([
+            html.Div(style={
+                "position": "relative", "height": "6px", "background": "#222",
+                "borderRadius": "3px", "width": "100%",
+            }, children=[
+                # Current dot (cyan)
+                html.Div(style={
+                    "position": "absolute", "left": f"{pct_in_range}%", "top": "-2px",
+                    "width": "8px", "height": "10px", "background": C["cyan"],
+                    "borderRadius": "2px", "transform": "translateX(-50%)",
+                }),
+                # Mean marker (orange diamond)
+                html.Div(style={
+                    "position": "absolute",
+                    "left": f"{max(0, min(100, (mean - low) / (high - low) * 100)) if high != low else 50}%",
+                    "top": "-1px", "width": "6px", "height": "8px", "background": C["orange"],
+                    "borderRadius": "1px", "transform": "translateX(-50%) rotate(45deg)",
+                }),
+            ]),
+        ], style={"width": "100px", "display": "inline-block"})
+
+        rows.append(html.Tr([
+            html.Td(ratio_name, style={**cell, "color": C["white"], "fontWeight": "bold"}),
+            html.Td(f"{current:.1f}x", style={**cell, "color": val_color, "fontWeight": "bold", "textAlign": "right"}),
+            html.Td(f"{mean:.1f}x", style={**cell, "color": C["orange"], "textAlign": "right"}),
+            html.Td(f"{diff_pct:+.0f}%", style={**cell, "color": val_color, "textAlign": "right"}),
+            html.Td(f"{z:+.1f}", style={**cell, "color": z_color, "fontWeight": "bold", "textAlign": "right"}),
+            html.Td(range_bar, style={**cell, "textAlign": "center"}),
+            html.Td(f"{low:.1f}x", style={**cell, "color": C["dim"], "textAlign": "right"}),
+            html.Td(f"{high:.1f}x", style={**cell, "color": C["dim"], "textAlign": "right"}),
+            html.Td(
+                f"${implied_px:.2f}" if implied_px else "—",
+                style={**cell, "color": C["cyan"], "fontWeight": "bold", "textAlign": "right"},
+            ),
+        ]))
+
+    # Current price label
+    price_label = html.Tr([
+        html.Td("Current Price", style={**cell, "color": C["orange"], "fontWeight": "bold"}),
+        *[html.Td("", style=cell) for _ in range(7)],
+        html.Td(
+            f"${current_price:.2f}" if current_price else "—",
+            style={**cell, "color": C["orange"], "fontWeight": "bold", "textAlign": "right"},
+        ),
+    ])
+
     return html.Div([
+        html.Div(
+            style={"display": "flex", "justifyContent": "space-between", "alignItems": "center", "marginBottom": "4px"},
+            children=[
+                html.Span("RELATIVE VALUATION", style={"color": C["orange"], "fontSize": "9px", "fontWeight": "bold", "letterSpacing": "1px"}),
+                html.Span("● Current  ◆ Hist Avg", style={"color": C["gray"], "fontSize": "8px"}),
+            ],
+        ),
+        html.Table(
+            [html.Thead(header), html.Tbody([price_label] + rows)],
+            style={"width": "100%", "borderCollapse": "collapse"},
+        ),
+    ], style={"marginBottom": "8px"})
+
+
+def _build_rv_controls(symbol):
+    """RV summary table + ratio dropdown + window toggle + RV chart."""
+    return html.Div([
+        _build_rv_summary_table(symbol),
         html.Div(
             style={"display": "flex", "gap": "16px", "alignItems": "center", "marginBottom": "6px"},
             children=[
@@ -760,8 +880,13 @@ def _build_rv_controls():
                         options=WINDOW_OPTIONS,
                         value="2Y",
                         inline=True,
-                        inputStyle={"marginRight": "3px"},
-                        labelStyle={"marginRight": "10px", "color": C["gray"], "fontSize": "10px", "cursor": "pointer"},
+                        inputStyle={"display": "none"},
+                        labelStyle={
+                            "padding": "3px 8px", "fontSize": "9px", "cursor": "pointer",
+                            "fontFamily": FONT_FAMILY, "border": f"1px solid {C['border']}",
+                            "marginRight": "2px", "color": C["gray"], "background": "#000",
+                        },
+                        className="bbg-period-selector",
                     ),
                 ]),
             ],
@@ -786,13 +911,13 @@ def _build_technicals_section(prices, symbol):
                                                "letterSpacing": "1px", "marginBottom": "4px"}),
         html.Div([
             html.Span("RSI ", style={"color": C["orange"], "fontSize": "9px", "fontWeight": "bold"}),
-            html.Span("ⓘ", title=rsi_tooltip, style={"color": C["dim"], "fontSize": "10px", "cursor": "help"}),
+            html.Span("[?]", title=rsi_tooltip, style={"color": C["dim"], "fontSize": "9px", "cursor": "help", "marginLeft": "4px"}),
         ], style={"marginBottom": "2px"}),
         dcc.Graph(id="ta-rsi-chart", figure=_build_ta_rsi_chart(prices, symbol),
                   config={"displayModeBar": False}, style={"height": "300px", "marginBottom": "4px"}),
         html.Div([
             html.Span("MACD ", style={"color": C["orange"], "fontSize": "9px", "fontWeight": "bold"}),
-            html.Span("ⓘ", title=macd_tooltip, style={"color": C["dim"], "fontSize": "10px", "cursor": "help"}),
+            html.Span("[?]", title=macd_tooltip, style={"color": C["dim"], "fontSize": "9px", "cursor": "help", "marginLeft": "4px"}),
         ], style={"marginBottom": "2px"}),
         dcc.Graph(id="ta-macd-chart", figure=_build_ta_macd_chart(prices, symbol),
                   config={"displayModeBar": False}, style={"height": "300px"}),
