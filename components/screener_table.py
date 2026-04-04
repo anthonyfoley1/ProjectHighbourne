@@ -170,7 +170,14 @@ def build_screener_table(df=None):
 
         # Sparkline
         prices = startup.price_cache.get(sym)
-        spark_color = C["green"] if ret1 >= 0 else C["red"]
+        # Sparkline color based on 90-day trend, not 1-day return
+        if prices is not None and len(prices) >= 90:
+            trend_90d = float(prices.iloc[-1]) - float(prices.iloc[-90])
+        elif prices is not None and len(prices) >= 2:
+            trend_90d = float(prices.iloc[-1]) - float(prices.iloc[0])
+        else:
+            trend_90d = 0
+        spark_color = C["green"] if trend_90d >= 0 else C["red"]
         spark = sparkline_svg(prices, spark_color)
 
         row = html.Tr([

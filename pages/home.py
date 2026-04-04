@@ -43,50 +43,88 @@ LABEL_STYLE = {
 # Section builders
 # ---------------------------------------------------------------------------
 
-def _build_alert_banner():
-    """Orange-bordered alert strip showing up to 5 alerts."""
+def _build_headline_bar():
+    """Bloomberg-style combined headline bar: movers tape + news wire in one panel."""
     df = startup.screener_df
-    alerts_df = df[df["alert_type"].notna()].head(5) if not df.empty else df.head(0)
-    n_alerts = len(alerts_df)
 
-    alert_items = []
-    for _, row in alerts_df.iterrows():
-        is_buy = row["alert_type"] == "BUY"
-        color = C["green"] if is_buy else C["red"]
-        arrow = "\u25b2" if is_buy else "\u25bc"
-        alert_items.append(
+    # --- Row 1: Movers ticker tape ---
+    mover_items = []
+    if not df.empty:
+        top = df.reindex(df["ret_1d"].abs().sort_values(ascending=False).index).head(20)
+        for _, row in top.iterrows():
+            color = C["green"] if row["ret_1d"] > 0 else C["red"]
+            arrow = "\u25b2" if row["ret_1d"] > 0 else "\u25bc"
+            mover_items.append(
+                html.Span([
+                    html.Span(row["symbol"], style={"color": C["white"], "fontWeight": "bold", "marginRight": "2px"}),
+                    html.Span(f"{arrow}{row['ret_1d']:+.1f}%", style={"color": color}),
+                ], style={"marginRight": "16px", "whiteSpace": "nowrap", "fontSize": "10px"})
+            )
+
+    # Duplicate items for seamless loop (marquee scrolls -50%, second copy fills the gap)
+    movers_row = html.Div([
+        html.Div(
+            html.Div(mover_items + mover_items, style={
+                "display": "flex", "animation": "marquee 25s linear infinite", "whiteSpace": "nowrap",
+            }),
+            style={"overflow": "hidden", "flex": "1"},
+        ),
+    ], style={
+        "display": "flex", "alignItems": "center",
+        "padding": "4px 0", "borderBottom": f"1px solid {C['border']}",
+    })
+
+    # --- Row 2: Combined news (stock-specific + market) ---
+    all_news = []
+
+    # Stock-specific news
+    for article in getattr(startup, "news_cache", []):
+        age = article.get("age", "")
+        all_news.append(
             html.Span([
-                html.Span(f"{arrow} ", style={"fontSize": "8px"}),
-                html.Span(f"{row['symbol']} {row['rv_sig']} {row['alert_reason']}"),
-            ], style={
-                "color": color, "fontSize": "10px", "fontFamily": FONT_FAMILY,
-                "marginRight": "16px", "whiteSpace": "nowrap",
-            })
+                html.Span(article["symbol"], style={"color": C["yellow"], "fontWeight": "bold", "marginRight": "4px"}),
+                html.A(article["title"], href=article["link"], target="_blank",
+                       style={"color": "#6699cc", "textDecoration": "none"}),
+                html.Span(f"  {article['publisher']}", style={"color": "#555"}),
+                html.Span(f"  {age}", style={"color": "#444"}) if age else None,
+            ], style={"marginRight": "40px", "whiteSpace": "nowrap", "fontSize": "10px"})
         )
 
-    marquee_content = html.Div(
-        alert_items,
-        style={
-            "display": "flex", "flexWrap": "nowrap",
-            "animation": "marquee 30s linear infinite", "whiteSpace": "nowrap",
-        },
-    )
+    # General market news (Finnhub)
+    for article in getattr(startup, "market_news_cache", []):
+        headline = article.get("headline", article.get("title", ""))
+        source = article.get("source", article.get("publisher", ""))
+        url = article.get("url", article.get("link", "#"))
+        age = article.get("age", "")
+        if headline:
+            all_news.append(
+                html.Span([
+                    html.Span("\u25cf ", style={"color": C["cyan"], "fontSize": "6px"}),
+                    html.A(headline, href=url, target="_blank",
+                           style={"color": "#88aacc", "textDecoration": "none"}),
+                    html.Span(f"  {source}", style={"color": "#555"}),
+                    html.Span(f"  {age}", style={"color": "#444"}) if age else None,
+                ], style={"marginRight": "40px", "whiteSpace": "nowrap", "fontSize": "10px"})
+            )
+
+    news_row = html.Div([
+        html.Div(
+            html.Div(all_news + all_news, style={
+                "display": "flex", "animation": "marquee 80s linear infinite", "whiteSpace": "nowrap",
+            }),
+            style={"overflow": "hidden", "flex": "1"},
+        ),
+    ], style={
+        "display": "flex", "alignItems": "center", "padding": "4px 0",
+    }) if all_news else html.Div()
 
     return html.Div([
-        html.Span(
-            f"ALERTS {n_alerts}",
-            style={
-                "backgroundColor": C["orange"], "color": "#000",
-                "padding": "2px 8px", "fontSize": "10px", "fontWeight": "bold",
-                "fontFamily": FONT_FAMILY, "marginRight": "12px",
-                "borderRadius": "2px", "whiteSpace": "nowrap", "flexShrink": "0",
-            },
-        ),
-        html.Div(marquee_content, style={"overflow": "hidden", "flex": "1"}),
+        movers_row,
+        news_row,
     ], style={
-        "background": "#1a0a00", "border": f"1px solid {C['orange']}",
-        "padding": "6px 10px", "display": "flex", "alignItems": "center",
-        "marginBottom": "8px",
+        "backgroundColor": C["panel"], "border": f"1px solid {C['border']}",
+        "borderLeft": f"3px solid {C['orange']}",
+        "padding": "2px 10px", "marginBottom": "8px", "fontFamily": FONT_FAMILY,
     })
 
 
@@ -146,40 +184,6 @@ def _build_filter_bar():
     })
 
 
-def _build_news_ticker():
-    """Scrolling news bar showing top movers with their signals."""
-    df = startup.screener_df
-    if df.empty:
-        return html.Div()
-
-    top = df.reindex(df["ret_1d"].abs().sort_values(ascending=False).index).head(15)
-    items = []
-    for _, row in top.iterrows():
-        color = C["green"] if row["ret_1d"] > 0 else C["red"]
-        arrow = "\u25b2" if row["ret_1d"] > 0 else "\u25bc"
-        items.append(
-            html.Span([
-                html.Span(row["symbol"], style={"color": C["white"], "fontWeight": "bold", "marginRight": "3px"}),
-                html.Span(f"{arrow} {row['ret_1d']:+.1f}%", style={"color": color, "marginRight": "20px"}),
-            ], style={"whiteSpace": "nowrap"})
-        )
-
-    return html.Div([
-        html.Span("MOVERS ", style={
-            "color": C["orange"], "fontSize": "9px", "fontWeight": "bold",
-            "fontFamily": FONT_FAMILY, "marginRight": "8px", "flexShrink": "0",
-        }),
-        html.Div(
-            html.Div(items, style={
-                "display": "flex", "animation": "marquee 30s linear infinite", "whiteSpace": "nowrap",
-            }),
-            style={"overflow": "hidden", "flex": "1"},
-        ),
-    ], style={
-        "display": "flex", "alignItems": "center",
-        "backgroundColor": C["panel"], "border": f"1px solid {C['border']}",
-        "padding": "4px 8px", "marginBottom": "6px", "fontFamily": FONT_FAMILY,
-    })
 
 
 def _build_gainers_losers_bar():
@@ -408,8 +412,7 @@ def layout():
         header_bar("HIGHBOURNE TERMINAL", "EQUITY SCANNER", ts),
 
         html.Div([
-            _build_alert_banner(),
-            _build_news_ticker(),
+            _build_headline_bar(),
             _build_filter_bar(),
             build_screener_table(),
             _build_gainers_losers_bar(),

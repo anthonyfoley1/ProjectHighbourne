@@ -33,11 +33,13 @@ ticker_info_cache: dict = {}
 ticker_sector: dict = {}
 ticker_name: dict = {}
 close_prices: pd.DataFrame = pd.DataFrame()
+news_cache: list = []
+market_news_cache: list = []
 
 
 def init():
     """Load all data, build Universe, compute technicals / screener / risk."""
-    global universe, screener_df, risk_stats, sector_data
+    global universe, screener_df, risk_stats, sector_data, news_cache, market_news_cache
     global price_cache, ticker_info_cache, ticker_sector, ticker_name, close_prices
 
     # ------------------------------------------------------------------
@@ -231,5 +233,41 @@ def init():
         "normalized": sector_norm,
         "colors": SECTOR_COLORS,
     }
+
+    # ------------------------------------------------------------------
+    # 10. Pre-fetch news for top movers
+    # ------------------------------------------------------------------
+    # ------------------------------------------------------------------
+    # 10. Fetch news via Finnhub (real-time)
+    # ------------------------------------------------------------------
+    print("Fetching news (Finnhub)...")
+    from data.news import fetch_market_news, fetch_company_news
+
+    global market_news_cache, news_cache
+    market_news_cache = []
+    news_cache = []
+
+    try:
+        market_news_cache = fetch_market_news(limit=15)
+        print(f"  Market news: {len(market_news_cache)} articles")
+    except Exception:
+        print("  Warning: market news fetch failed")
+
+    # Company news for top movers
+    top_movers = screener_df.reindex(screener_df["ret_1d"].abs().sort_values(ascending=False).index).head(5)
+    for _, row in top_movers.iterrows():
+        try:
+            articles = fetch_company_news(row["symbol"], days_back=2, limit=2)
+            for a in articles:
+                news_cache.append({
+                    "symbol": row["symbol"],
+                    "title": a["headline"],
+                    "link": a["url"],
+                    "publisher": a["source"],
+                    "age": a["age"],
+                })
+        except Exception:
+            continue
+    print(f"  Company news: {len(news_cache)} articles")
 
     print("Startup complete.")

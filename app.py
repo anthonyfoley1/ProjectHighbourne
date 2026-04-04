@@ -45,8 +45,8 @@ app.index_string = '''
             body { margin: 0; padding: 0; background: #000;
                    font-family: ''' + FONT_FAMILY + '''; }
             @keyframes marquee {
-                0% { transform: translateX(100%); }
-                100% { transform: translateX(-100%); }
+                0% { transform: translateX(0%); }
+                100% { transform: translateX(-50%); }
             }
             ''' + _DARK_DROPDOWN_CSS + '''
             ''' + FLASH_CSS + '''
@@ -99,4 +99,4 @@ import data.startup as startup
 startup.init()
 
 if __name__ == "__main__":
-    app.run(debug=False, port=8050)
+    app.run(debug=True, use_reloader=False, port=8050)

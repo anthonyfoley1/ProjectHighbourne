@@ -147,7 +147,7 @@ def layout(symbol="AAPL"):
     )
 
     sec_desc = _build_description(info, symbol)
-    sec_news = _build_news(info)
+    sec_news = _build_news(info, symbol=symbol)
     sec_price = _build_price_section(info, prices)
     sec_earnings = _build_earnings_section(symbol)
     sec_financials = _build_financials_placeholder()
@@ -311,9 +311,30 @@ def _build_description(info, symbol):
     )
 
 
-def _build_news(info):
-    """Recent news section."""
-    news_items = info.get("news", [])[:3]
+def _build_news(info, symbol=None):
+    """Recent news section — uses Finnhub for real-time news, falls back to yfinance."""
+    from data.news import fetch_company_news
+
+    news_items = []
+    if symbol:
+        try:
+            articles = fetch_company_news(symbol, days_back=5, limit=5)
+            for a in articles:
+                news_items.append({
+                    "title": a["headline"], "link": a["url"],
+                    "publisher": a["source"], "age": a["age"],
+                })
+        except Exception:
+            pass
+
+    # Fallback to yfinance news if Finnhub returned nothing
+    if not news_items:
+        for n in (info.get("news") or [])[:3]:
+            news_items.append({
+                "title": n.get("title", ""), "link": n.get("link", "#"),
+                "publisher": n.get("publisher", ""), "age": "",
+            })
+
     if not news_items:
         return html.Div()
 
@@ -322,14 +343,13 @@ def _build_news(info):
                                         "letterSpacing": "1px", "marginBottom": "4px"}),
     ]
     for n in news_items:
-        link = n.get("link", "#")
-        title = n.get("title", "Untitled")
-        pub = n.get("publisher", "")
+        age = n.get("age", "")
         children.append(html.Div([
-            html.A(title, href=link, target="_blank",
+            html.A(n["title"], href=n["link"], target="_blank",
                    style={"color": "#6699cc", "textDecoration": "none", "fontSize": "10px"}),
-            html.Span(f"  - {pub}" if pub else "", style={"color": C["gray"], "fontSize": "9px"}),
-        ], style={"marginBottom": "3px"}))
+            html.Span(f"  {n['publisher']}", style={"color": C["gray"], "fontSize": "9px"}),
+            html.Span(f"  {age}", style={"color": "#555", "fontSize": "9px"}) if age else None,
+        ], style={"marginBottom": "3px", "borderBottom": f"1px solid {C['border']}", "paddingBottom": "3px"}))
     return html.Div(children, style={**PANEL_STYLE, "marginBottom": "8px"})
 
 
@@ -841,11 +861,15 @@ def update_rv_chart(ratio_name, window_name, pathname):
         return empty_fig(f"{symbol} not found")
 
     window_days = WINDOW_MAP.get(window_name)
-    series = ticker_obj.window_series(ratio_name, window_days)
-    st = ticker_obj.stats(ratio_name, window_days)
+    try:
+        series = ticker_obj.window_series(ratio_name, window_days)
+        st = ticker_obj.stats(ratio_name, window_days)
+    except Exception:
+        series = pd.Series(dtype=float)
+        st = None
 
-    if st is None or series.empty:
-        return empty_fig(f"No {ratio_name} data for {symbol}")
+    if st is None or series is None or len(series) < 10:
+        return empty_fig(f"Insufficient {ratio_name} data for {symbol}")
 
     mean = st["mean"]
     std = st["std"]
