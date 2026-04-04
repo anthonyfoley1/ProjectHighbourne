@@ -470,7 +470,7 @@ def _build_technicals_section(prices, symbol):
         html.Div("TECHNICAL ANALYSIS", style={"color": C["orange"], "fontSize": "9px", "fontWeight": "bold",
                                                "letterSpacing": "1px", "marginBottom": "4px"}),
         dcc.Graph(id="ta-price-chart", figure=_build_ta_price_chart(prices, symbol),
-                  config={"displayModeBar": False}, style={"height": "260px", "marginBottom": "4px"}),
+                  config={"displayModeBar": False}, style={"height": "280px", "marginBottom": "4px"}),
         dcc.Graph(id="ta-rsi-chart", figure=_build_ta_rsi_chart(prices, symbol),
                   config={"displayModeBar": False}, style={"height": "180px", "marginBottom": "4px"}),
         dcc.Graph(id="ta-macd-chart", figure=_build_ta_macd_chart(prices, symbol),
@@ -620,11 +620,37 @@ def _build_ta_price_chart(prices, symbol):
                                    text="DC", showarrow=True, arrowhead=2, arrowcolor=C["red"],
                                    font=dict(size=8, color=C["red"]))
 
+    # Background tint: green when price above both MAs, red when below both
+    for i in range(1, len(p1y)):
+        s50 = sma50.iloc[i] if i < len(sma50) and not np.isnan(sma50.iloc[i]) else None
+        s200 = sma200.iloc[i] if i < len(sma200) and not np.isnan(sma200.iloc[i]) else None
+        price_val_i = p1y.iloc[i]
+        if s50 is not None and s200 is not None:
+            if price_val_i > s50 and price_val_i > s200:
+                fig.add_vrect(x0=p1y.index[i - 1], x1=p1y.index[i],
+                              fillcolor="rgba(0,255,0,0.03)", line_width=0, layer="below")
+            elif price_val_i < s50 and price_val_i < s200:
+                fig.add_vrect(x0=p1y.index[i - 1], x1=p1y.index[i],
+                              fillcolor="rgba(255,68,68,0.03)", line_width=0, layer="below")
+
+    # Current price badge annotation
+    last_price = float(p1y.iloc[-1])
+    last_sma200 = float(sma200.iloc[-1]) if not sma200.empty and not np.isnan(sma200.iloc[-1]) else None
+    badge_color = C["green"] if last_sma200 is not None and last_price > last_sma200 else C["red"]
+    fig.add_annotation(
+        x=p1y.index[-1], y=last_price,
+        text=f"${last_price:.2f}",
+        showarrow=True, arrowhead=2, arrowcolor=badge_color,
+        font=dict(size=9, color="#000", family=FONT_FAMILY),
+        bgcolor=badge_color, bordercolor=badge_color, borderwidth=1,
+    )
+
     fig.update_layout(
         **make_chart_layout(
             title=dict(text=f"{symbol} PRICE + MOVING AVERAGES (1Y)", font=dict(size=11, color=C["orange"]), x=0.01),
             xaxis=dict(gridcolor=C["border"], tickfont=dict(size=9, color=C["gray"])),
             yaxis=dict(gridcolor=C["border"], tickfont=dict(size=9, color=C["gray"]), tickprefix="$"),
+            height=280,
             showlegend=True,
             legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="left", x=0,
                         font=dict(size=8, color=C["gray"])),
@@ -706,6 +732,12 @@ def _build_ta_macd_chart(prices, symbol):
     signal_color = C["green"] if is_bullish else C["red"]
 
     fig = go.Figure()
+
+    # Bullish/bearish zone tints around zero line
+    y_abs_max = max(abs(macd_6m.max()), abs(macd_6m.min()), abs(hist_6m.max()), abs(hist_6m.min())) * 1.5
+    fig.add_hrect(y0=0, y1=y_abs_max, fillcolor="rgba(0,255,0,0.04)", line_width=0)
+    fig.add_hrect(y0=-y_abs_max, y1=0, fillcolor="rgba(255,68,68,0.04)", line_width=0)
+
     hist_colors = [C["green"] if v >= 0 else C["red"] for v in hist_6m.values]
     fig.add_trace(go.Bar(x=hist_6m.index, y=hist_6m.values,
                          marker_color=hist_colors, name="Histogram", opacity=0.6))
@@ -821,9 +853,34 @@ def update_rv_chart(ratio_name, window_name, pathname):
 
     fig = go.Figure()
 
-    # +/- 2 sigma band
-    fig.add_hrect(y0=mean - 2 * std, y1=mean + 2 * std,
-                  fillcolor="rgba(255,215,0,0.03)", line_width=0)
+    # Zone fills between sigma bands (like RSI colored zones)
+    # Extreme zones: beyond +/-2 sigma
+    fig.add_hrect(y0=mean + 2 * std, y1=mean + 4 * std,
+                  fillcolor="rgba(255,68,68,0.07)", line_width=0)
+    fig.add_hrect(y0=mean - 4 * std, y1=mean - 2 * std,
+                  fillcolor="rgba(0,255,0,0.07)", line_width=0)
+    # Rich/Cheap zones: between +/-1 and +/-2 sigma
+    fig.add_hrect(y0=mean + std, y1=mean + 2 * std,
+                  fillcolor="rgba(255,68,68,0.04)", line_width=0)
+    fig.add_hrect(y0=mean - 2 * std, y1=mean - std,
+                  fillcolor="rgba(0,255,0,0.04)", line_width=0)
+
+    # Zone labels on the right margin
+    fig.add_annotation(x=1.01, y=mean + 1.5 * std, text="RICH",
+                       xref="paper", yref="y", showarrow=False,
+                       font=dict(size=8, color="rgba(255,68,68,0.6)", family=FONT_FAMILY))
+    fig.add_annotation(x=1.01, y=mean - 1.5 * std, text="CHEAP",
+                       xref="paper", yref="y", showarrow=False,
+                       font=dict(size=8, color="rgba(0,255,0,0.6)", family=FONT_FAMILY))
+    fig.add_annotation(x=1.01, y=mean + 2.5 * std, text="EXTREME",
+                       xref="paper", yref="y", showarrow=False,
+                       font=dict(size=7, color="rgba(255,68,68,0.7)", family=FONT_FAMILY))
+    fig.add_annotation(x=1.01, y=mean - 2.5 * std, text="EXTREME",
+                       xref="paper", yref="y", showarrow=False,
+                       font=dict(size=7, color="rgba(0,255,0,0.7)", family=FONT_FAMILY))
+    fig.add_annotation(x=1.01, y=mean, text="FAIR",
+                       xref="paper", yref="y", showarrow=False,
+                       font=dict(size=8, color="rgba(255,165,0,0.6)", family=FONT_FAMILY))
 
     # +/- 1 sigma lines
     for y_val, label in [(mean + std, f"+1\u03c3 {mean + std:.1f}"),

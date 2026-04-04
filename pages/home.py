@@ -359,6 +359,13 @@ def _build_sector_performance():
                     mode="lines", name=sector_name, line=dict(color=clr, width=1),
                 ))
 
+    # Zero line + bullish/bearish zone tints
+    fig.add_hline(y=0, line_dash="solid", line_color=C["gray"], line_width=0.8, opacity=0.5,
+                  annotation_text="FLAT", annotation_position="right",
+                  annotation_font=dict(size=8, color=C["gray"]))
+    fig.add_hrect(y0=0, y1=1e6, fillcolor="rgba(0,255,0,0.03)", line_width=0)
+    fig.add_hrect(y0=-1e6, y1=0, fillcolor="rgba(255,68,68,0.03)", line_width=0)
+
     fig.update_layout(
         template="plotly_dark",
         paper_bgcolor=C["panel"],
