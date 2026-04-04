@@ -660,8 +660,8 @@ def _build_earnings_data_table(symbol):
         html.Th("EPS Actual", style=hdr_style),
         html.Th("EPS Est", style=hdr_style),
         html.Th("Surprise %", style=hdr_style),
-        html.Th("Px Surp (3D)", style=hdr_style),
         html.Th("Beat/Miss", style=hdr_style),
+        html.Th("Px Surp (3D)", style=hdr_style),
     ])
 
     rows = []
@@ -698,16 +698,19 @@ def _build_earnings_data_table(symbol):
             "textAlign": "right", "fontFamily": FONT_FAMILY,
         }
 
+        # Strip timestamps from dates — show just YYYY-MM-DD
+        q_date_str = str(q_label).split(" ")[0] if q_label else ""
+
         rows.append(html.Tr([
-            html.Td(q_label, style={**cell, "color": C["white"], "textAlign": "left"}),
-            html.Td(q_label, style={**cell, "color": C["gray"]}),
+            html.Td(q_date_str, style={**cell, "color": C["white"], "textAlign": "left"}),
+            html.Td(q_date_str, style={**cell, "color": C["gray"]}),
             html.Td(f"${act:.2f}" if act is not None else "--", style={**cell, "color": C["white"]}),
             html.Td(f"${est:.2f}" if est is not None else "--", style={**cell, "color": C["gray"]}),
             html.Td(f"{surp:+.1f}%" if surp is not None else "--",
                      style={**cell, "color": C["green"] if surp and surp >= 0 else C["red"] if surp else C["gray"]}),
+            html.Td(beat_label, style={**cell, "color": beat_color, "fontWeight": "bold"}),
             html.Td(f"{px_3d:+.1f}%" if px_3d is not None else "--",
                      style={**cell, "color": C["green"] if px_3d and px_3d >= 0 else C["red"] if px_3d else C["gray"]}),
-            html.Td(beat_label, style={**cell, "color": beat_color, "fontWeight": "bold"}),
         ], style={"backgroundColor": row_bg}))
 
     table = html.Table(
@@ -763,7 +766,7 @@ def _build_rv_summary_table(symbol):
         html.Th("Hist Avg", style={**hdr, "textAlign": "right"}),
         html.Th("Diff", style={**hdr, "textAlign": "right"}),
         html.Th("# SD", style={**hdr, "textAlign": "right"}),
-        html.Th("", style={**hdr, "width": "120px", "textAlign": "center"}),
+        html.Th("Range", style={**hdr, "width": "120px", "textAlign": "center"}),
         html.Th("Low", style={**hdr, "textAlign": "right"}),
         html.Th("High", style={**hdr, "textAlign": "right"}),
         html.Th("Implied Px", style={**hdr, "textAlign": "right"}),
@@ -862,44 +865,49 @@ def _build_rv_summary_table(symbol):
             [html.Thead(header), html.Tbody([price_label] + rows)],
             style={"width": "100%", "borderCollapse": "collapse"},
         ),
-    ], style={"marginBottom": "8px"})
+    ], style={"marginBottom": "14px"})
 
 
 def _build_rv_controls(symbol):
     """RV summary table + ratio dropdown + window toggle + RV chart."""
+    # Inline controls row: ratio dropdown + window toggle
+    controls_row = html.Div(
+        style={"display": "flex", "gap": "12px", "alignItems": "center", "marginBottom": "8px"},
+        children=[
+            html.Div([
+                html.Label("RATIO", style={"color": C["gray"], "fontSize": "8px", "marginRight": "4px",
+                                           "fontFamily": FONT_FAMILY}),
+                dcc.Dropdown(
+                    id="ratio-dropdown",
+                    options=[{"label": r, "value": r} for r in RATIO_NAMES],
+                    value="P/E",
+                    style={"width": "120px", "backgroundColor": C["panel"], "fontFamily": FONT_FAMILY, "fontSize": "10px"},
+                    clearable=False,
+                ),
+            ], style={"display": "flex", "alignItems": "center"}),
+            html.Div([
+                html.Label("WINDOW", style={"color": C["gray"], "fontSize": "8px", "marginRight": "4px",
+                                            "fontFamily": FONT_FAMILY}),
+                dcc.RadioItems(
+                    id="window-toggle",
+                    options=WINDOW_OPTIONS,
+                    value="2Y",
+                    inline=True,
+                    inputStyle={"display": "none"},
+                    labelStyle={
+                        "padding": "3px 8px", "fontSize": "9px", "cursor": "pointer",
+                        "fontFamily": FONT_FAMILY, "border": f"1px solid {C['border']}",
+                        "marginRight": "2px", "color": C["gray"], "background": "#000",
+                    },
+                    className="bbg-period-selector",
+                ),
+            ], style={"display": "flex", "alignItems": "center"}),
+        ],
+    )
+
     return html.Div([
         _build_rv_summary_table(symbol),
-        html.Div(
-            style={"display": "flex", "gap": "16px", "alignItems": "center", "marginBottom": "6px"},
-            children=[
-                html.Div([
-                    html.Label("RATIO", style={"color": C["gray"], "fontSize": "9px", "display": "block", "marginBottom": "2px"}),
-                    dcc.Dropdown(
-                        id="ratio-dropdown",
-                        options=[{"label": r, "value": r} for r in RATIO_NAMES],
-                        value="P/E",
-                        style={"width": "140px", "backgroundColor": C["panel"], "fontFamily": FONT_FAMILY, "fontSize": "10px"},
-                        clearable=False,
-                    ),
-                ]),
-                html.Div([
-                    html.Label("WINDOW", style={"color": C["gray"], "fontSize": "9px", "display": "block", "marginBottom": "2px"}),
-                    dcc.RadioItems(
-                        id="window-toggle",
-                        options=WINDOW_OPTIONS,
-                        value="2Y",
-                        inline=True,
-                        inputStyle={"display": "none"},
-                        labelStyle={
-                            "padding": "3px 8px", "fontSize": "9px", "cursor": "pointer",
-                            "fontFamily": FONT_FAMILY, "border": f"1px solid {C['border']}",
-                            "marginRight": "2px", "color": C["gray"], "background": "#000",
-                        },
-                        className="bbg-period-selector",
-                    ),
-                ]),
-            ],
-        ),
+        controls_row,
         dcc.Graph(id="rv-chart", config={"displayModeBar": False}, style={"height": "320px"}),
         html.Div(id="rv-sector-attribution"),
     ], style=PANEL_STYLE)
@@ -1032,12 +1040,12 @@ def _build_earnings_chart(symbol):
             yaxis=dict(gridcolor=C["border"], tickfont=dict(size=10, color=C["gray"]),
                        title=dict(text="EPS ($)", font=dict(size=10, color=C["gray"]))),
             height=280,
-            margin=dict(l=60, r=20, t=40, b=40),
+            margin=dict(l=60, r=20, t=40, b=60),
             hovermode="closest",
             hoverlabel=dict(bgcolor="#1a1a1a", bordercolor=C["border"],
                             font=dict(color=C["white"], family=FONT_FAMILY, size=11)),
             showlegend=True,
-            legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="left", x=0,
+            legend=dict(orientation="h", yanchor="top", y=-0.12, xanchor="left", x=0,
                         font=dict(size=9, color=C["gray"])),
         ),
     )
@@ -1145,9 +1153,9 @@ def _build_ta_macd_chart(prices, symbol):
             xaxis=dict(gridcolor=C["border"], tickfont=dict(size=9, color=C["gray"])),
             yaxis=dict(gridcolor=C["border"], tickfont=dict(size=9, color=C["gray"])),
             height=300,
-            margin=dict(l=50, r=80, t=35, b=30),
+            margin=dict(l=50, r=80, t=35, b=50),
             showlegend=True,
-            legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="left", x=0,
+            legend=dict(orientation="h", yanchor="top", y=-0.12, xanchor="left", x=0,
                         font=dict(size=8, color=C["gray"])),
             barmode="relative",
         ),
@@ -1335,10 +1343,10 @@ def update_price_chart(period, overlays, pathname):
         xaxis=dict(gridcolor=C["border"], tickfont=dict(size=9, color=C["gray"])),
         yaxis=dict(gridcolor=C["border"], tickfont=dict(size=9, color=C["gray"]), tickprefix="$"),
         height=350,
-        margin=dict(l=50, r=80, t=35, b=30),
+        margin=dict(l=50, r=80, t=35, b=55),
         hovermode="x unified",
         showlegend=True,
-        legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="left", x=0,
+        legend=dict(orientation="h", yanchor="top", y=-0.12, xanchor="left", x=0,
                     font=dict(size=8, color=C["gray"])),
         font=dict(family=FONT_FAMILY),
     )
