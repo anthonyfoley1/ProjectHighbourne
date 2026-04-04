@@ -138,24 +138,36 @@ def _reconcile_quarterly_with_annual(quarterly_entries, annual_entries):
 
 
 # Alternative XBRL concept names — try primary first, then alternatives
+# Primary + alternatives for each concept, ordered by prevalence.
+# Based on empirical check across MSFT, AAPL, AMZN, GOOG, META, JPM, HD, WMT, JNJ, PG.
 CONCEPT_ALTERNATIVES = {
     "Revenues": [
-        "RevenueFromContractWithCustomerExcludingAssessedTax",
-        "SalesRevenueNet",
-        "RevenueFromContractWithCustomerIncludingAssessedTax",
+        "RevenueFromContractWithCustomerExcludingAssessedTax",  # ASC 606 (post-2018), used by all major filers
+        "SalesRevenueNet",                                      # pre-2018 legacy
+        "SalesRevenueGoodsNet",                                 # product-only revenue
+        "RevenueFromContractWithCustomerIncludingAssessedTax",  # includes sales tax
     ],
     "DepreciationDepletionAndAmortization": [
-        "DepreciationAndAmortization",
-        "Depreciation",
+        "Depreciation",                                         # MSFT, GOOG use this (current!)
+        "DepreciationAndAmortization",                          # some filers
+        "DepreciationAmortizationAndAccretionNet",              # AAPL used historically
     ],
     "LongTermDebt": [
-        "LongTermDebtNoncurrent",
+        "LongTermDebtNoncurrent",                               # all major filers have this
+        "LongTermDebtAndCapitalLeaseObligations",               # GOOG
     ],
     "CashAndCashEquivalentsAtCarryingValue": [
-        "CashCashEquivalentsAndShortTermInvestments",
+        "CashCashEquivalentsAndShortTermInvestments",           # MSFT, GOOG (broader definition)
     ],
     "StockholdersEquity": [
         "StockholdersEquityIncludingPortionAttributableToNoncontrollingInterest",
+    ],
+    "NetIncomeLoss": [
+        "NetIncomeLossAvailableToCommonStockholdersBasic",      # GOOG, META
+        "ProfitLoss",
+    ],
+    "OperatingIncomeLoss": [
+        "IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest",
     ],
 }
 
