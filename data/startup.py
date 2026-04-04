@@ -150,7 +150,7 @@ def init():
             "rv_sig": best_ratio,
             "z_score": round(best_z, 2),
             "rsi": round(float(current_rsi), 1),
-            "macd": round(float(current_macd), 4),
+            "macd": macd_sig,
             "ret_1d": round(ret_1d * 100, 2),
             "ret_3d": round(ret_3d * 100, 2),
             "signal": signal,

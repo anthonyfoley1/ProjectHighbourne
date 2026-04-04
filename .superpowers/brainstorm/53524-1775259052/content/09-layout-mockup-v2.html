@@ -1,0 +1,141 @@
+<h2>Section 1: RV Chart Tab — Stacked Panels (v2)</h2>
+<p class="subtitle">Taller charts, earnings boxes preserved on the RV ratio line.</p>
+
+<div class="mockup">
+  <div class="mockup-header">RV Chart Tab — Stacked Panels</div>
+  <div class="mockup-body" style="background:#0b0e11; color:#ccc; font-family:monospace; padding:16px;">
+
+    <!-- Controls bar -->
+    <div style="display:flex; gap:16px; align-items:center; padding:8px 12px; background:#141920; border-radius:6px; margin-bottom:12px;">
+      <span style="color:#ff8c00; font-weight:bold;">Ticker:</span>
+      <div style="background:#1e2530; padding:4px 12px; border-radius:4px; border:1px solid #333;">AAPL ▾</div>
+      <span style="color:#ff8c00; font-weight:bold;">Ratio:</span>
+      <div style="background:#1e2530; padding:4px 12px; border-radius:4px; border:1px solid #333;">P/E ▾</div>
+      <span style="color:#ff8c00; font-weight:bold;">Window:</span>
+      <div style="display:flex; gap:4px;">
+        <span style="background:#1e2530; padding:4px 8px; border-radius:4px; border:1px solid #555;">5Y</span>
+        <span style="background:#ff8c00; padding:4px 8px; border-radius:4px; color:#000; font-weight:bold;">2Y</span>
+        <span style="background:#1e2530; padding:4px 8px; border-radius:4px; border:1px solid #555;">6M</span>
+      </div>
+    </div>
+
+    <!-- Stat cards -->
+    <div style="display:flex; gap:8px; margin-bottom:12px;">
+      <div style="flex:1; background:#141920; padding:8px 12px; border-radius:4px; border-left:3px solid #00bcd4;">
+        <div style="font-size:10px; color:#888;">CURRENT</div>
+        <div style="font-size:18px; color:#00bcd4; font-weight:bold;">22.4x</div>
+      </div>
+      <div style="flex:1; background:#141920; padding:8px 12px; border-radius:4px; border-left:3px solid #ff8c00;">
+        <div style="font-size:10px; color:#888;">MEAN</div>
+        <div style="font-size:18px; color:#ff8c00; font-weight:bold;">25.1x</div>
+      </div>
+      <div style="flex:1; background:#141920; padding:8px 12px; border-radius:4px; border-left:3px solid #4caf50;">
+        <div style="font-size:10px; color:#888;">Z-SCORE</div>
+        <div style="font-size:18px; color:#4caf50; font-weight:bold;">-1.2</div>
+      </div>
+      <div style="flex:1; background:#141920; padding:8px 12px; border-radius:4px; border-left:3px solid #ab47bc;">
+        <div style="font-size:10px; color:#888;">RSI (14)</div>
+        <div style="font-size:18px; color:#4caf50; font-weight:bold;">28.3</div>
+      </div>
+      <div style="flex:1; background:#141920; padding:8px 12px; border-radius:4px; border-left:3px solid #00bcd4;">
+        <div style="font-size:10px; color:#888;">MACD SIGNAL</div>
+        <div style="font-size:18px; color:#f44336; font-weight:bold;">Bearish</div>
+      </div>
+      <div style="flex:1; background:#141920; padding:8px 12px; border-radius:4px; border-left:3px solid #e91e63;">
+        <div style="font-size:10px; color:#888;">MA TREND</div>
+        <div style="font-size:18px; color:#f44336; font-weight:bold;">Below 200d</div>
+      </div>
+    </div>
+
+    <!-- Top panel: RV Chart — TALLER -->
+    <div style="background:#141920; border-radius:6px; padding:12px; margin-bottom:8px;">
+      <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
+        <span style="color:#ff8c00; font-weight:bold; font-size:12px;">RELATIVE VALUATION — P/E</span>
+      </div>
+      <div style="position:relative; height:220px; border-bottom:1px solid #333; border-left:1px solid #333;">
+        <!-- Mean line -->
+        <div style="position:absolute; top:50%; width:100%; border-top:2px dashed #ff8c00;"></div>
+        <!-- +1σ -->
+        <div style="position:absolute; top:30%; width:100%; border-top:1px dashed rgba(255,193,7,0.4);"></div>
+        <!-- -1σ -->
+        <div style="position:absolute; top:70%; width:100%; border-top:1px dashed rgba(255,193,7,0.4);"></div>
+        <!-- +2σ -->
+        <div style="position:absolute; top:15%; width:100%; border-top:1px dashed rgba(255,193,7,0.2);"></div>
+        <!-- -2σ -->
+        <div style="position:absolute; top:85%; width:100%; border-top:1px dashed rgba(255,193,7,0.2);"></div>
+        <!-- Price line -->
+        <svg style="position:absolute; top:0; left:0; width:100%; height:100%;" viewBox="0 0 400 220" preserveAspectRatio="none">
+          <polyline points="0,110 20,105 40,115 60,100 80,90 100,95 120,85 140,92 160,108 180,115 200,120 220,130 240,140 260,155 280,165 300,158 320,148 340,160 360,170 380,165 400,155" fill="none" stroke="white" stroke-width="1.5"/>
+        </svg>
+        <!-- Current dot -->
+        <div style="position:absolute; right:5px; top:68%; width:10px; height:10px; background:#00bcd4; border-radius:50%;"></div>
+        <!-- Earnings boxes on the chart line -->
+        <div style="position:absolute; left:22%; top:38%; background:#4caf50; color:#fff; font-size:9px; font-weight:bold; padding:2px 5px; border-radius:3px;">E</div>
+        <div style="position:absolute; left:47%; top:53%; background:#4caf50; color:#fff; font-size:9px; font-weight:bold; padding:2px 5px; border-radius:3px;">E</div>
+        <div style="position:absolute; left:72%; top:72%; background:#ff8c00; color:#fff; font-size:9px; font-weight:bold; padding:2px 5px; border-radius:3px;">E</div>
+      </div>
+    </div>
+
+    <!-- Bottom panel: Price + Technicals — TALLER -->
+    <div style="background:#141920; border-radius:6px; padding:12px;">
+      <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
+        <span style="color:#00bcd4; font-weight:bold; font-size:12px;">PRICE + TECHNICALS</span>
+        <span style="color:#555; font-size:11px;">SMA 50 / SMA 200 | RSI (14) | MACD</span>
+      </div>
+
+      <!-- Price chart with MAs — TALLER -->
+      <div style="position:relative; height:160px; border-bottom:1px solid #333; border-left:1px solid #333; margin-bottom:4px;">
+        <svg style="position:absolute; top:0; left:0; width:100%; height:100%;" viewBox="0 0 400 160" preserveAspectRatio="none">
+          <!-- Price -->
+          <polyline points="0,95 20,90 40,85 60,78 80,70 100,65 120,60 140,68 160,75 180,82 200,90 220,98 240,105 260,112 280,100 300,92 320,85 340,78 360,75 380,80 400,84" fill="none" stroke="white" stroke-width="1.5"/>
+          <!-- 50 SMA -->
+          <polyline points="0,88 20,85 40,82 60,78 80,74 100,70 120,67 140,68 160,72 180,76 200,82 220,88 240,94 260,100 280,100 300,96 320,92 340,87 360,83 380,81 400,82" fill="none" stroke="#ff8c00" stroke-width="1" stroke-dasharray="4,2"/>
+          <!-- 200 SMA -->
+          <polyline points="0,80 20,80 40,79 60,79 80,78 100,77 120,77 140,78 160,79 180,80 200,82 220,84 240,86 260,88 280,89 300,89 320,88 340,87 360,86 380,85 400,84" fill="none" stroke="#e91e63" stroke-width="1" stroke-dasharray="4,2"/>
+        </svg>
+        <div style="position:absolute; top:4px; right:4px; font-size:9px;">
+          <span style="color:#ff8c00;">━ 50d</span>&nbsp;
+          <span style="color:#e91e63;">━ 200d</span>&nbsp;
+          <span style="color:white;">━ Price</span>
+        </div>
+      </div>
+
+      <!-- RSI sub-panel — TALLER -->
+      <div style="position:relative; height:70px; border-bottom:1px solid #333; border-left:1px solid #333; margin-bottom:4px;">
+        <div style="position:absolute; top:0; left:-28px; font-size:9px; color:#888;">RSI</div>
+        <!-- Overbought line (70) -->
+        <div style="position:absolute; top:30%; width:100%; border-top:1px solid rgba(244,67,54,0.3);"></div>
+        <div style="position:absolute; top:30%; right:4px; font-size:8px; color:rgba(244,67,54,0.5);">70</div>
+        <!-- Oversold line (30) -->
+        <div style="position:absolute; top:70%; width:100%; border-top:1px solid rgba(76,175,80,0.3);"></div>
+        <div style="position:absolute; top:70%; right:4px; font-size:8px; color:rgba(76,175,80,0.5);">30</div>
+        <svg style="position:absolute; top:0; left:0; width:100%; height:100%;" viewBox="0 0 400 70" preserveAspectRatio="none">
+          <polyline points="0,35 20,33 40,30 60,27 80,22 100,18 120,15 140,22 160,28 180,32 200,36 220,40 240,44 260,48 280,42 300,36 320,30 340,25 360,22 380,28 400,50" fill="none" stroke="#ab47bc" stroke-width="1"/>
+        </svg>
+        <div style="position:absolute; right:4px; bottom:2px; font-size:10px; color:#4caf50; font-weight:bold;">28.3</div>
+      </div>
+
+      <!-- MACD sub-panel — TALLER -->
+      <div style="position:relative; height:70px; border-left:1px solid #333;">
+        <div style="position:absolute; top:0; left:-35px; font-size:9px; color:#888;">MACD</div>
+        <!-- Zero line -->
+        <div style="position:absolute; top:50%; width:100%; border-top:1px solid #333;"></div>
+        <svg style="position:absolute; top:0; left:0; width:100%; height:100%;" viewBox="0 0 400 70" preserveAspectRatio="none">
+          <!-- MACD line -->
+          <polyline points="0,38 20,36 40,33 60,30 80,26 100,22 120,20 140,24 160,28 180,32 200,36 220,40 240,44 260,46 280,42 300,38 320,34 340,30 360,28 380,32 400,40" fill="none" stroke="#00bcd4" stroke-width="1"/>
+          <!-- Signal line -->
+          <polyline points="0,36 20,35 40,33 60,31 80,28 100,25 120,23 140,23 160,26 180,29 200,33 220,37 240,41 260,44 280,43 300,40 320,37 340,33 360,30 380,31 400,36" fill="none" stroke="#ff8c00" stroke-width="1" stroke-dasharray="3,2"/>
+        </svg>
+        <div style="position:absolute; top:4px; right:4px; font-size:9px;">
+          <span style="color:#00bcd4;">━ MACD</span>&nbsp;
+          <span style="color:#ff8c00;">━ Signal</span>
+        </div>
+        <div style="position:absolute; right:4px; bottom:2px; font-size:10px; color:#f44336; font-weight:bold;">Bearish ✕</div>
+      </div>
+    </div>
+
+    <div style="text-align:center; margin-top:8px; color:#555; font-size:10px;">← Shared time axis: both panels scroll/zoom together →</div>
+  </div>
+</div>
+
+<p style="margin-top:16px;">Charts are taller now. Earnings "E" boxes sit on the RV ratio line itself (green for 10-Q, orange for 10-K), matching your current style.</p>

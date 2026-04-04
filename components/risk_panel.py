@@ -90,7 +90,7 @@ def build_risk_dashboard():
     fg_label = fg.get("label", "N/A")
     breadth = rs.get("breadth", {})
     verdict = rs.get("verdict", {})
-    verdict_label = verdict.get("label", "N/A") if isinstance(verdict, dict) else str(verdict)
+    verdict_label = verdict.get("level", verdict.get("label", "N/A")) if isinstance(verdict, dict) else str(verdict)
     verdict_color = verdict.get("color", C["gray"]) if isinstance(verdict, dict) else C["gray"]
 
     vix_color = C["green"] if vix_val < 20 else (C["yellow"] if vix_val < 30 else C["red"])

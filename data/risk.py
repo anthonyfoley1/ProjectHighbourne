@@ -191,26 +191,71 @@ def fetch_vix() -> dict:
         return {"value": None, "change": None}
 
 
-def fetch_fear_greed() -> dict:
-    """Scrape CNN Fear & Greed index.
+def compute_fear_greed(breadth_stats, vix_value, new_highs, new_lows):
+    """Compute our own Fear & Greed composite from R3000 breadth data.
 
-    Returns:
-        {value: int (0-100), label: str} or {value: None, label: 'N/A'} on error.
+    Scores 0-100 where 0 = Extreme Fear, 100 = Extreme Greed.
+    Based on: % above SMAs, avg RSI, VIX level, new highs vs lows ratio.
     """
+    score = 50  # start neutral
+
+    # Breadth: % above 200 SMA (0-100 range, centered at 50)
+    pct200 = breadth_stats.get("pct_above_200sma", 50)
+    score += (pct200 - 50) * 0.3  # contributes up to ±15
+
+    # Breadth: % above 50 SMA
+    pct50 = breadth_stats.get("pct_above_50sma", 50)
+    score += (pct50 - 50) * 0.2  # contributes up to ±10
+
+    # RSI: avg RSI (centered at 50)
+    avg_rsi = breadth_stats.get("avg_rsi", 50)
+    score += (avg_rsi - 50) * 0.3  # contributes up to ±15
+
+    # VIX: lower = greed, higher = fear
+    if vix_value:
+        if vix_value < 15: score += 10
+        elif vix_value < 20: score += 5
+        elif vix_value > 30: score -= 15
+        elif vix_value > 25: score -= 10
+        elif vix_value > 20: score -= 5
+
+    # New highs vs lows ratio
+    total = (new_highs or 0) + (new_lows or 0)
+    if total > 0:
+        hl_ratio = (new_highs or 0) / total  # 0 to 1
+        score += (hl_ratio - 0.5) * 20  # contributes up to ±10
+
+    # Clamp to 0-100
+    score = max(0, min(100, int(round(score))))
+
+    # Label
+    if score <= 20:
+        label = "EXTREME FEAR"
+    elif score <= 40:
+        label = "FEAR"
+    elif score <= 60:
+        label = "NEUTRAL"
+    elif score <= 80:
+        label = "GREED"
+    else:
+        label = "EXTREME GREED"
+
+    return {"value": score, "label": label}
+
+
+def fetch_fear_greed() -> dict:
+    """Try CNN scrape, fallback to None (will use compute_fear_greed instead)."""
     try:
         import requests
-
         url = "https://production.dataviz.cnn.io/index/fearandgreed/graphdata"
         headers = {"User-Agent": "Mozilla/5.0"}
         resp = requests.get(url, headers=headers, timeout=10)
         resp.raise_for_status()
         data = resp.json()
-
         score = data.get("fear_and_greed", {}).get("score")
         rating = data.get("fear_and_greed", {}).get("rating", "N/A")
-
         if score is not None:
             return {"value": int(round(score)), "label": rating}
-        return {"value": None, "label": "N/A"}
     except Exception:
-        return {"value": None, "label": "N/A"}
+        pass
+    return {"value": None, "label": "N/A"}

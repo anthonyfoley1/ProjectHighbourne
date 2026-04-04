@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:#000; color:#c8c8c8; font-family:'Lucida Console','Monaco','Courier New',monospace; font-size:11px; padding:8px; }
+  .container { max-width:1100px; margin:0 auto; }
+
+  .grn { color:#00ff00; }
+  .red { color:#ff4444; }
+  .yel { color:#ffff00; }
+  .wht { color:#e0e0e0; }
+  .gry { color:#999; }
+  .dim { color:#777; }
+  .org { color:#ff8c00; }
+  .cyn { color:#00bcd4; }
+  .pur { color:#bb86fc; }
+  .b { font-weight:bold; }
+  .ticker { color:#ffffff; }
+
+  .bbg-header { background:#1a1a1a; border-bottom:2px solid #ff8c00; padding:4px 8px; display:flex; justify-content:space-between; align-items:center; margin-bottom:6px; }
+  .bbg-header .title { color:#ff8c00; font-size:14px; font-weight:bold; letter-spacing:1px; }
+
+  .back-nav { display:inline-block; color:#ffff00; font-size:10px; cursor:pointer; margin-bottom:6px; padding:2px 6px; border:1px solid #444; background:#111; }
+  .back-nav:hover { background:#1a1a00; }
+
+  .ticker-bar { background:#1a1a1a; border:1px solid #333; padding:6px 10px; margin-bottom:6px; display:flex; align-items:center; gap:16px; }
+  .ticker-bar .sym { color:#fff; font-size:18px; font-weight:bold; }
+  .ticker-bar .name { color:#999; font-size:12px; }
+  .ticker-bar .price { color:#e0e0e0; font-size:16px; font-weight:bold; }
+
+  .company-desc { background:#0a0a0a; border:1px solid #222; padding:6px 10px; margin-bottom:6px; font-size:10px; color:#999; line-height:1.5; }
+  .company-desc .desc-label { color:#ff8c00; font-size:8px; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:3px; }
+
+  /* News section */
+  .news-section { background:#0a0a0a; border:1px solid #222; padding:6px 10px; margin-bottom:6px; }
+  .news-section .news-label { color:#ff8c00; font-size:8px; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:4px; }
+  .news-section a { color:#6699cc; text-decoration:none; font-size:10px; }
+  .news-section a:hover { color:#88bbee; text-decoration:underline; }
+  .news-section .news-item { padding:2px 0; border-bottom:1px solid #111; display:flex; justify-content:space-between; }
+  .news-section .news-item:last-child { border-bottom:none; }
+  .news-section .news-src { color:#666; font-size:9px; white-space:nowrap; margin-left:8px; }
+
+  .detail-grid { display:flex; gap:6px; margin-bottom:6px; }
+  .detail-left { flex:1; min-width:0; }
+  .detail-right { width:260px; flex-shrink:0; }
+
+  .mkt-data { background:#0a0a0a; border:1px solid #333; }
+  .mkt-data .mkt-title { background:#1a1a1a; padding:4px 8px; border-bottom:1px solid #ff8c00; color:#ff8c00; font-weight:bold; font-size:10px; text-transform:uppercase; letter-spacing:0.5px; }
+  .mkt-data table { width:100%; border-collapse:collapse; }
+  .mkt-data td { padding:2px 8px; font-size:10px; border-bottom:1px solid #111; }
+  .mkt-data td:first-child { color:#999; }
+  .mkt-data td:last-child { text-align:right; color:#e0e0e0; font-weight:bold; }
+  .mkt-data tr:hover { background:#111; }
+
+  .stats { display:flex; gap:4px; margin-bottom:6px; }
+  .stat { flex:1; background:#111; border:1px solid #333; padding:4px 6px; }
+  .stat .label { color:#ff8c00; font-size:8px; text-transform:uppercase; letter-spacing:0.5px; }
+  .stat .value { font-size:14px; font-weight:bold; margin-top:2px; }
+
+  .controls { background:#111; border:1px solid #333; padding:3px 6px; margin-bottom:6px; display:flex; gap:10px; align-items:center; font-size:10px; }
+  .controls .lbl { color:#ff8c00; }
+  .controls .val { color:#ffff00; background:#000; border:1px solid #444; padding:1px 6px; }
+  .controls .btn-active { background:#ff8c00; color:#000; padding:1px 6px; font-weight:bold; border:1px solid #ff8c00; cursor:pointer; }
+  .controls .btn { background:#000; color:#999; padding:1px 6px; border:1px solid #444; cursor:pointer; }
+  .controls .btn:hover { background:#1a1a00; color:#ffff00; }
+
+  .chart-panel { background:#0a0a0a; border:1px solid #333; margin-bottom:6px; }
+  .chart-title { background:#1a1a1a; padding:4px 8px; border-bottom:1px solid #333; display:flex; justify-content:space-between; align-items:center; }
+  .chart-title .name { color:#ff8c00; font-weight:bold; font-size:11px; }
+  .chart-title .legend { color:#777; font-size:9px; }
+  .chart-body { padding:8px; position:relative; }
+
+  .time-btns { display:flex; gap:2px; }
+  .time-btns .tb { background:#000; color:#999; padding:1px 5px; border:1px solid #444; font-size:9px; cursor:pointer; font-family:inherit; }
+  .time-btns .tb:hover { color:#ffff00; background:#1a1a00; }
+  .time-btns .tb.active { background:#ff8c00; color:#000; font-weight:bold; border-color:#ff8c00; }
+
+  /* Earnings surprise tooltip */
+  .er-tooltip { display:none; position:absolute; background:#1a1a1a; border:1px solid #ff8c00; padding:6px 8px; font-size:9px; z-index:10; pointer-events:none; min-width:140px; }
+  .er-dot:hover .er-tooltip { display:block; }
+  .er-dot { position:absolute; cursor:pointer; }
+
+  .fn-bar { background:#1a1a1a; border-top:1px solid #333; padding:3px 8px; margin-top:8px; display:flex; gap:16px; font-size:9px; }
+  .fn-bar span { color:#ffff00; }
+  .fn-bar .key { background:#444; color:#ffff00; padding:0 4px; margin-right:3px; font-weight:bold; }
+</style>
+</head>
+<body>
+<div class="container">
+
+<!-- Header -->
+<div class="bbg-header">
+  <div>
+    <span class="title">HIGHBOURNE TERMINAL</span>
+    <span style="color:#999; margin-left:8px; font-size:10px;">DETAIL VIEW</span>
+  </div>
+  <div style="color:#999; font-size:10px;"><span class="yel">14:34:22 EST</span></div>
+</div>
+
+<span class="back-nav">◄ BACK TO SCANNER</span>
+
+<!-- Ticker header -->
+<div class="ticker-bar">
+  <span class="sym">INTC</span>
+  <span class="name">Intel Corporation &nbsp;|&nbsp; Technology &nbsp;|&nbsp; Semiconductors</span>
+  <div style="flex:1;"></div>
+  <span class="price">$24.12</span>
+  <span class="red b" style="font-size:12px;">-1.8%</span>
+  <span class="gry" style="font-size:10px;">Vol: 48.2M</span>
+  <span style="color:#444; margin:0 4px;">|</span>
+  <span class="gry" style="font-size:10px;">MCap:</span> <span class="wht b" style="font-size:10px;">$103.4B</span>
+  <span style="color:#444; margin:0 4px;">|</span>
+  <span class="gry" style="font-size:10px;">YTD:</span> <span class="red b" style="font-size:10px;">-18.4%</span>
+  <span class="gry" style="font-size:10px;">1Y:</span> <span class="red b" style="font-size:10px;">-52.1%</span>
+  <span style="color:#444; margin:0 4px;">|</span>
+  <span class="gry" style="font-size:10px;">Next ER:</span> <span class="org b" style="font-size:10px;">Apr 24</span>
+  <span style="color:#444; margin:0 4px;">|</span>
+  <span style="background:#00ff00; color:#000; padding:2px 8px; font-size:11px; font-weight:bold; letter-spacing:0.5px;">OVERWEIGHT</span>
+</div>
+
+<!-- Company description + Peers -->
+<div style="display:flex; gap:6px; margin-bottom:6px;">
+  <div class="company-desc" style="flex:1; margin-bottom:0;">
+    <div class="desc-label">Company Description</div>
+    Intel Corporation designs, manufactures, and sells computer products and technologies. The company operates through Client Computing Group, Data Center and AI, Network and Edge, Mobileye, and Intel Foundry Services segments. It serves OEMs, cloud service providers, and enterprise customers worldwide. Founded in 1968, headquartered in Santa Clara, CA.
+  </div>
+  <div style="background:#0a0a0a; border:1px solid #222; padding:6px 10px; width:200px; flex-shrink:0;">
+    <div style="color:#ff8c00; font-size:8px; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:5px;">Key Competitors</div>
+    <div style="display:flex; flex-direction:column; gap:4px;">
+      <a href="#" style="color:#6699cc; text-decoration:none; font-size:10px; padding:2px 4px; border:1px solid #222; display:flex; justify-content:space-between; align-items:center;" onmouseover="this.style.background='#111';this.style.borderColor='#444'" onmouseout="this.style.background='transparent';this.style.borderColor='#222'">
+        <span style="color:#fff; font-weight:bold;">AMD</span><span style="color:#999; font-size:9px;">Adv. Micro Dev. →</span>
+      </a>
+      <a href="#" style="color:#6699cc; text-decoration:none; font-size:10px; padding:2px 4px; border:1px solid #222; display:flex; justify-content:space-between; align-items:center;" onmouseover="this.style.background='#111';this.style.borderColor='#444'" onmouseout="this.style.background='transparent';this.style.borderColor='#222'">
+        <span style="color:#fff; font-weight:bold;">NVDA</span><span style="color:#999; font-size:9px;">NVIDIA →</span>
+      </a>
+      <a href="#" style="color:#6699cc; text-decoration:none; font-size:10px; padding:2px 4px; border:1px solid #222; display:flex; justify-content:space-between; align-items:center;" onmouseover="this.style.background='#111';this.style.borderColor='#444'" onmouseout="this.style.background='transparent';this.style.borderColor='#222'">
+        <span style="color:#fff; font-weight:bold;">QCOM</span><span style="color:#999; font-size:9px;">Qualcomm →</span>
+      </a>
+      <a href="#" style="color:#6699cc; text-decoration:none; font-size:10px; padding:2px 4px; border:1px solid #222; display:flex; justify-content:space-between; align-items:center;" onmouseover="this.style.background='#111';this.style.borderColor='#444'" onmouseout="this.style.background='transparent';this.style.borderColor='#222'">
+        <span style="color:#fff; font-weight:bold;">TXN</span><span style="color:#999; font-size:9px;">Texas Inst. →</span>
+      </a>
+      <a href="#" style="color:#6699cc; text-decoration:none; font-size:10px; padding:2px 4px; border:1px solid #222; display:flex; justify-content:space-between; align-items:center;" onmouseover="this.style.background='#111';this.style.borderColor='#444'" onmouseout="this.style.background='transparent';this.style.borderColor='#222'">
+        <span style="color:#fff; font-weight:bold;">AVGO</span><span style="color:#999; font-size:9px;">Broadcom →</span>
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- Recent News — hyperlinked -->
+<div class="news-section">
+  <div class="news-label">Recent News</div>
+  <div class="news-item">
+    <a href="#">Intel secures $3.5B CHIPS Act grant for military chip production</a>
+    <span class="news-src">Reuters — 2h ago</span>
+  </div>
+  <div class="news-item">
+    <a href="#">Intel Foundry lands first external customer for 18A process node</a>
+    <span class="news-src">Bloomberg — 1d ago</span>
+  </div>
+  <div class="news-item">
+    <a href="#">Analysts raise Intel price targets after strong data center results</a>
+    <span class="news-src">Barron's — 3d ago</span>
+  </div>
+</div>
+
+<!-- Two-column: Stock Price + Market Data -->
+<div class="detail-grid">
+  <!-- LEFT: Stock Price Chart -->
+  <div class="detail-left">
+    <div class="chart-panel" style="margin-bottom:0;">
+      <div class="chart-title">
+        <span class="name">STOCK PRICE</span>
+        <div class="time-btns">
+          <span class="tb">1D</span>
+          <span class="tb">5D</span>
+          <span class="tb">1M</span>
+          <span class="tb">3M</span>
+          <span class="tb">YTD</span>
+          <span class="tb">6M</span>
+          <span class="tb active">1Y</span>
+          <span class="tb">2Y</span>
+          <span class="tb">5Y</span>
+          <span class="tb">MAX</span>
+        </div>
+      </div>
+      <div class="chart-body" style="height:180px;">
+        <span style="position:absolute; top:5%; left:4px; font-size:8px; color:#777;">$52</span>
+        <span style="position:absolute; top:30%; left:4px; font-size:8px; color:#777;">$42</span>
+        <span style="position:absolute; top:55%; left:4px; font-size:8px; color:#777;">$32</span>
+        <span style="position:absolute; top:80%; left:4px; font-size:8px; color:#777;">$22</span>
+
+        <div style="position:absolute; top:30%; left:30px; right:0; border-top:1px solid #1a1a1a;"></div>
+        <div style="position:absolute; top:55%; left:30px; right:0; border-top:1px solid #1a1a1a;"></div>
+        <div style="position:absolute; top:80%; left:30px; right:0; border-top:1px solid #1a1a1a;"></div>
+
+        <svg style="position:absolute; top:0; left:30px; width:calc(100% - 38px); height:100%;" viewBox="0 0 500 180" preserveAspectRatio="none">
+          <polygon points="0,30 25,28 50,25 75,32 100,38 125,42 150,50 175,55 200,52 225,60 250,68 275,75 300,82 325,90 350,95 375,100 400,105 425,110 450,120 475,130 500,140 500,180 0,180" fill="rgba(0,188,212,0.06)" stroke="none"/>
+          <polyline points="0,30 25,28 50,25 75,32 100,38 125,42 150,50 175,55 200,52 225,60 250,68 275,75 300,82 325,90 350,95 375,100 400,105 425,110 450,120 475,130 500,140" fill="none" stroke="#00bcd4" stroke-width="1.5"/>
+        </svg>
+
+        <div style="position:absolute; right:8px; top:76%;"><span style="color:#00bcd4; font-size:10px; font-weight:bold;">$24.12</span></div>
+        <div style="position:absolute; bottom:2px; left:30px; right:8px; display:flex; justify-content:space-between; font-size:7px; color:#555;">
+          <span>Apr 24</span><span>Jun</span><span>Aug</span><span>Oct</span><span>Dec</span><span>Feb 25</span><span>Apr</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT: Market Data -->
+  <div class="detail-right">
+    <div class="mkt-data">
+      <div class="mkt-title">Market Data</div>
+      <table>
+        <tr><td>Last</td><td>24.12</td></tr>
+        <tr><td>VWAP</td><td>24.38</td></tr>
+        <tr><td>Open</td><td>24.85</td></tr>
+        <tr><td>Prev Close</td><td>24.56</td></tr>
+        <tr><td>Day High/Low</td><td>25.10 / 23.98</td></tr>
+        <tr><td>52wk High/Low</td><td>51.28 / 18.51</td></tr>
+        <tr><td>Beta 3Y</td><td>1.12</td></tr>
+        <tr><td>Mkt Cap ($M)</td><td class="grn">103,420</td></tr>
+        <tr><td>TEV ($M)</td><td>128,650</td></tr>
+        <tr><td>Volume</td><td>48,215,380</td></tr>
+        <tr><td>Avg 3M Vol</td><td>32,145,200</td></tr>
+        <tr><td>Shares Out</td><td>4,288M</td></tr>
+        <tr><td>Float (%)</td><td>99.62</td></tr>
+        <tr><td>Inst. Own (%)</td><td>65.4</td></tr>
+        <tr><td>Short Int (%)</td><td>4.82</td></tr>
+        <tr><td>Div Yield (%)</td><td>0.00</td></tr>
+        <tr><td>PT Avg</td><td class="grn">$38.00</td></tr>
+        <tr><td>PT Upside</td><td class="grn b">+57.5%</td></tr>
+        <tr><td>Next Earnings</td><td class="org b">Apr 24</td></tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== -->
+<!-- EARNINGS SURPRISE CHART -->
+<!-- ==================== -->
+<div class="chart-panel">
+  <div class="chart-title">
+    <span class="name">EARNINGS SURPRISE — EPS ($)</span>
+    <span class="legend">
+      <span style="display:inline-block; width:10px; height:10px; background:#00ff00; border-radius:50%; vertical-align:middle;"></span> Actual (Beat) &nbsp;
+      <span style="display:inline-block; width:10px; height:10px; background:#ff4444; border-radius:50%; vertical-align:middle;"></span> Actual (Miss) &nbsp;
+      <span style="display:inline-block; width:10px; height:10px; border:2px solid #999; border-radius:50%; vertical-align:middle;"></span> Estimate &nbsp;|&nbsp;
+      Hover for 3-day price reaction
+    </span>
+  </div>
+  <div class="chart-body" style="height:220px;">
+
+    <!-- Y-axis -->
+    <span style="position:absolute; top:5%; left:4px; font-size:8px; color:#777;">$0.50</span>
+    <span style="position:absolute; top:25%; left:4px; font-size:8px; color:#777;">$0.30</span>
+    <span style="position:absolute; top:50%; left:4px; font-size:8px; color:#777;">$0.10</span>
+    <span style="position:absolute; top:70%; left:4px; font-size:8px; color:#777;">-$0.10</span>
+    <span style="position:absolute; top:90%; left:4px; font-size:8px; color:#777;">-$0.30</span>
+
+    <!-- Zero line -->
+    <div style="position:absolute; top:55%; left:40px; right:8px; border-top:1px dashed #444;"></div>
+    <span style="position:absolute; top:53%; left:40px; font-size:7px; color:#444;">$0.00</span>
+
+    <!-- Grid lines -->
+    <div style="position:absolute; top:25%; left:40px; right:8px; border-top:1px solid #111;"></div>
+    <div style="position:absolute; top:70%; left:40px; right:8px; border-top:1px solid #111;"></div>
+
+    <!-- X-axis labels -->
+    <div style="position:absolute; bottom:2px; left:40px; right:8px; display:flex; justify-content:space-around; font-size:8px; color:#888;">
+      <span>FQ1'25<br><span class="dim">Mar 2025</span></span>
+      <span>FQ2'25<br><span class="dim">Jun 2025</span></span>
+      <span>FQ3'25<br><span class="dim">Sep 2025</span></span>
+      <span class="org b">FQ4'25<br><span class="dim">Dec 2025</span></span>
+      <span>FQ1'26<br><span class="dim">Mar 2026</span></span>
+    </div>
+
+    <!-- FQ1'25 — Beat -->
+    <!-- Estimate dot (hollow) -->
+    <div style="position:absolute; left:12%; top:52%; width:16px; height:16px; border:2px solid #999; border-radius:50%; transform:translate(-50%,-50%);"></div>
+    <!-- Actual dot (filled green) — above estimate = beat -->
+    <div class="er-dot" style="left:12%; top:38%; width:20px; height:20px; transform:translate(-50%,-50%);">
+      <div style="width:20px; height:20px; background:#00ff00; border-radius:50; opacity:0.8;"></div>
+      <div class="er-tooltip" style="top:-70px; left:10px;">
+        <div class="org b">FQ1'25 — Mar 2025</div>
+        <div>Actual: <span class="grn b">$0.18</span></div>
+        <div>Estimate: <span class="gry">$0.10</span></div>
+        <div>Surprise: <span class="grn b">▲ 80.0%</span></div>
+        <div style="margin-top:3px; border-top:1px solid #333; padding-top:3px;">
+          <span class="gry">3-Day Price:</span> <span class="grn b">+6.2%</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- FQ2'25 — Miss -->
+    <div style="position:absolute; left:31%; top:48%; width:16px; height:16px; border:2px solid #999; border-radius:50%; transform:translate(-50%,-50%);"></div>
+    <div class="er-dot" style="left:31%; top:58%; width:20px; height:20px; transform:translate(-50%,-50%);">
+      <div style="width:20px; height:20px; background:#ff4444; border-radius:50%; opacity:0.8;"></div>
+      <div class="er-tooltip" style="top:-70px; left:10px;">
+        <div class="org b">FQ2'25 — Jun 2025</div>
+        <div>Actual: <span class="red b">-$0.03</span></div>
+        <div>Estimate: <span class="gry">$0.05</span></div>
+        <div>Surprise: <span class="red b">▼ -160.0%</span></div>
+        <div style="margin-top:3px; border-top:1px solid #333; padding-top:3px;">
+          <span class="gry">3-Day Price:</span> <span class="red b">-8.4%</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- FQ3'25 — Beat -->
+    <div style="position:absolute; left:50%; top:50%; width:16px; height:16px; border:2px solid #999; border-radius:50%; transform:translate(-50%,-50%);"></div>
+    <div class="er-dot" style="left:50%; top:34%; width:20px; height:20px; transform:translate(-50%,-50%);">
+      <div style="width:20px; height:20px; background:#00ff00; border-radius:50%; opacity:0.8;"></div>
+      <div class="er-tooltip" style="top:-70px; left:10px;">
+        <div class="org b">FQ3'25 — Sep 2025</div>
+        <div>Actual: <span class="grn b">$0.24</span></div>
+        <div>Estimate: <span class="gry">$0.12</span></div>
+        <div>Surprise: <span class="grn b">▲ 100.0%</span></div>
+        <div style="margin-top:3px; border-top:1px solid #333; padding-top:3px;">
+          <span class="gry">3-Day Price:</span> <span class="grn b">+9.1%</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- FQ4'25 — Beat (most recent, highlighted) -->
+    <div style="position:absolute; left:69%; top:46%; width:16px; height:16px; border:2px solid #999; border-radius:50%; transform:translate(-50%,-50%);"></div>
+    <div class="er-dot" style="left:69%; top:30%; width:22px; height:22px; transform:translate(-50%,-50%);">
+      <div style="width:22px; height:22px; background:#00ff00; border-radius:50%; opacity:0.9; box-shadow:0 0 8px rgba(0,255,0,0.4);"></div>
+      <div class="er-tooltip" style="top:-70px; left:10px;">
+        <div class="org b">FQ4'25 — Dec 2025</div>
+        <div>Actual: <span class="grn b">$0.30</span></div>
+        <div>Estimate: <span class="gry">$0.08</span></div>
+        <div>Surprise: <span class="grn b">▲ 275.0%</span></div>
+        <div style="margin-top:3px; border-top:1px solid #333; padding-top:3px;">
+          <span class="gry">3-Day Price:</span> <span class="grn b">+12.3%</span>
+        </div>
+      </div>
+    </div>
+    <!-- Selected quarter callout -->
+    <div style="position:absolute; left:50%; top:4px; transform:translateX(-50%); font-size:10px;">
+      <span class="org b">FQ4'25</span> <span class="gry">|</span> Actual: <span class="grn b">$0.30</span> <span class="grn">▲ 275%</span> <span class="gry">|</span> Estimate: <span class="gry">$0.08</span>
+    </div>
+
+    <!-- FQ1'26 — Estimate only (future) -->
+    <div style="position:absolute; left:88%; top:60%; width:18px; height:18px; border:2px solid #999; border-radius:50%; transform:translate(-50%,-50%);"></div>
+    <div style="position:absolute; left:86%; top:68%; font-size:8px; color:#999;">Est: -$0.05</div>
+
+  </div>
+</div>
+
+<!-- ==================== -->
+<!-- FINANCIAL ANALYSIS -->
+<!-- ==================== -->
+<div style="background:#0a0a0a; border:1px solid #333; margin-bottom:6px;">
+  <div style="background:#1a1a1a; padding:4px 8px; border-bottom:1px solid #333; display:flex; justify-content:space-between; align-items:center;">
+    <span style="color:#ff8c00; font-weight:bold; font-size:11px;">FINANCIAL ANALYSIS — 5 YEAR</span>
+    <div class="time-btns">
+      <span class="tb active">INCOME STMT</span>
+      <span class="tb">BALANCE SHEET</span>
+      <span class="tb">CASH FLOW</span>
+      <span class="tb">DUPONT ROE</span>
+    </div>
+  </div>
+  <div style="padding:8px; overflow-x:auto;">
+    <table style="width:100%; border-collapse:collapse; font-size:10px;">
+      <thead>
+        <tr style="border-bottom:1px solid #ff8c00;">
+          <th style="text-align:left; padding:3px 6px; color:#ff8c00; font-size:8px;">INCOME STATEMENT ($M)</th>
+          <th style="text-align:right; padding:3px 6px; color:#999; font-size:8px;">FY2021</th>
+          <th style="text-align:right; padding:3px 6px; color:#999; font-size:8px;">FY2022</th>
+          <th style="text-align:right; padding:3px 6px; color:#999; font-size:8px;">FY2023</th>
+          <th style="text-align:right; padding:3px 6px; color:#999; font-size:8px;">FY2024</th>
+          <th style="text-align:right; padding:3px 6px; color:#ffff00; font-size:8px;">FY2025</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr style="border-bottom:1px solid #111;">
+          <td style="padding:3px 6px; color:#999;">Revenue</td>
+          <td style="padding:3px 6px; text-align:right; color:#e0e0e0;">79,024</td>
+          <td style="padding:3px 6px; text-align:right; color:#e0e0e0;">63,054</td>
+          <td style="padding:3px 6px; text-align:right; color:#e0e0e0;">54,228</td>
+          <td style="padding:3px 6px; text-align:right; color:#e0e0e0;">53,100</td>
+          <td style="padding:3px 6px; text-align:right; color:#ffff00; font-weight:bold;">54,800</td>
+        </tr>
+        <tr style="border-bottom:1px solid #111;">
+          <td style="padding:3px 6px; color:#999;">YoY Growth</td>
+          <td style="padding:3px 6px; text-align:right; color:#00ff00;">+1.5%</td>
+          <td style="padding:3px 6px; text-align:right; color:#ff4444;">-20.2%</td>
+          <td style="padding:3px 6px; text-align:right; color:#ff4444;">-14.0%</td>
+          <td style="padding:3px 6px; text-align:right; color:#ff4444;">-2.1%</td>
+          <td style="padding:3px 6px; text-align:right; color:#00ff00; font-weight:bold;">+3.2%</td>
+        </tr>
+        <tr style="border-bottom:1px solid #111;">
+          <td style="padding:3px 6px; color:#999;">Gross Profit</td>
+          <td style="padding:3px 6px; text-align:right; color:#e0e0e0;">43,815</td>
+          <td style="padding:3px 6px; text-align:right; color:#e0e0e0;">27,461</td>
+          <td style="padding:3px 6px; text-align:right; color:#e0e0e0;">21,692</td>
+          <td style="padding:3px 6px; text-align:right; color:#e0e0e0;">18,600</td>
+          <td style="padding:3px 6px; text-align:right; color:#ffff00; font-weight:bold;">20,100</td>
+        </tr>
+        <tr style="border-bottom:1px solid #111;">
+          <td style="padding:3px 6px; color:#999;">Gross Margin</td>
+          <td style="padding:3px 6px; text-align:right; color:#00ff00;">55.4%</td>
+          <td style="padding:3px 6px; text-align:right; color:#ff4444;">43.6%</td>
+          <td style="padding:3px 6px; text-align:right; color:#ff4444;">40.0%</td>
+          <td style="padding:3px 6px; text-align:right; color:#ff4444;">35.0%</td>
+          <td style="padding:3px 6px; text-align:right; color:#00ff00; font-weight:bold;">36.7%</td>
+        </tr>
+        <tr style="border-bottom:1px solid #111;">
+          <td style="padding:3px 6px; color:#999;">Operating Income</td>
+          <td style="padding:3px 6px; text-align:right; color:#e0e0e0;">19,456</td>
+          <td style="padding:3px 6px; text-align:right; color:#e0e0e0;">2,334</td>
+          <td style="padding:3px 6px; text-align:right; color:#ff4444;">-1,610</td>
+          <td style="padding:3px 6px; text-align:right; color:#ff4444;">-4,200</td>
+          <td style="padding:3px 6px; text-align:right; color:#e0e0e0; font-weight:bold;">1,200</td>
+        </tr>
+        <tr style="border-bottom:1px solid #111;">
+          <td style="padding:3px 6px; color:#999;">Op. Margin</td>
+          <td style="padding:3px 6px; text-align:right; color:#00ff00;">24.6%</td>
+          <td style="padding:3px 6px; text-align:right; color:#ff4444;">3.7%</td>
+          <td style="padding:3px 6px; text-align:right; color:#ff4444;">-3.0%</td>
+          <td style="padding:3px 6px; text-align:right; color:#ff4444;">-7.9%</td>
+          <td style="padding:3px 6px; text-align:right; color:#00ff00; font-weight:bold;">2.2%</td>
+        </tr>
+        <tr style="border-bottom:1px solid #111;">
+          <td style="padding:3px 6px; color:#999;">Net Income</td>
+          <td style="padding:3px 6px; text-align:right; color:#e0e0e0;">19,868</td>
+          <td style="padding:3px 6px; text-align:right; color:#e0e0e0;">8,014</td>
+          <td style="padding:3px 6px; text-align:right; color:#e0e0e0;">1,689</td>
+          <td style="padding:3px 6px; text-align:right; color:#ff4444;">-1,800</td>
+          <td style="padding:3px 6px; text-align:right; color:#e0e0e0; font-weight:bold;">780</td>
+        </tr>
+        <tr>
+          <td style="padding:3px 6px; color:#999;">EPS (Diluted)</td>
+          <td style="padding:3px 6px; text-align:right; color:#e0e0e0;">$4.86</td>
+          <td style="padding:3px 6px; text-align:right; color:#e0e0e0;">$1.94</td>
+          <td style="padding:3px 6px; text-align:right; color:#e0e0e0;">$0.40</td>
+          <td style="padding:3px 6px; text-align:right; color:#ff4444;">-$0.42</td>
+          <td style="padding:3px 6px; text-align:right; color:#00ff00; font-weight:bold;">$0.18</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Stat cards -->
+<div class="stats">
+  <div class="stat">
+    <div class="label">RV RATIO</div>
+    <div class="value grn">P/E</div>
+  </div>
+  <div class="stat">
+    <div class="label">CURRENT</div>
+    <div class="value cyn">8.2x</div>
+  </div>
+  <div class="stat">
+    <div class="label">MEAN</div>
+    <div class="value org">14.5x</div>
+  </div>
+  <div class="stat">
+    <div class="label">Z-SCORE</div>
+    <div class="value grn">-2.1</div>
+  </div>
+  <div class="stat">
+    <div class="label">RSI (14)</div>
+    <div class="value grn">24 OVERSOLD</div>
+  </div>
+  <div class="stat">
+    <div class="label">MACD</div>
+    <div class="value grn">Bullish ✓</div>
+  </div>
+  <div class="stat">
+    <div class="label">MA TREND</div>
+    <div class="value red">Below 200d</div>
+  </div>
+</div>
+
+<!-- RV Controls -->
+<div class="controls">
+  <span class="lbl">RATIO</span><span class="val">P/E ▾</span>
+  <span class="lbl">WINDOW</span>
+  <span class="btn">5Y</span><span class="btn-active">2Y</span><span class="btn">6M</span>
+</div>
+
+<!-- RV CHART -->
+<div class="chart-panel">
+  <div class="chart-title">
+    <span class="name">RELATIVE VALUATION — P/E</span>
+    <span class="legend">
+      <span class="wht">━ Ratio</span> &nbsp;
+      <span class="org">╌ Mean</span> &nbsp;
+      <span class="yel">╌ ±1σ</span> &nbsp;
+      <span style="color:#665500;">╌ ±2σ</span> &nbsp;
+      <span style="background:#00ff00; color:#000; padding:0 3px; font-size:8px;">E</span> 10-Q &nbsp;
+      <span style="background:#ff8c00; color:#000; padding:0 3px; font-size:8px;">E</span> 10-K
+    </span>
+  </div>
+  <div class="chart-body" style="height:200px;">
+    <div style="position:absolute; top:12%; left:0; right:0; height:76%; background:linear-gradient(to bottom, rgba(102,85,0,0.05) 0%, rgba(102,85,0,0.08) 25%, rgba(102,85,0,0.08) 75%, rgba(102,85,0,0.05) 100%);"></div>
+    <div style="position:absolute; top:12%; width:100%; border-top:1px dashed #665500;"></div>
+    <span style="position:absolute; top:10%; right:4px; font-size:8px; color:#665500;">+2σ</span>
+    <div style="position:absolute; top:28%; width:100%; border-top:1px dashed #998800;"></div>
+    <span style="position:absolute; top:26%; right:4px; font-size:8px; color:#998800;">+1σ</span>
+    <div style="position:absolute; top:46%; width:100%; border-top:2px dashed #ff8c00;"></div>
+    <span style="position:absolute; top:44%; right:4px; font-size:8px; color:#ff8c00;">MEAN 14.5x</span>
+    <div style="position:absolute; top:64%; width:100%; border-top:1px dashed #998800;"></div>
+    <span style="position:absolute; top:62%; right:4px; font-size:8px; color:#998800;">-1σ</span>
+    <div style="position:absolute; top:80%; width:100%; border-top:1px dashed #665500;"></div>
+    <span style="position:absolute; top:78%; right:4px; font-size:8px; color:#665500;">-2σ</span>
+
+    <span style="position:absolute; top:10%; left:4px; font-size:8px; color:#777;">22x</span>
+    <span style="position:absolute; top:44%; left:4px; font-size:8px; color:#777;">14.5x</span>
+    <span style="position:absolute; top:78%; left:4px; font-size:8px; color:#777;">7x</span>
+
+    <svg style="position:absolute; top:0; left:0; width:100%; height:100%;" viewBox="0 0 500 200" preserveAspectRatio="none">
+      <polyline points="0,100 25,95 50,105 75,90 100,80 125,85 150,75 175,82 200,98 225,105 250,110 275,120 300,130 325,145 350,155 375,148 400,138 425,150 450,160 475,155 500,148" fill="none" stroke="#e0e0e0" stroke-width="1.5"/>
+    </svg>
+
+    <div style="position:absolute; right:8px; top:72%; width:8px; height:8px; background:#00bcd4; border-radius:50%;"></div>
+    <span style="position:absolute; right:20px; top:70%; font-size:9px; color:#00bcd4; font-weight:bold;">8.2x</span>
+
+    <!-- Correct cadence: Q1, Q2, Q3, Annual, Q1, Q2 -->
+    <div style="position:absolute; left:15%; top:42%;"><div style="background:#00ff00; color:#000; font-size:8px; font-weight:bold; padding:1px 4px;">E</div></div>
+    <div style="position:absolute; left:32%; top:55%;"><div style="background:#00ff00; color:#000; font-size:8px; font-weight:bold; padding:1px 4px;">E</div></div>
+    <div style="position:absolute; left:50%; top:50%;"><div style="background:#00ff00; color:#000; font-size:8px; font-weight:bold; padding:1px 4px;">E</div></div>
+    <div style="position:absolute; left:65%; top:62%;"><div style="background:#ff8c00; color:#000; font-size:8px; font-weight:bold; padding:1px 4px;">E</div></div>
+    <div style="position:absolute; left:78%; top:68%;"><div style="background:#00ff00; color:#000; font-size:8px; font-weight:bold; padding:1px 4px;">E</div></div>
+    <div style="position:absolute; left:92%; top:72%;"><div style="background:#00ff00; color:#000; font-size:8px; font-weight:bold; padding:1px 4px;">E</div></div>
+  </div>
+</div>
+
+<!-- PRICE + MAs -->
+<div class="chart-panel">
+  <div class="chart-title">
+    <span class="name">PRICE + MOVING AVERAGES — 1 YEAR</span>
+    <span class="legend">
+      <span class="wht">━ Close</span> &nbsp;
+      <span class="org">╌ 50d SMA</span> &nbsp;
+      <span class="red">╌ 200d SMA</span>
+    </span>
+  </div>
+  <div class="chart-body" style="height:150px;">
+    <span style="position:absolute; top:5%; left:4px; font-size:8px; color:#777;">$52</span>
+    <span style="position:absolute; top:50%; left:4px; font-size:8px; color:#777;">$35</span>
+    <span style="position:absolute; top:90%; left:4px; font-size:8px; color:#777;">$18</span>
+
+    <svg style="position:absolute; top:0; left:0; width:100%; height:100%;" viewBox="0 0 500 150" preserveAspectRatio="none">
+      <polyline points="0,30 25,28 50,25 75,32 100,38 125,42 150,50 175,55 200,52 225,60 250,68 275,75 300,82 325,90 350,95 375,100 400,105 425,98 450,95 475,100 500,105" fill="none" stroke="#e0e0e0" stroke-width="1.5"/>
+      <polyline points="0,28 25,27 50,28 75,30 100,33 125,36 150,40 175,45 200,48 225,52 250,58 275,64 300,70 325,76 350,82 375,88 400,92 425,95 450,96 475,97 500,100" fill="none" stroke="#ff8c00" stroke-width="1" stroke-dasharray="4,2"/>
+      <polyline points="0,35 25,35 50,35 75,36 100,37 125,38 150,40 175,42 200,44 225,47 250,50 275,53 300,56 325,60 350,64 375,68 400,72 425,75 450,78 475,80 500,82" fill="none" stroke="#ff4444" stroke-width="1" stroke-dasharray="4,2"/>
+    </svg>
+
+    <div style="position:absolute; left:55%; top:8%;">
+      <div style="background:#ff4444; color:#fff; font-size:8px; font-weight:bold; padding:1px 5px;">DEATH CROSS</div>
+      <div style="width:1px; height:30px; background:#ff4444; margin-left:30px;"></div>
+    </div>
+
+    <div style="position:absolute; right:8px; top:68%;"><span style="color:#e0e0e0; font-size:9px; font-weight:bold;">$24.12</span></div>
+  </div>
+</div>
+
+<!-- RSI -->
+<div class="chart-panel">
+  <div class="chart-title">
+    <span class="name">RSI (14) — 6 MONTH</span>
+    <span class="legend">Below 30 = oversold &nbsp;|&nbsp; Above 70 = overbought</span>
+  </div>
+  <div class="chart-body" style="height:80px;">
+    <div style="position:absolute; top:0; width:100%; height:30%; background:rgba(255,68,68,0.06);"></div>
+    <div style="position:absolute; top:30%; width:100%; border-top:1px dashed #ff4444;"></div>
+    <span style="position:absolute; top:28%; left:4px; font-size:8px; color:#ff4444;">70 OVERBOUGHT</span>
+    <div style="position:absolute; bottom:0; width:100%; height:30%; background:rgba(0,255,0,0.04);"></div>
+    <div style="position:absolute; top:70%; width:100%; border-top:1px dashed #00ff00;"></div>
+    <span style="position:absolute; top:72%; left:4px; font-size:8px; color:#00ff00;">30 OVERSOLD</span>
+    <div style="position:absolute; top:50%; width:100%; border-top:1px solid #222;"></div>
+    <span style="position:absolute; top:48%; left:4px; font-size:8px; color:#444;">50</span>
+    <svg style="position:absolute; top:0; left:0; width:100%; height:100%;" viewBox="0 0 500 80" preserveAspectRatio="none">
+      <polyline points="0,40 25,38 50,35 75,30 100,25 125,20 150,22 175,28 200,35 225,40 250,45 275,50 300,52 325,48 350,44 375,50 400,55 425,58 450,62 475,60 500,58" fill="none" stroke="#bb86fc" stroke-width="1.5"/>
+    </svg>
+    <div style="position:absolute; right:8px; bottom:6px;">
+      <span style="background:#00ff00; color:#000; padding:1px 6px; font-size:10px; font-weight:bold;">24 — OVERSOLD</span>
+    </div>
+  </div>
+</div>
+
+<!-- MACD -->
+<div class="chart-panel">
+  <div class="chart-title">
+    <span class="name">MACD (12, 26, 9) — 6 MONTH</span>
+    <span class="legend">
+      <span class="cyn">━ MACD</span> &nbsp;
+      <span class="org">╌ Signal</span> &nbsp;
+      <span class="grn">▮</span><span class="red">▮</span> Histogram &nbsp;|&nbsp;
+      Bullish when MACD crosses above signal
+    </span>
+  </div>
+  <div class="chart-body" style="height:80px;">
+    <div style="position:absolute; top:50%; width:100%; border-top:1px solid #444;"></div>
+    <span style="position:absolute; top:48%; left:4px; font-size:8px; color:#666;">0</span>
+    <svg style="position:absolute; top:0; left:0; width:100%; height:100%;" viewBox="0 0 500 80" preserveAspectRatio="none">
+      <rect x="0" y="36" width="10" height="4" fill="rgba(0,255,0,0.3)"/>
+      <rect x="25" y="34" width="10" height="6" fill="rgba(0,255,0,0.4)"/>
+      <rect x="50" y="32" width="10" height="8" fill="rgba(0,255,0,0.4)"/>
+      <rect x="75" y="28" width="10" height="12" fill="rgba(0,255,0,0.5)"/>
+      <rect x="100" y="24" width="10" height="16" fill="rgba(0,255,0,0.6)"/>
+      <rect x="125" y="20" width="10" height="20" fill="rgba(0,255,0,0.7)"/>
+      <rect x="150" y="26" width="10" height="14" fill="rgba(0,255,0,0.5)"/>
+      <rect x="175" y="34" width="10" height="6" fill="rgba(0,255,0,0.3)"/>
+      <rect x="200" y="40" width="10" height="4" fill="rgba(255,68,68,0.3)"/>
+      <rect x="225" y="40" width="10" height="8" fill="rgba(255,68,68,0.4)"/>
+      <rect x="250" y="40" width="10" height="12" fill="rgba(255,68,68,0.5)"/>
+      <rect x="275" y="40" width="10" height="16" fill="rgba(255,68,68,0.6)"/>
+      <rect x="300" y="40" width="10" height="18" fill="rgba(255,68,68,0.7)"/>
+      <rect x="325" y="40" width="10" height="14" fill="rgba(255,68,68,0.6)"/>
+      <rect x="350" y="40" width="10" height="10" fill="rgba(255,68,68,0.5)"/>
+      <rect x="375" y="40" width="10" height="6" fill="rgba(255,68,68,0.3)"/>
+      <rect x="400" y="40" width="10" height="3" fill="rgba(255,68,68,0.2)"/>
+      <rect x="425" y="38" width="10" height="2" fill="rgba(0,255,0,0.2)"/>
+      <rect x="450" y="36" width="10" height="4" fill="rgba(0,255,0,0.3)"/>
+      <rect x="475" y="34" width="10" height="6" fill="rgba(0,255,0,0.4)"/>
+      <polyline points="0,38 25,36 50,33 75,28 100,22 125,18 150,24 175,32 200,40 225,46 250,50 275,54 300,56 325,52 350,48 375,44 400,42 425,40 450,38 475,36 500,35" fill="none" stroke="#00bcd4" stroke-width="1.5"/>
+      <polyline points="0,36 25,35 50,34 75,31 100,27 125,23 150,23 175,28 200,34 225,40 250,44 275,48 300,52 325,52 350,50 375,48 400,46 425,44 450,42 475,40 500,38" fill="none" stroke="#ff8c00" stroke-width="1" stroke-dasharray="4,2"/>
+    </svg>
+    <div style="position:absolute; left:38%; top:4%;">
+      <div style="background:#ff4444; color:#fff; font-size:8px; font-weight:bold; padding:1px 5px;">BEARISH CROSS</div>
+      <div style="width:1px; height:16px; background:#ff4444; margin-left:30px;"></div>
+    </div>
+    <div style="position:absolute; right:8px; bottom:6px;">
+      <span style="background:rgba(0,255,0,0.15); border:1px solid #00ff00; color:#00ff00; padding:1px 6px; font-size:10px; font-weight:bold;">CONVERGING — WATCH FOR BULLISH CROSS</span>
+    </div>
+  </div>
+</div>
+
+<!-- Function key bar -->
+<div class="fn-bar">
+  <span><span class="key">F1</span>HOME</span>
+  <span><span class="key">F2</span>SCREENER</span>
+  <span><span class="key">F3</span>SECTORS</span>
+  <span><span class="key">F4</span>DETAIL</span>
+  <div style="flex:1;"></div>
+  <span class="gry">HIGHBOURNE v2.0 &nbsp;|&nbsp; INTC — Intel Corporation</span>
+</div>
+
+</div><!-- /container -->
+</body>
+</html>

@@ -251,7 +251,7 @@ def _build_ticker_header(symbol, sector, industry, price_val, daily_chg,
             "color": C["gray"], "fontSize": "10px", "marginRight": "10px",
         }))
     if mkt_cap:
-        items.append(html.Span(f"MCap: {fmt_large(mkt_cap)}", style={
+        items.append(html.Span(f"Mkt Cap: {fmt_large(mkt_cap)}", style={
             "color": C["gray"], "fontSize": "10px", "marginRight": "10px",
         }))
     if ytd_ret is not None:
@@ -483,7 +483,7 @@ def _build_technicals_section(prices, symbol):
 # ---------------------------------------------------------------------------
 
 def _build_earnings_chart(symbol):
-    """Earnings surprise scatter chart."""
+    """Earnings surprise scatter chart with beat/miss coloring and 3-day price reaction."""
     try:
         earnings = fetch_earnings_history(symbol)
     except Exception:
@@ -495,28 +495,42 @@ def _build_earnings_chart(symbol):
     quarters = [e["quarter"] for e in earnings]
     actuals = [e.get("actual") for e in earnings]
     estimates = [e.get("estimate") for e in earnings]
+    prices = startup.price_cache.get(symbol)
 
-    # Estimate markers (hollow)
+    # Estimate markers (hollow circles)
     fig.add_trace(go.Scatter(
         x=quarters, y=estimates, mode="markers",
-        marker=dict(color="rgba(0,0,0,0)", size=10, line=dict(color=C["gray"], width=2)),
+        marker=dict(color="rgba(0,0,0,0)", size=14,
+                    line=dict(color=C["gray"], width=2.5)),
         name="Estimate",
-        hovertemplate="Est: %{y:.2f}<extra></extra>",
+        hovertemplate="Estimate: $%{y:.2f}<extra></extra>",
     ))
 
-    # Actual markers with beat/miss coloring
-    prices = startup.price_cache.get(symbol)
+    # Actual markers (filled, green=beat, red=miss)
     colors = []
+    sizes = []
     hover_texts = []
-    for e in earnings:
+    for i, e in enumerate(earnings):
         act = e.get("actual")
         est = e.get("estimate")
         surp = e.get("surprise_pct")
         beat = act is not None and est is not None and act >= est
-        colors.append(C["green"] if beat else C["red"] if act is not None else C["gray"])
+        color = C["green"] if beat else C["red"] if act is not None else C["gray"]
+        colors.append(color)
+        # Most recent quarter gets a bigger dot
+        sizes.append(18 if i == len(earnings) - 1 else 14)
+
+        # Build hover text
+        lines = []
+        if act is not None:
+            lines.append(f"Actual: ${act:.2f}")
+        if est is not None:
+            lines.append(f"Estimate: ${est:.2f}")
+        if surp is not None:
+            arrow = "▲" if surp >= 0 else "▼"
+            lines.append(f"Surprise: {arrow} {surp:+.1f}%")
 
         # 3-day price reaction
-        price_reaction = ""
         q_date = e.get("quarter")
         if q_date and prices is not None and len(prices) > 5:
             try:
@@ -529,29 +543,44 @@ def _build_earnings_chart(symbol):
                         p_start = float(prices.iloc[pos])
                         p_end = float(prices.iloc[pos + 3])
                         ret_3d = (p_end - p_start) / p_start * 100
-                        ret_color = "green" if ret_3d >= 0 else "red"
-                        price_reaction = f"<br>3-Day Price: <span style='color:{ret_color}'>{ret_3d:+.1f}%</span>"
+                        lines.append(f"3-Day Move: {ret_3d:+.1f}%")
             except Exception:
                 pass
 
-        surp_str = f"<br>Surprise: {surp:+.1f}%" if surp is not None else ""
-        act_str = f"Actual: {act:.2f}" if act is not None else "N/A"
-        est_str = f"<br>Estimate: {est:.2f}" if est is not None else ""
-        hover_texts.append(act_str + est_str + surp_str + price_reaction)
+        hover_texts.append("<br>".join(lines))
+
 
     fig.add_trace(go.Scatter(
         x=quarters, y=actuals, mode="markers",
-        marker=dict(color=colors, size=12),
+        marker=dict(color=colors, size=sizes, line=dict(color="#0a0a0a", width=1)),
         name="Actual",
         hovertemplate="%{customdata}<extra></extra>",
         customdata=hover_texts,
     ))
 
+    # Connect estimates to actuals with thin lines
+    for i, e in enumerate(earnings):
+        act = e.get("actual")
+        est = e.get("estimate")
+        if act is not None and est is not None:
+            color = C["green"] if act >= est else C["red"]
+            fig.add_trace(go.Scatter(
+                x=[quarters[i], quarters[i]], y=[est, act],
+                mode="lines", line=dict(color=color, width=1, dash="dot"),
+                showlegend=False, hoverinfo="skip",
+            ))
+
     fig.update_layout(
         **make_chart_layout(
             title=dict(text=f"{symbol} EARNINGS SURPRISE", font=dict(size=11, color=C["orange"]), x=0.01),
-            xaxis=dict(gridcolor=C["border"], tickfont=dict(size=9, color=C["gray"])),
-            yaxis=dict(gridcolor=C["border"], tickfont=dict(size=9, color=C["gray"]), title="EPS"),
+            xaxis=dict(gridcolor=C["border"], tickfont=dict(size=10, color=C["gray"])),
+            yaxis=dict(gridcolor=C["border"], tickfont=dict(size=10, color=C["gray"]),
+                       title=dict(text="EPS ($)", font=dict(size=10, color=C["gray"]))),
+            height=280,
+            margin=dict(l=60, r=20, t=40, b=40),
+            showlegend=True,
+            legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="left", x=0,
+                        font=dict(size=9, color=C["gray"])),
         ),
     )
     return fig
@@ -609,26 +638,45 @@ def _build_ta_rsi_chart(prices, symbol):
     if prices is None or len(prices) < 30:
         return empty_fig("Insufficient data for RSI")
 
-    rsi = compute_rsi(prices, 14)
+    rsi = compute_rsi(prices, 14).dropna()
     rsi_6m = rsi.iloc[-126:] if len(rsi) >= 126 else rsi
-    current_val = float(rsi_6m.iloc[-1]) if not rsi_6m.empty else 50.0
+    if rsi_6m.empty:
+        return empty_fig("Insufficient RSI data")
+    current_val = float(rsi_6m.iloc[-1])
+
+    # Color based on current level
+    rsi_color = C["green"] if current_val <= 30 else C["red"] if current_val >= 70 else C["purple"]
+    label = " OVERSOLD" if current_val <= 30 else " OVERBOUGHT" if current_val >= 70 else ""
 
     fig = go.Figure()
     fig.add_hrect(y0=70, y1=100, fillcolor="rgba(255,68,68,0.08)", line_width=0)
-    fig.add_hrect(y0=0, y1=30, fillcolor="rgba(0,255,0,0.08)", line_width=0)
-    for level in [30, 50, 70]:
-        fig.add_hline(y=level, line_dash="dot", line_color=C["gray"], line_width=0.5, opacity=0.5)
+    fig.add_hrect(y0=0, y1=30, fillcolor="rgba(0,255,0,0.06)", line_width=0)
+    fig.add_hline(y=70, line_dash="dash", line_color=C["red"], line_width=0.8, opacity=0.5,
+                  annotation_text="OVERBOUGHT 70", annotation_position="top left",
+                  annotation_font=dict(size=8, color=C["red"]))
+    fig.add_hline(y=30, line_dash="dash", line_color=C["green"], line_width=0.8, opacity=0.5,
+                  annotation_text="OVERSOLD 30", annotation_position="bottom left",
+                  annotation_font=dict(size=8, color=C["green"]))
+    fig.add_hline(y=50, line_dash="dot", line_color=C["dim"], line_width=0.5, opacity=0.3)
+
     fig.add_trace(go.Scatter(x=rsi_6m.index, y=rsi_6m.values, mode="lines",
-                             line=dict(color=C["purple"], width=1.5), name="RSI"))
+                             line=dict(color=C["purple"], width=2), name="RSI",
+                             fill="tozeroy", fillcolor="rgba(187,134,252,0.05)"))
+
+    # Current value annotation
     fig.add_annotation(x=rsi_6m.index[-1], y=current_val,
-                       text=f"RSI: {current_val:.0f}", showarrow=True, arrowhead=2,
-                       font=dict(size=9, color=C["purple"]), arrowcolor=C["purple"])
+                       text=f"RSI: {current_val:.0f}{label}", showarrow=True, arrowhead=2,
+                       font=dict(size=10, color=rsi_color, family=FONT_FAMILY),
+                       arrowcolor=rsi_color, bgcolor="#0a0a0a", bordercolor=rsi_color, borderwidth=1)
 
     fig.update_layout(
         **make_chart_layout(
             title=dict(text=f"{symbol} RSI (6M)", font=dict(size=11, color=C["orange"]), x=0.01),
             xaxis=dict(gridcolor=C["border"], tickfont=dict(size=9, color=C["gray"])),
-            yaxis=dict(gridcolor=C["border"], tickfont=dict(size=9, color=C["gray"]), range=[0, 100]),
+            yaxis=dict(gridcolor=C["border"], tickfont=dict(size=9, color=C["gray"]),
+                       range=[0, 100], dtick=10),
+            height=220,
+            margin=dict(l=50, r=80, t=35, b=30),
         ),
     )
     return fig
@@ -640,26 +688,47 @@ def _build_ta_macd_chart(prices, symbol):
         return empty_fig("Insufficient data for MACD")
 
     macd_l, sig_l, hist = compute_macd(prices)
-    n = min(126, len(macd_l))
-    macd_6m = macd_l.iloc[-n:]
-    sig_6m = sig_l.iloc[-n:]
-    hist_6m = hist.iloc[-n:]
+    # Drop NaN values from the start
+    valid = macd_l.dropna().index
+    if len(valid) < 10:
+        return empty_fig("Insufficient MACD data")
+
+    n = min(126, len(valid))
+    macd_6m = macd_l.loc[valid[-n:]]
+    sig_6m = sig_l.loc[valid[-n:]]
+    hist_6m = hist.loc[valid[-n:]]
+
+    # Determine current signal
+    current_macd = float(macd_6m.iloc[-1])
+    current_sig = float(sig_6m.iloc[-1])
+    is_bullish = current_macd > current_sig
+    signal_text = "BULLISH" if is_bullish else "BEARISH"
+    signal_color = C["green"] if is_bullish else C["red"]
 
     fig = go.Figure()
     hist_colors = [C["green"] if v >= 0 else C["red"] for v in hist_6m.values]
     fig.add_trace(go.Bar(x=hist_6m.index, y=hist_6m.values,
                          marker_color=hist_colors, name="Histogram", opacity=0.6))
     fig.add_trace(go.Scatter(x=macd_6m.index, y=macd_6m.values, mode="lines",
-                             line=dict(color=C["cyan"], width=1.5), name="MACD"))
+                             line=dict(color=C["cyan"], width=2), name="MACD"))
     fig.add_trace(go.Scatter(x=sig_6m.index, y=sig_6m.values, mode="lines",
-                             line=dict(color=C["orange"], width=1, dash="dash"), name="Signal"))
-    fig.add_hline(y=0, line_dash="dot", line_color=C["gray"], line_width=0.5)
+                             line=dict(color=C["orange"], width=1.5, dash="dash"), name="Signal"))
+    fig.add_hline(y=0, line_dash="solid", line_color=C["dim"], line_width=0.8)
+
+    # Current signal annotation
+    fig.add_annotation(x=macd_6m.index[-1], y=current_macd,
+                       text=signal_text, showarrow=True, arrowhead=2,
+                       font=dict(size=9, color=signal_color, family=FONT_FAMILY),
+                       arrowcolor=signal_color, bgcolor="#0a0a0a",
+                       bordercolor=signal_color, borderwidth=1)
 
     fig.update_layout(
         **make_chart_layout(
             title=dict(text=f"{symbol} MACD (6M)", font=dict(size=11, color=C["orange"]), x=0.01),
             xaxis=dict(gridcolor=C["border"], tickfont=dict(size=9, color=C["gray"])),
             yaxis=dict(gridcolor=C["border"], tickfont=dict(size=9, color=C["gray"])),
+            height=220,
+            margin=dict(l=50, r=80, t=35, b=30),
             showlegend=True,
             legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="left", x=0,
                         font=dict(size=8, color=C["gray"])),
@@ -688,8 +757,14 @@ def update_price_chart(period, pathname):
         return empty_fig("No price data")
 
     if period == "YTD":
-        start = pd.Timestamp(datetime(datetime.now().year, 1, 1))
+        start = pd.Timestamp(f"{datetime.now().year}-01-01")
+        # Strip timezone if prices have tz-naive index
+        if prices.index.tz is not None:
+            start = start.tz_localize(prices.index.tz)
         p = prices[prices.index >= start]
+        if p.empty:
+            # Fallback: use last 60 trading days
+            p = prices.iloc[-60:] if len(prices) >= 60 else prices
     elif period == "MAX":
         p = prices
     else:

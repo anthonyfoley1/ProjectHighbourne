@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:#000; color:#c8c8c8; font-family:'Lucida Console','Monaco','Courier New',monospace; font-size:11px; padding:8px; }
+  .container { max-width:1100px; margin:0 auto; }
+
+  /* Bloomberg orange/black theme */
+  .bbg-header { background:#1a1a1a; border-bottom:2px solid #ff8c00; padding:4px 8px; display:flex; justify-content:space-between; align-items:center; margin-bottom:6px; }
+  .bbg-header .title { color:#ff8c00; font-size:14px; font-weight:bold; letter-spacing:1px; }
+
+  /* Alert ticker strip */
+  .alert-strip { background:#1a0a00; border:1px solid #ff8c00; padding:4px 8px; margin-bottom:6px; display:flex; align-items:center; gap:8px; }
+  .alert-badge { background:#ff8c00; color:#000; font-weight:bold; padding:2px 6px; font-size:9px; }
+  .alert-content { font-size:10px; display:flex; gap:12px; overflow:hidden; }
+
+  /* Filter bar */
+  .filter-bar { background:#111; border:1px solid #333; padding:3px 6px; margin-bottom:6px; display:flex; gap:10px; align-items:center; font-size:10px; }
+  .filter-bar .lbl { color:#ff8c00; }
+  .filter-bar .val { color:#ffff00; background:#000; border:1px solid #444; padding:1px 6px; }
+  .filter-bar .btn-active { background:#ff8c00; color:#000; padding:1px 6px; font-weight:bold; border:1px solid #ff8c00; }
+  .filter-bar .btn { background:#000; color:#999; padding:1px 6px; border:1px solid #444; }
+
+  /* Table */
+  .tbl { width:100%; border-collapse:collapse; }
+  .tbl th { background:#1a1a1a; color:#ff8c00; font-size:8px; text-transform:uppercase; letter-spacing:0.5px; padding:4px 4px; text-align:left; border-bottom:1px solid #ff8c00; font-weight:bold; }
+  .tbl th.r { text-align:right; }
+  .tbl th.c { text-align:center; }
+  .tbl td { padding:3px 4px; border-bottom:1px solid #1a1a1a; font-size:10px; vertical-align:middle; }
+  .tbl tr { cursor:pointer; }
+  .tbl tr:hover { background:#1a1a00; }
+  .tbl tr.alert-buy { background:#001a00; border-left:3px solid #00ff00; }
+  .tbl tr.alert-buy:hover { background:#002a00; }
+  .tbl tr.alert-sell { background:#1a0000; border-left:3px solid #ff3333; }
+  .tbl tr.alert-sell:hover { background:#2a0000; }
+
+  /* Colors — brighter for readability */
+  .grn { color:#00ff00; }
+  .red { color:#ff4444; }
+  .yel { color:#ffff00; }
+  .ticker { color:#ffffff; }
+  .wht { color:#e0e0e0; }
+  .gry { color:#999; }
+  .dim { color:#777; }
+  .org { color:#ff8c00; }
+  .cyn { color:#00bcd4; }
+  .b { font-weight:bold; }
+
+  /* Signal badges */
+  .sig-buy { background:#00ff00; color:#000; padding:0 4px; font-size:8px; font-weight:bold; }
+  .sig-cheap { border:1px solid #00ff00; color:#00ff00; padding:0 4px; font-size:8px; font-weight:bold; background:transparent; }
+  .sig-sell { background:#ff4444; color:#fff; padding:0 4px; font-size:8px; font-weight:bold; }
+  .sig-rich { color:#ff8c00; font-size:8px; font-weight:bold; }
+  .sig-fair { color:#999; font-size:8px; }
+
+  /* 52W range */
+  .range-bar { position:relative; height:8px; background:#222; width:100%; min-width:50px; }
+  .range-bar .dot { position:absolute; top:-1px; width:6px; height:10px; background:#00bcd4; }
+  .range-bar .lo, .range-bar .hi { position:absolute; top:-8px; font-size:7px; color:#777; }
+  .range-bar .lo { left:0; }
+  .range-bar .hi { right:0; }
+
+  /* News row */
+  .news-row td { padding:0 4px 4px 20px; font-size:9px; color:#888; border-bottom:1px solid #111; }
+  .news-row td .src { color:#666; }
+  .news-row td .headline { color:#aaa; }
+
+  /* Movers panel */
+  .movers { display:flex; gap:6px; margin-top:8px; }
+  .mover-panel { flex:1; background:#0a0a0a; border:1px solid #333; }
+  .mover-panel .mover-header { padding:4px 8px; border-bottom:1px solid #333; display:flex; justify-content:space-between; align-items:center; }
+  .mover-panel .mover-header.gain { background:#001a00; border-bottom:1px solid #00ff00; }
+  .mover-panel .mover-header.loss { background:#1a0000; border-bottom:1px solid #ff4444; }
+  .mover-tbl { width:100%; border-collapse:collapse; }
+  .mover-tbl th { background:#111; color:#ff8c00; font-size:8px; text-transform:uppercase; padding:3px 6px; text-align:left; border-bottom:1px solid #333; }
+  .mover-tbl th.r { text-align:right; }
+  .mover-tbl td { padding:3px 6px; border-bottom:1px solid #111; font-size:10px; cursor:pointer; }
+  .mover-tbl tr:hover { background:#1a1a00; }
+  .page-dots { text-align:center; padding:6px; }
+  .page-dots .dot { display:inline-block; width:6px; height:6px; border-radius:50%; margin:0 2px; }
+
+  /* Bloomberg function key bar */
+  .fn-bar { background:#1a1a1a; border-top:1px solid #333; padding:3px 8px; margin-top:8px; display:flex; gap:16px; font-size:9px; }
+  .fn-bar span { color:#ffff00; }
+  .fn-bar .key { background:#444; color:#ffff00; padding:0 4px; margin-right:3px; font-weight:bold; }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+<!-- Header -->
+<div class="bbg-header">
+  <div>
+    <span class="title">HIGHBOURNE TERMINAL</span>
+    <span style="color:#999; margin-left:8px; font-size:10px;">EQUITY SCANNER</span>
+    <span style="margin-left:16px;">
+      <input type="text" placeholder="Search ticker..." style="background:#000; border:1px solid #444; color:#ffff00; font-family:inherit; font-size:10px; padding:2px 8px; width:140px;" />
+    </span>
+  </div>
+  <div style="color:#999; font-size:10px;">R3000 ex-Energy &nbsp;|&nbsp; <span class="yel">14:34:22 EST</span></div>
+</div>
+
+<!-- Alert Strip -->
+<div class="alert-strip">
+  <span class="alert-badge">ALERTS 3</span>
+  <div class="alert-content">
+    <span><span class="grn b">INTC</span> <span class="gry">P/E -2.1σ + RSI 24 oversold</span></span>
+    <span class="dim">|</span>
+    <span><span class="grn b">NKE</span> <span class="gry">P/S -1.8σ + golden cross</span></span>
+    <span class="dim">|</span>
+    <span><span class="red b">TSLA</span> <span class="gry">EV/EB +2.4σ + RSI 78 overbought</span></span>
+  </div>
+</div>
+
+<!-- Filter Bar -->
+<div class="filter-bar">
+  <span class="lbl">SECTOR</span><span class="val">ALL ▾</span>
+  <span class="lbl">VIEW</span>
+  <span class="btn-active">CHEAP</span><span class="btn">RICH</span><span class="btn">ALL</span>
+  <div style="flex:1;"></div>
+  <span class="dim">Showing <span class="yel">2,556</span> tickers &nbsp;|&nbsp; Last: <span class="yel">14:34 EST</span></span>
+</div>
+
+<!-- Main Screener Table -->
+<table class="tbl">
+  <thead>
+    <tr>
+      <th style="width:18px;"></th>
+      <th>TICKER</th>
+      <th>SECTOR</th>
+      <th>RV</th>
+      <th>Z-SCR</th>
+      <th>RSI</th>
+      <th>MACD</th>
+      <th class="r">1D%</th>
+      <th class="r">3D%</th>
+      <th class="c">SIGNAL</th>
+      <th class="r">vPEER</th>
+      <th class="c">52W RANGE</th>
+      <th class="c">PT(AVG)</th>
+      <th class="c">NEXT ER</th>
+      <th class="r">90D</th>
+    </tr>
+  </thead>
+  <tbody>
+    <!-- INTC — BUY ALERT -->
+    <tr class="alert-buy">
+      <td class="grn b">►</td>
+      <td class="ticker b">INTC</td>
+      <td class="gry">Tech</td>
+      <td class="grn">P/E</td>
+      <td class="grn b">-2.1</td>
+      <td class="grn b">24</td>
+      <td class="grn">BULL</td>
+      <td class="red r">-1.8</td>
+      <td class="red r">-4.2</td>
+      <td class="c"><span class="sig-buy">BUY</span></td>
+      <td class="red r">-12%</td>
+      <td>
+        <div class="range-bar">
+          <div class="lo">18</div><div class="hi">52</div>
+          <div class="dot" style="left:12%;"></div>
+        </div>
+      </td>
+      <td class="c"><span class="grn b">38</span> <span class="grn" style="font-size:8px;">+58%</span></td>
+      <td class="c org b">Apr 24</td>
+      <td class="r"><svg width="55" height="14" viewBox="0 0 55 14"><polyline points="0,2 7,3 14,5 21,8 28,11 35,13 42,12 49,10 55,9" fill="none" stroke="#00ff00" stroke-width="1"/></svg></td>
+    </tr>
+    <tr class="news-row alert-buy"><td colspan="15"><span class="headline">Intel secures $3.5B CHIPS Act grant for military chip production</span> — <span class="src">Reuters 2h</span></td></tr>
+
+    <!-- NKE — CHEAP ALERT -->
+    <tr class="alert-buy">
+      <td class="grn b">►</td>
+      <td class="ticker b">NKE</td>
+      <td class="gry">ConDisc</td>
+      <td class="grn">P/S</td>
+      <td class="grn b">-1.8</td>
+      <td class="wht">42</td>
+      <td class="grn">BULL</td>
+      <td class="grn r">+2.1</td>
+      <td class="grn r">+3.5</td>
+      <td class="c"><span class="sig-cheap">CHEAP</span></td>
+      <td class="red r">-8%</td>
+      <td>
+        <div class="range-bar">
+          <div class="lo">68</div><div class="hi">112</div>
+          <div class="dot" style="left:25%;"></div>
+        </div>
+      </td>
+      <td class="c"><span class="grn b">98</span> <span class="grn" style="font-size:8px;">+24%</span></td>
+      <td class="c gry">Jun 26</td>
+      <td class="r"><svg width="55" height="14" viewBox="0 0 55 14"><polyline points="0,12 7,11 14,9 21,7 28,5 35,4 42,6 49,5 55,3" fill="none" stroke="#00ff00" stroke-width="1"/></svg></td>
+    </tr>
+    <tr class="news-row"><td colspan="15"><span class="headline">Nike announces restructuring plan, cutting 2% of global workforce</span> — <span class="src">WSJ 5h</span></td></tr>
+
+    <!-- DIS -->
+    <tr>
+      <td></td>
+      <td class="ticker">DIS</td>
+      <td class="gry">Comm</td>
+      <td class="grn">P/E</td>
+      <td class="grn">-1.4</td>
+      <td class="wht">38</td>
+      <td class="red">BEAR</td>
+      <td class="red r">-0.5</td>
+      <td class="red r">-1.2</td>
+      <td class="c"><span class="sig-cheap">CHEAP</span></td>
+      <td class="red r">-5%</td>
+      <td>
+        <div class="range-bar">
+          <div class="lo">82</div><div class="hi">126</div>
+          <div class="dot" style="left:35%;"></div>
+        </div>
+      </td>
+      <td class="c"><span class="grn b">115</span> <span class="grn" style="font-size:8px;">+18%</span></td>
+      <td class="c gry">May 7</td>
+      <td class="r"><svg width="55" height="14" viewBox="0 0 55 14"><polyline points="0,5 7,6 14,8 21,7 28,9 35,10 42,11 49,9 55,10" fill="none" stroke="#999" stroke-width="1"/></svg></td>
+    </tr>
+    <tr class="news-row"><td colspan="15"><span class="headline">Disney+ subscriber growth slows in Q1, parks revenue beats</span> — <span class="src">CNBC 1d</span></td></tr>
+
+    <!-- MSFT -->
+    <tr>
+      <td></td>
+      <td class="ticker">MSFT</td>
+      <td class="gry">Tech</td>
+      <td class="gry">P/E</td>
+      <td class="gry">-0.3</td>
+      <td class="wht">52</td>
+      <td class="grn">BULL</td>
+      <td class="grn r">+0.8</td>
+      <td class="grn r">+1.1</td>
+      <td class="c"><span class="sig-fair">FAIR</span></td>
+      <td class="grn r">+3%</td>
+      <td>
+        <div class="range-bar">
+          <div class="lo">310</div><div class="hi">450</div>
+          <div class="dot" style="left:72%;"></div>
+        </div>
+      </td>
+      <td class="c"><span class="grn b">460</span> <span class="grn" style="font-size:8px;">+8%</span></td>
+      <td class="c gry">Jul 22</td>
+      <td class="r"><svg width="55" height="14" viewBox="0 0 55 14"><polyline points="0,11 7,10 14,8 21,8 28,7 35,6 42,7 49,6 55,5" fill="none" stroke="#999" stroke-width="1"/></svg></td>
+    </tr>
+    <tr class="news-row"><td colspan="15"><span class="headline">Microsoft Copilot adoption surpasses 1M enterprise seats</span> — <span class="src">Bloomberg 3h</span></td></tr>
+
+    <!-- NFLX -->
+    <tr>
+      <td></td>
+      <td class="ticker">NFLX</td>
+      <td class="gry">Comm</td>
+      <td class="org">EV/EB</td>
+      <td class="org">+1.6</td>
+      <td class="wht">62</td>
+      <td class="grn">BULL</td>
+      <td class="grn r">+1.3</td>
+      <td class="grn r">+2.8</td>
+      <td class="c"><span class="sig-rich">RICH</span></td>
+      <td class="grn r">+15%</td>
+      <td>
+        <div class="range-bar">
+          <div class="lo">420</div><div class="hi">720</div>
+          <div class="dot" style="left:82%;"></div>
+        </div>
+      </td>
+      <td class="c"><span class="red b">580</span> <span class="red" style="font-size:8px;">-12%</span></td>
+      <td class="c gry">Jul 17</td>
+      <td class="r"><svg width="55" height="14" viewBox="0 0 55 14"><polyline points="0,13 7,11 14,8 21,6 28,4 35,3 42,2 49,2 55,1" fill="none" stroke="#ff8c00" stroke-width="1"/></svg></td>
+    </tr>
+    <tr class="news-row"><td colspan="15"><span class="headline">Netflix ad tier reaches 70M monthly active users globally</span> — <span class="src">Variety 6h</span></td></tr>
+
+    <!-- TSLA — SELL ALERT -->
+    <tr class="alert-sell">
+      <td class="red b">►</td>
+      <td class="ticker b">TSLA</td>
+      <td class="gry">ConDisc</td>
+      <td class="red">EV/EB</td>
+      <td class="red b">+2.4</td>
+      <td class="red b">78</td>
+      <td class="red">BEAR</td>
+      <td class="red r">-3.2</td>
+      <td class="red r">-5.1</td>
+      <td class="c"><span class="sig-sell">SELL</span></td>
+      <td class="grn r">+22%</td>
+      <td>
+        <div class="range-bar">
+          <div class="lo">140</div><div class="hi">390</div>
+          <div class="dot" style="left:88%;"></div>
+        </div>
+      </td>
+      <td class="c"><span class="red b">250</span> <span class="red" style="font-size:8px;">-28%</span></td>
+      <td class="c"><span class="org b">Apr 8 !</span></td>
+      <td class="r"><svg width="55" height="14" viewBox="0 0 55 14"><polyline points="0,13 7,10 14,6 21,3 28,1 35,0 42,2 49,3 55,4" fill="none" stroke="#ff4444" stroke-width="1"/></svg></td>
+    </tr>
+    <tr class="news-row alert-sell"><td colspan="15"><span class="headline">Tesla Q1 deliveries miss estimates by 12%, China competition intensifies</span> — <span class="src">Reuters 45m</span></td></tr>
+  </tbody>
+</table>
+
+<div style="text-align:center; color:#666; font-size:9px; padding:4px;">↓ 48 more tickers ↓</div>
+
+<!-- Gainers vs Losers bar — inline with screener -->
+<div style="display:flex; height:22px; margin:4px 0 0 0; border-radius:3px; overflow:hidden;">
+  <div style="width:43%; background:#005500; display:flex; align-items:center; padding-left:8px;">
+    <span style="color:#00ff00; font-weight:bold; font-size:10px;">Gainers (1,284)</span>
+  </div>
+  <div style="width:53%; background:#550000; display:flex; align-items:center; justify-content:flex-end; padding-right:8px;">
+    <span style="color:#ff4444; font-weight:bold; font-size:10px;">Losers (1,592)</span>
+  </div>
+  <div style="width:4%; background:#333; display:flex; align-items:center; justify-content:center;">
+    <span style="font-size:7px; color:#888;">124</span>
+  </div>
+</div>
+
+<!-- TODAY'S MOVERS -->
+<div class="movers">
+  <!-- GAINERS -->
+  <div class="mover-panel">
+    <div class="mover-header gain">
+      <span class="grn b" style="font-size:12px;">▲ TOP GAINERS</span>
+      <span class="gry" style="font-size:9px;">1-5 of 10 &nbsp;|&nbsp; rotating 5s</span>
+    </div>
+    <table class="mover-tbl">
+      <thead><tr><th>#</th><th>TICKER</th><th>NAME</th><th class="r">LAST</th><th class="r">CHG%</th></tr></thead>
+      <tbody>
+        <tr><td class="gry">1</td><td class="ticker b">SMCI</td><td class="gry">Super Micro Computer</td><td class="wht r">42.18</td><td class="grn b r">+14.2</td></tr>
+        <tr><td class="gry">2</td><td class="ticker b">MARA</td><td class="gry">Marathon Digital</td><td class="wht r">18.92</td><td class="grn b r">+11.8</td></tr>
+        <tr><td class="gry">3</td><td class="ticker b">RIVN</td><td class="gry">Rivian Automotive</td><td class="wht r">14.55</td><td class="grn b r">+9.3</td></tr>
+        <tr><td class="gry">4</td><td class="ticker b">SNAP</td><td class="gry">Snap Inc</td><td class="wht r">11.24</td><td class="grn b r">+7.6</td></tr>
+        <tr><td class="gry">5</td><td class="ticker b">UAL</td><td class="gry">United Airlines</td><td class="wht r">58.30</td><td class="grn b r">+6.1</td></tr>
+      </tbody>
+    </table>
+    <div class="page-dots">
+      <span class="dot" style="background:#00ff00;"></span>
+      <span class="dot" style="background:#333;"></span>
+    </div>
+  </div>
+
+  <!-- LOSERS -->
+  <div class="mover-panel">
+    <div class="mover-header loss">
+      <span class="red b" style="font-size:12px;">▼ TOP LOSERS</span>
+      <span class="gry" style="font-size:9px;">1-5 of 10 &nbsp;|&nbsp; rotating 5s</span>
+    </div>
+    <table class="mover-tbl">
+      <thead><tr><th>#</th><th>TICKER</th><th>NAME</th><th class="r">LAST</th><th class="r">CHG%</th></tr></thead>
+      <tbody>
+        <tr><td class="gry">1</td><td class="ticker b">PARA</td><td class="gry">Paramount Global</td><td class="wht r">9.82</td><td class="red b r">-12.4</td></tr>
+        <tr><td class="gry">2</td><td class="ticker b">TSLA</td><td class="gry">Tesla Inc</td><td class="wht r">348.50</td><td class="red b r">-8.7</td></tr>
+        <tr><td class="gry">3</td><td class="ticker b">MRNA</td><td class="gry">Moderna Inc</td><td class="wht r">26.15</td><td class="red b r">-7.2</td></tr>
+        <tr><td class="gry">4</td><td class="ticker b">PYPL</td><td class="gry">PayPal Holdings</td><td class="wht r">62.40</td><td class="red b r">-5.9</td></tr>
+        <tr><td class="gry">5</td><td class="ticker b">BA</td><td class="gry">Boeing Co</td><td class="wht r">172.85</td><td class="red b r">-4.8</td></tr>
+      </tbody>
+    </table>
+    <div class="page-dots">
+      <span class="dot" style="background:#ff4444;"></span>
+      <span class="dot" style="background:#333;"></span>
+    </div>
+  </div>
+</div>
+
+<!-- MARKET MOVERS: Scatter Plot + Risk Dashboard -->
+<div style="display:flex; gap:6px; margin-top:8px;">
+
+  <!-- SCATTER PLOT: 1-Day Return vs Relative Volume -->
+  <div style="flex:1; background:#0a0a0a; border:1px solid #333;">
+    <div style="background:#1a1a1a; padding:4px 8px; border-bottom:1px solid #ff8c00; display:flex; justify-content:space-between; align-items:center;">
+      <span style="color:#ff8c00; font-weight:bold; font-size:11px;">MARKET MOVERS — R3000</span>
+      <span class="gry" style="font-size:9px;">1-Day Performance vs Relative Volume (10d)</span>
+    </div>
+    <div style="padding:8px 12px;">
+
+      <!-- Scatter chart area -->
+      <div style="position:relative; height:240px; border-left:1px solid #444; border-bottom:1px solid #444; margin:4px 0;">
+
+        <!-- Y-axis labels -->
+        <span style="position:absolute; left:-42px; top:5%; font-size:8px; color:#777;">+10%</span>
+        <span style="position:absolute; left:-38px; top:27%; font-size:8px; color:#777;">+5%</span>
+        <span style="position:absolute; left:-38px; top:48%; font-size:8px; color:#777;">0.0%</span>
+        <span style="position:absolute; left:-35px; top:69%; font-size:8px; color:#777;">-5%</span>
+        <span style="position:absolute; left:-42px; top:90%; font-size:8px; color:#777;">-10%</span>
+
+        <!-- Zero line -->
+        <div style="position:absolute; top:50%; left:0; right:0; border-top:1px solid #333;"></div>
+
+        <!-- X-axis labels -->
+        <span style="position:absolute; bottom:-14px; left:0; font-size:8px; color:#777;">0.0x</span>
+        <span style="position:absolute; bottom:-14px; left:20%; font-size:8px; color:#777;">0.5x</span>
+        <span style="position:absolute; bottom:-14px; left:40%; font-size:8px; color:#777;">1.0x</span>
+        <span style="position:absolute; bottom:-14px; left:60%; font-size:8px; color:#777;">1.5x</span>
+        <span style="position:absolute; bottom:-14px; left:80%; font-size:8px; color:#777;">2.0x</span>
+        <span style="position:absolute; bottom:-14px; right:0; font-size:8px; color:#777;">2.5x</span>
+
+        <!-- Grid lines -->
+        <div style="position:absolute; top:27%; left:0; right:0; border-top:1px solid #1a1a1a;"></div>
+        <div style="position:absolute; top:69%; left:0; right:0; border-top:1px solid #1a1a1a;"></div>
+        <div style="position:absolute; top:0; bottom:0; left:20%; border-left:1px solid #1a1a1a;"></div>
+        <div style="position:absolute; top:0; bottom:0; left:40%; border-left:1px solid #1a1a1a;"></div>
+        <div style="position:absolute; top:0; bottom:0; left:60%; border-left:1px solid #1a1a1a;"></div>
+        <div style="position:absolute; top:0; bottom:0; left:80%; border-left:1px solid #1a1a1a;"></div>
+
+        <!-- Dots — cluster around center, outliers labeled -->
+        <!-- Cluster dots (unlabeled, near center) -->
+        <svg style="position:absolute; top:0; left:0; width:100%; height:100%;">
+          <!-- Main cluster -->
+          <circle cx="22%" cy="46%" r="3" fill="#6699cc" opacity="0.5"/>
+          <circle cx="25%" cy="48%" r="3" fill="#6699cc" opacity="0.5"/>
+          <circle cx="28%" cy="44%" r="3" fill="#6699cc" opacity="0.5"/>
+          <circle cx="24%" cy="52%" r="3" fill="#6699cc" opacity="0.5"/>
+          <circle cx="30%" cy="47%" r="3" fill="#6699cc" opacity="0.5"/>
+          <circle cx="27%" cy="50%" r="3" fill="#6699cc" opacity="0.5"/>
+          <circle cx="32%" cy="45%" r="3" fill="#6699cc" opacity="0.5"/>
+          <circle cx="29%" cy="53%" r="3" fill="#6699cc" opacity="0.5"/>
+          <circle cx="26%" cy="49%" r="3" fill="#6699cc" opacity="0.5"/>
+          <circle cx="31%" cy="51%" r="3" fill="#6699cc" opacity="0.5"/>
+          <circle cx="34%" cy="43%" r="3" fill="#6699cc" opacity="0.5"/>
+          <circle cx="33%" cy="48%" r="3" fill="#6699cc" opacity="0.5"/>
+          <circle cx="35%" cy="46%" r="3" fill="#6699cc" opacity="0.5"/>
+          <circle cx="23%" cy="51%" r="3" fill="#6699cc" opacity="0.5"/>
+          <circle cx="36%" cy="50%" r="3" fill="#6699cc" opacity="0.5"/>
+          <circle cx="28%" cy="42%" r="3" fill="#6699cc" opacity="0.5"/>
+          <circle cx="38%" cy="47%" r="3" fill="#6699cc" opacity="0.5"/>
+          <circle cx="30%" cy="54%" r="3" fill="#6699cc" opacity="0.5"/>
+          <circle cx="37%" cy="44%" r="3" fill="#6699cc" opacity="0.5"/>
+          <circle cx="33%" cy="55%" r="3" fill="#6699cc" opacity="0.5"/>
+          <circle cx="40%" cy="49%" r="3" fill="#6699cc" opacity="0.5"/>
+          <circle cx="35%" cy="52%" r="3" fill="#6699cc" opacity="0.5"/>
+          <circle cx="39%" cy="45%" r="3" fill="#6699cc" opacity="0.5"/>
+          <circle cx="42%" cy="48%" r="3" fill="#6699cc" opacity="0.5"/>
+          <circle cx="41%" cy="51%" r="3" fill="#6699cc" opacity="0.5"/>
+          <circle cx="20%" cy="47%" r="3" fill="#6699cc" opacity="0.5"/>
+          <circle cx="37%" cy="53%" r="3" fill="#6699cc" opacity="0.5"/>
+          <circle cx="44%" cy="46%" r="3" fill="#6699cc" opacity="0.5"/>
+          <circle cx="43%" cy="50%" r="3" fill="#6699cc" opacity="0.5"/>
+          <circle cx="26%" cy="55%" r="3" fill="#6699cc" opacity="0.5"/>
+        </svg>
+
+        <!-- Labeled outliers — interesting movers -->
+        <!-- INTC: high vol, big up -->
+        <div style="position:absolute; left:56%; top:18%; font-size:8px; color:#00ff00; font-weight:bold; cursor:pointer;">
+          <div style="width:7px; height:7px; background:#6699cc; border-radius:50%; margin-bottom:1px; margin-left:6px;"></div>
+          INTC
+        </div>
+        <!-- NKE: very high vol, up -->
+        <div style="position:absolute; left:90%; top:40%; font-size:8px; color:#00ff00; font-weight:bold; cursor:pointer;">
+          <div style="width:7px; height:7px; background:#6699cc; border-radius:50%; margin-bottom:1px; margin-left:4px;"></div>
+          NKE
+        </div>
+        <!-- AMD: moderate vol, up -->
+        <div style="position:absolute; left:46%; top:36%; font-size:8px; color:#6699cc; cursor:pointer;">
+          <div style="width:6px; height:6px; background:#6699cc; border-radius:50%; margin-bottom:1px; margin-left:6px;"></div>
+          AMD
+        </div>
+        <!-- MSFT: low vol, flat -->
+        <div style="position:absolute; left:32%; top:44%; font-size:8px; color:#6699cc; cursor:pointer;">
+          <div style="width:5px; height:5px; background:#6699cc; border-radius:50%; margin-bottom:1px; margin-left:8px;"></div>
+          MSFT
+        </div>
+        <!-- TSLA: high vol, big down -->
+        <div style="position:absolute; left:54%; top:72%; font-size:8px; color:#ff4444; font-weight:bold; cursor:pointer;">
+          <div style="width:7px; height:7px; background:#6699cc; border-radius:50%; margin-bottom:1px; margin-left:6px;"></div>
+          TSLA
+        </div>
+        <!-- GM: moderate vol, down -->
+        <div style="position:absolute; left:38%; top:64%; font-size:8px; color:#6699cc; cursor:pointer;">
+          <div style="width:5px; height:5px; background:#6699cc; border-radius:50%; margin-bottom:1px; margin-left:4px;"></div>
+          GM
+        </div>
+        <!-- NFLX: near average -->
+        <div style="position:absolute; left:42%; top:40%; font-size:8px; color:#6699cc; cursor:pointer;">
+          <div style="width:5px; height:5px; background:#6699cc; border-radius:50%; margin-bottom:1px; margin-left:8px;"></div>
+          NFLX
+        </div>
+      </div>
+
+      <!-- X-axis title -->
+      <div style="text-align:center; margin-top:18px; font-size:9px; color:#999;">Relative Volume (10d) →</div>
+
+    </div>
+  </div>
+
+  <!-- RISK DASHBOARD -->
+  <div style="width:280px; flex-shrink:0; background:#0a0a0a; border:1px solid #333;">
+    <div style="background:#1a1a1a; padding:4px 8px; border-bottom:1px solid #ff8c00;">
+      <span style="color:#ff8c00; font-weight:bold; font-size:11px;">RISK DASHBOARD</span>
+    </div>
+    <div style="padding:10px;">
+
+      <!-- VIX -->
+      <div style="display:flex; justify-content:space-between; padding:3px 0; border-bottom:1px solid #111;">
+        <span class="gry">VIX</span>
+        <span class="red b">28.4 <span style="font-size:8px;">▲ +3.2</span></span>
+      </div>
+
+      <!-- VIX gauge bar -->
+      <div style="position:relative; height:14px; background:#111; border-radius:2px; margin:4px 0 8px 0; overflow:hidden;">
+        <div style="position:absolute; left:0; top:0; height:100%; width:20%; background:#005500;"></div>
+        <div style="position:absolute; left:20%; top:0; height:100%; width:20%; background:#338800;"></div>
+        <div style="position:absolute; left:40%; top:0; height:100%; width:20%; background:#888800;"></div>
+        <div style="position:absolute; left:60%; top:0; height:100%; width:20%; background:#884400;"></div>
+        <div style="position:absolute; left:80%; top:0; height:100%; width:20%; background:#880000;"></div>
+        <div style="position:absolute; left:56%; top:-2px; width:3px; height:18px; background:#ffff00; border-radius:1px; z-index:2;"></div>
+        <span style="position:absolute; left:4px; top:1px; font-size:7px; color:rgba(255,255,255,0.4);">LOW</span>
+        <span style="position:absolute; right:4px; top:1px; font-size:7px; color:rgba(255,255,255,0.4);">EXTREME</span>
+      </div>
+
+      <!-- Fear & Greed -->
+      <div style="display:flex; justify-content:space-between; padding:3px 0; border-bottom:1px solid #111;">
+        <span class="gry">Fear & Greed</span>
+        <span class="red b">22 <span style="font-size:8px;">EXTREME FEAR</span></span>
+      </div>
+
+      <!-- Fear & Greed gauge -->
+      <div style="position:relative; height:14px; background:#111; border-radius:2px; margin:4px 0 8px 0; overflow:hidden;">
+        <div style="position:absolute; left:0; top:0; height:100%; width:20%; background:#880000;"></div>
+        <div style="position:absolute; left:20%; top:0; height:100%; width:20%; background:#884400;"></div>
+        <div style="position:absolute; left:40%; top:0; height:100%; width:20%; background:#888800;"></div>
+        <div style="position:absolute; left:60%; top:0; height:100%; width:20%; background:#338800;"></div>
+        <div style="position:absolute; left:80%; top:0; height:100%; width:20%; background:#005500;"></div>
+        <div style="position:absolute; left:22%; top:-2px; width:3px; height:18px; background:#ffff00; border-radius:1px; z-index:2;"></div>
+        <span style="position:absolute; left:4px; top:1px; font-size:7px; color:rgba(255,255,255,0.4);">FEAR</span>
+        <span style="position:absolute; right:4px; top:1px; font-size:7px; color:rgba(255,255,255,0.4);">GREED</span>
+      </div>
+
+      <!-- Put/Call -->
+      <div style="display:flex; justify-content:space-between; padding:3px 0; border-bottom:1px solid #111;">
+        <span class="gry">Put/Call Ratio</span>
+        <span class="red b">1.24 <span style="font-size:8px;">bearish</span></span>
+      </div>
+
+      <!-- 52wk new highs vs lows -->
+      <div style="display:flex; justify-content:space-between; padding:3px 0; border-bottom:1px solid #111;">
+        <span class="gry">New 52W Highs/Lows</span>
+        <span><span class="grn">42</span> <span class="gry">/</span> <span class="red b">218</span></span>
+      </div>
+
+      <!-- % above 200 SMA -->
+      <div style="display:flex; justify-content:space-between; padding:3px 0; border-bottom:1px solid #111;">
+        <span class="gry">% Above 200d SMA</span>
+        <span class="red b">38.2%</span>
+      </div>
+
+      <!-- % above 50 SMA -->
+      <div style="display:flex; justify-content:space-between; padding:3px 0; border-bottom:1px solid #111;">
+        <span class="gry">% Above 50d SMA</span>
+        <span class="red b">29.5%</span>
+      </div>
+
+      <!-- Avg R3000 RSI -->
+      <div style="display:flex; justify-content:space-between; padding:3px 0; border-bottom:1px solid #111;">
+        <span class="gry">Avg RSI (R3000)</span>
+        <span class="red b">38.1</span>
+      </div>
+
+      <!-- Overall risk verdict -->
+      <div style="margin-top:6px; text-align:center; padding:4px; background:#1a0000; border:1px solid #ff4444; border-radius:3px;">
+        <span class="red b" style="font-size:12px;">ELEVATED RISK</span>
+        <span class="gry" style="font-size:9px;"> — defensive posture</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- SECTOR PERFORMANCE BREAKDOWN -->
+<div style="display:flex; gap:6px; margin-top:8px;">
+
+  <!-- LEFT: Sector Table -->
+  <div style="width:420px; flex-shrink:0; background:#0a0a0a; border:1px solid #333;">
+    <div style="background:#1a1a1a; padding:4px 8px; border-bottom:1px solid #ff8c00; display:flex; justify-content:space-between; align-items:center;">
+      <span style="color:#ff8c00; font-weight:bold; font-size:11px;">SECTORS — R3000</span>
+      <div class="time-btns" style="display:flex; gap:2px;">
+        <span style="background:#000; color:#999; padding:1px 4px; border:1px solid #444; font-size:8px; cursor:pointer; font-family:inherit;">1M</span>
+        <span style="background:#000; color:#999; padding:1px 4px; border:1px solid #444; font-size:8px; cursor:pointer; font-family:inherit;">3M</span>
+        <span style="background:#000; color:#999; padding:1px 4px; border:1px solid #444; font-size:8px; cursor:pointer; font-family:inherit;">YTD</span>
+        <span style="background:#ff8c00; color:#000; padding:1px 4px; border:1px solid #ff8c00; font-size:8px; cursor:pointer; font-family:inherit; font-weight:bold;">1Y</span>
+        <span style="background:#000; color:#999; padding:1px 4px; border:1px solid #444; font-size:8px; cursor:pointer; font-family:inherit;">3Y</span>
+      </div>
+    </div>
+    <table style="width:100%; border-collapse:collapse; font-size:10px;">
+      <thead>
+        <tr style="border-bottom:1px solid #ff8c00;">
+          <th style="text-align:left; padding:3px 6px; color:#ff8c00; font-size:8px;">SECTOR</th>
+          <th style="text-align:right; padding:3px 6px; color:#ff8c00; font-size:8px;">RETURN</th>
+          <th style="text-align:right; padding:3px 6px; color:#ff8c00; font-size:8px;">EPS GR</th>
+          <th style="text-align:right; padding:3px 6px; color:#ff8c00; font-size:8px;">MULT EXP</th>
+          <th style="text-align:center; padding:3px 6px; color:#ff8c00; font-size:8px;">52W RANGE</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr style="border-bottom:1px solid #111; cursor:pointer;" onmouseover="this.style.background='#111'" onmouseout="this.style.background='transparent'">
+          <td style="padding:3px 6px;"><span style="display:inline-block; width:8px; height:8px; background:#00ff00; border-radius:2px; margin-right:4px;"></span><span class="wht">Technology</span></td>
+          <td style="padding:3px 6px; text-align:right;" class="grn b">+30.6%</td>
+          <td style="padding:3px 6px; text-align:right;" class="grn">+22.1%</td>
+          <td style="padding:3px 6px; text-align:right;" class="grn">+8.5%</td>
+          <td style="padding:3px 6px;">
+            <div style="position:relative; height:6px; background:#222; border-radius:3px;">
+              <div style="position:absolute; left:82%; top:-1px; width:5px; height:8px; background:#00bcd4; border-radius:1px;"></div>
+            </div>
+          </td>
+        </tr>
+        <tr style="border-bottom:1px solid #111; cursor:pointer;" onmouseover="this.style.background='#111'" onmouseout="this.style.background='transparent'">
+          <td style="padding:3px 6px;"><span style="display:inline-block; width:8px; height:8px; background:#ff8c00; border-radius:2px; margin-right:4px;"></span><span class="wht">Industrials</span></td>
+          <td style="padding:3px 6px; text-align:right;" class="grn b">+24.8%</td>
+          <td style="padding:3px 6px; text-align:right;" class="grn">+12.3%</td>
+          <td style="padding:3px 6px; text-align:right;" class="grn">+12.5%</td>
+          <td style="padding:3px 6px;">
+            <div style="position:relative; height:6px; background:#222; border-radius:3px;">
+              <div style="position:absolute; left:75%; top:-1px; width:5px; height:8px; background:#00bcd4; border-radius:1px;"></div>
+            </div>
+          </td>
+        </tr>
+        <tr style="border-bottom:1px solid #111; cursor:pointer;" onmouseover="this.style.background='#111'" onmouseout="this.style.background='transparent'">
+          <td style="padding:3px 6px;"><span style="display:inline-block; width:8px; height:8px; background:#ffff00; border-radius:2px; margin-right:4px;"></span><span class="wht">Health Care</span></td>
+          <td style="padding:3px 6px; text-align:right;" class="grn b">+18.1%</td>
+          <td style="padding:3px 6px; text-align:right;" class="grn">+15.4%</td>
+          <td style="padding:3px 6px; text-align:right;" class="grn">+2.7%</td>
+          <td style="padding:3px 6px;">
+            <div style="position:relative; height:6px; background:#222; border-radius:3px;">
+              <div style="position:absolute; left:68%; top:-1px; width:5px; height:8px; background:#00bcd4; border-radius:1px;"></div>
+            </div>
+          </td>
+        </tr>
+        <tr style="border-bottom:1px solid #111; cursor:pointer;" onmouseover="this.style.background='#111'" onmouseout="this.style.background='transparent'">
+          <td style="padding:3px 6px;"><span style="display:inline-block; width:8px; height:8px; background:#bb86fc; border-radius:2px; margin-right:4px;"></span><span class="wht">Materials</span></td>
+          <td style="padding:3px 6px; text-align:right;" class="grn b">+16.8%</td>
+          <td style="padding:3px 6px; text-align:right;" class="grn">+8.2%</td>
+          <td style="padding:3px 6px; text-align:right;" class="grn">+8.6%</td>
+          <td style="padding:3px 6px;">
+            <div style="position:relative; height:6px; background:#222; border-radius:3px;">
+              <div style="position:absolute; left:60%; top:-1px; width:5px; height:8px; background:#00bcd4; border-radius:1px;"></div>
+            </div>
+          </td>
+        </tr>
+        <tr style="border-bottom:1px solid #111; cursor:pointer;" onmouseover="this.style.background='#111'" onmouseout="this.style.background='transparent'">
+          <td style="padding:3px 6px;"><span style="display:inline-block; width:8px; height:8px; background:#00bcd4; border-radius:2px; margin-right:4px;"></span><span class="wht">Financials</span></td>
+          <td style="padding:3px 6px; text-align:right;" class="grn b">+12.3%</td>
+          <td style="padding:3px 6px; text-align:right;" class="grn">+18.5%</td>
+          <td style="padding:3px 6px; text-align:right;" class="red">-6.2%</td>
+          <td style="padding:3px 6px;">
+            <div style="position:relative; height:6px; background:#222; border-radius:3px;">
+              <div style="position:absolute; left:55%; top:-1px; width:5px; height:8px; background:#00bcd4; border-radius:1px;"></div>
+            </div>
+          </td>
+        </tr>
+        <tr style="border-bottom:1px solid #111; cursor:pointer;" onmouseover="this.style.background='#111'" onmouseout="this.style.background='transparent'">
+          <td style="padding:3px 6px;"><span style="display:inline-block; width:8px; height:8px; background:#e91e63; border-radius:2px; margin-right:4px;"></span><span class="wht">Cons. Staples</span></td>
+          <td style="padding:3px 6px; text-align:right;" class="grn">+3.6%</td>
+          <td style="padding:3px 6px; text-align:right;" class="grn">+5.1%</td>
+          <td style="padding:3px 6px; text-align:right;" class="red">-1.5%</td>
+          <td style="padding:3px 6px;">
+            <div style="position:relative; height:6px; background:#222; border-radius:3px;">
+              <div style="position:absolute; left:40%; top:-1px; width:5px; height:8px; background:#00bcd4; border-radius:1px;"></div>
+            </div>
+          </td>
+        </tr>
+        <tr style="border-bottom:1px solid #111; cursor:pointer;" onmouseover="this.style.background='#111'" onmouseout="this.style.background='transparent'">
+          <td style="padding:3px 6px;"><span style="display:inline-block; width:8px; height:8px; background:#ff4444; border-radius:2px; margin-right:4px;"></span><span class="wht">Communication</span></td>
+          <td style="padding:3px 6px; text-align:right;" class="grn">+2.3%</td>
+          <td style="padding:3px 6px; text-align:right;" class="grn">+9.8%</td>
+          <td style="padding:3px 6px; text-align:right;" class="red">-7.5%</td>
+          <td style="padding:3px 6px;">
+            <div style="position:relative; height:6px; background:#222; border-radius:3px;">
+              <div style="position:absolute; left:35%; top:-1px; width:5px; height:8px; background:#00bcd4; border-radius:1px;"></div>
+            </div>
+          </td>
+        </tr>
+        <tr style="cursor:pointer;" onmouseover="this.style.background='#111'" onmouseout="this.style.background='transparent'">
+          <td style="padding:3px 6px;"><span style="display:inline-block; width:8px; height:8px; background:#999; border-radius:2px; margin-right:4px;"></span><span class="wht">Cons. Disc.</span></td>
+          <td style="padding:3px 6px; text-align:right;" class="red b">-4.2%</td>
+          <td style="padding:3px 6px; text-align:right;" class="red">-1.8%</td>
+          <td style="padding:3px 6px; text-align:right;" class="red">-2.4%</td>
+          <td style="padding:3px 6px;">
+            <div style="position:relative; height:6px; background:#222; border-radius:3px;">
+              <div style="position:absolute; left:18%; top:-1px; width:5px; height:8px; background:#00bcd4; border-radius:1px;"></div>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <div style="padding:4px 8px; font-size:8px; color:#555; border-top:1px solid #222;">
+      EPS GR = earnings growth contribution &nbsp;|&nbsp; MULT EXP = multiple expansion contribution &nbsp;|&nbsp; RETURN ≈ EPS GR + MULT EXP
+    </div>
+  </div>
+
+  <!-- RIGHT: Normalized Performance Chart -->
+  <div style="flex:1; background:#0a0a0a; border:1px solid #333;">
+    <div style="background:#1a1a1a; padding:4px 8px; border-bottom:1px solid #ff8c00; display:flex; justify-content:space-between; align-items:center;">
+      <span style="color:#ff8c00; font-weight:bold; font-size:11px;">NORMALIZED PERFORMANCE</span>
+      <div class="time-btns" style="display:flex; gap:2px;">
+        <span style="background:#000; color:#999; padding:1px 4px; border:1px solid #444; font-size:8px; cursor:pointer; font-family:inherit;">1M</span>
+        <span style="background:#000; color:#999; padding:1px 4px; border:1px solid #444; font-size:8px; cursor:pointer; font-family:inherit;">3M</span>
+        <span style="background:#000; color:#999; padding:1px 4px; border:1px solid #444; font-size:8px; cursor:pointer; font-family:inherit;">YTD</span>
+        <span style="background:#ff8c00; color:#000; padding:1px 4px; border:1px solid #ff8c00; font-size:8px; cursor:pointer; font-family:inherit; font-weight:bold;">1Y</span>
+        <span style="background:#000; color:#999; padding:1px 4px; border:1px solid #444; font-size:8px; cursor:pointer; font-family:inherit;">3Y</span>
+      </div>
+    </div>
+    <div style="padding:8px; position:relative; height:320px;">
+
+      <!-- Sector color tags -->
+      <div style="display:flex; flex-wrap:wrap; gap:4px; margin-bottom:8px; font-size:8px;">
+        <span style="background:#00ff00; color:#000; padding:1px 5px; border-radius:2px;">Tech</span>
+        <span style="background:#ff8c00; color:#000; padding:1px 5px; border-radius:2px;">Indust</span>
+        <span style="background:#ffff00; color:#000; padding:1px 5px; border-radius:2px;">Health</span>
+        <span style="background:#bb86fc; color:#000; padding:1px 5px; border-radius:2px;">Matls</span>
+        <span style="background:#00bcd4; color:#000; padding:1px 5px; border-radius:2px;">Fins</span>
+        <span style="background:#e91e63; color:#000; padding:1px 5px; border-radius:2px;">Staples</span>
+        <span style="background:#ff4444; color:#fff; padding:1px 5px; border-radius:2px;">Comm</span>
+        <span style="background:#999; color:#000; padding:1px 5px; border-radius:2px;">ConDisc</span>
+      </div>
+
+      <!-- Chart area -->
+      <div style="position:relative; height:260px; border-left:1px solid #444; border-bottom:1px solid #444;">
+
+        <!-- Y-axis -->
+        <span style="position:absolute; left:-36px; top:2%; font-size:8px; color:#777;">+40%</span>
+        <span style="position:absolute; left:-36px; top:24%; font-size:8px; color:#777;">+30%</span>
+        <span style="position:absolute; left:-36px; top:46%; font-size:8px; color:#777;">+20%</span>
+        <span style="position:absolute; left:-36px; top:68%; font-size:8px; color:#777;">+10%</span>
+        <span style="position:absolute; left:-32px; top:88%; font-size:8px; color:#777;">0%</span>
+
+        <!-- Grid -->
+        <div style="position:absolute; top:24%; left:0; right:0; border-top:1px solid #1a1a1a;"></div>
+        <div style="position:absolute; top:46%; left:0; right:0; border-top:1px solid #1a1a1a;"></div>
+        <div style="position:absolute; top:68%; left:0; right:0; border-top:1px solid #1a1a1a;"></div>
+        <div style="position:absolute; top:88%; left:0; right:0; border-top:1px dashed #333;"></div>
+
+        <!-- X-axis -->
+        <div style="position:absolute; bottom:-14px; left:0; right:0; display:flex; justify-content:space-between; font-size:7px; color:#555;">
+          <span>Apr 24</span><span>Jul</span><span>Oct</span><span>Jan 25</span><span>Apr</span>
+        </div>
+
+        <svg style="position:absolute; top:0; left:0; width:100%; height:100%;" viewBox="0 0 400 260" preserveAspectRatio="none">
+          <!-- Tech (green) — best performer, +30.6% -->
+          <polyline points="0,230 40,225 80,210 120,190 160,170 200,145 240,110 280,85 320,60 360,40 400,25" fill="none" stroke="#00ff00" stroke-width="1.5"/>
+          <!-- Industrials (orange) — +24.8% -->
+          <polyline points="0,230 40,222 80,212 120,198 160,182 200,165 240,140 280,120 320,95 360,72 400,42" fill="none" stroke="#ff8c00" stroke-width="1.2"/>
+          <!-- Health Care (yellow) — +18.1% -->
+          <polyline points="0,230 40,226 80,218 120,208 160,195 200,182 240,165 280,148 320,130 360,115 400,80" fill="none" stroke="#ffff00" stroke-width="1.2"/>
+          <!-- Materials (purple) — +16.8% -->
+          <polyline points="0,230 40,228 80,222 120,215 160,205 200,190 240,175 280,158 320,140 360,125 400,90" fill="none" stroke="#bb86fc" stroke-width="1.2"/>
+          <!-- Financials (cyan) — +12.3% -->
+          <polyline points="0,230 40,228 80,225 120,218 160,210 200,200 240,188 280,175 320,162 360,148 400,120" fill="none" stroke="#00bcd4" stroke-width="1.2"/>
+          <!-- Staples (pink) — +3.6% -->
+          <polyline points="0,230 40,230 80,228 120,226 160,224 200,222 240,220 280,216 320,212 360,208 400,198" fill="none" stroke="#e91e63" stroke-width="1"/>
+          <!-- Communication (red) — +2.3% -->
+          <polyline points="0,230 40,232 80,235 120,232 160,228 200,225 240,222 280,218 320,215 360,210 400,205" fill="none" stroke="#ff4444" stroke-width="1"/>
+          <!-- Cons. Disc (gray) — -4.2% -->
+          <polyline points="0,230 40,232 80,236 120,240 160,245 200,248 240,244 280,240 320,242 360,246 400,250" fill="none" stroke="#999" stroke-width="1"/>
+        </svg>
+
+        <!-- End labels (right side) -->
+        <span style="position:absolute; right:-50px; top:7%; font-size:8px; color:#00ff00; font-weight:bold;">+30.6%</span>
+        <span style="position:absolute; right:-50px; top:14%; font-size:8px; color:#ff8c00; font-weight:bold;">+24.8%</span>
+        <span style="position:absolute; right:-50px; top:28%; font-size:8px; color:#ffff00;">+18.1%</span>
+        <span style="position:absolute; right:-50px; top:33%; font-size:8px; color:#bb86fc;">+16.8%</span>
+        <span style="position:absolute; right:-50px; top:44%; font-size:8px; color:#00bcd4;">+12.3%</span>
+        <span style="position:absolute; right:-50px; top:74%; font-size:8px; color:#e91e63;">+3.6%</span>
+        <span style="position:absolute; right:-50px; top:78%; font-size:8px; color:#ff4444;">+2.3%</span>
+        <span style="position:absolute; right:-50px; top:95%; font-size:8px; color:#999;">-4.2%</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Bloomberg function key bar -->
+<div class="fn-bar">
+  <span><span class="key">F1</span>HOME</span>
+  <span><span class="key">F2</span>SCREENER</span>
+  <span><span class="key">F3</span>SECTORS</span>
+  <span><span class="key">F4</span>DETAIL</span>
+  <div style="flex:1;"></div>
+  <span class="gry">HIGHBOURNE v2.0 &nbsp;|&nbsp; Click row → Detail View</span>
+</div>
+
+</div><!-- /container -->
+</body>
+</html>

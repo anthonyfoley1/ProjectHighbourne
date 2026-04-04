@@ -12,19 +12,26 @@ app = dash.Dash(__name__, suppress_callback_exceptions=True)
 # Dark-theme CSS (injected into index_string)
 # ---------------------------------------------------------------------------
 _DARK_DROPDOWN_CSS = """
-/* Dash dropdown -- dark theme overrides */
+/* Force ALL dropdowns dark — nuclear approach */
+.dash-dropdown * { color: #e0e0e0 !important; }
+.dash-dropdown div[class*="control"] { background-color: #1a1a1a !important; border-color: #444 !important; }
+.dash-dropdown div[class*="menu"] { background-color: #1a1a1a !important; border-color: #444 !important; }
+.dash-dropdown div[class*="option"] { background-color: #1a1a1a !important; }
+.dash-dropdown div[class*="option"]:hover { background-color: #333 !important; }
+.dash-dropdown div[class*="singleValue"] { color: #e0e0e0 !important; }
+.dash-dropdown div[class*="placeholder"] { color: #777 !important; }
+.dash-dropdown input { color: #e0e0e0 !important; background: transparent !important; }
+.dash-dropdown div[class*="indicatorSeparator"] { background-color: #444 !important; }
+.dash-dropdown svg { fill: #999 !important; }
+/* Also catch the search input inside dropdown */
+.dash-dropdown div[class*="Input"] input { color: #e0e0e0 !important; background: transparent !important; }
+/* Virtualized select (older Dash) */
 .Select-control { background-color: #1a1a1a !important; border-color: #444 !important; }
-.Select-menu-outer { background-color: #1a1a1a !important; border-color: #444 !important; }
+.Select-menu-outer { background-color: #1a1a1a !important; }
 .Select-option { background-color: #1a1a1a !important; color: #e0e0e0 !important; }
 .Select-option.is-focused { background-color: #333 !important; }
 .Select-value-label { color: #e0e0e0 !important; }
-.Select-placeholder { color: #777 !important; }
 .Select-input input { color: #e0e0e0 !important; }
-.dash-dropdown .Select-control { background-color: #1a1a1a !important; }
-.dash-dropdown .Select-menu-outer { background-color: #1a1a1a !important; }
-.dash-dropdown .Select-option:hover { background-color: #333 !important; }
-.VirtualizedSelectFocusedOption { background-color: #333 !important; }
-.VirtualizedSelectOption { background-color: #1a1a1a !important; color: #e0e0e0 !important; }
 """
 
 app.index_string = '''

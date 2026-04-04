@@ -9,6 +9,60 @@ import numpy as np
 
 SEC_HEADERS = {"User-Agent": "ProjectHighbourne research@example.com"}
 
+FILING_DATES_CACHE = "edgar_filing_dates_cache.json"
+
+
+def fetch_filing_dates(ticker, cik_lookup):
+    """
+    Fetch 10-Q and 10-K filing dates for a ticker from EDGAR.
+    Returns list of {"date": "YYYY-MM-DD", "form": "10-Q"/"10-K"} sorted by date.
+    Caches results locally.
+    """
+    cache_path = FILING_DATES_CACHE
+    if os.path.exists(cache_path):
+        with open(cache_path) as f:
+            cache = json.load(f)
+    else:
+        cache = {}
+
+    if ticker in cache:
+        return cache[ticker]
+
+    if ticker not in cik_lookup:
+        return []
+
+    cik = cik_lookup[ticker]
+    url = f"https://data.sec.gov/submissions/CIK{cik}.json"
+    try:
+        resp = requests.get(url, headers=SEC_HEADERS)
+        if resp.status_code != 200:
+            cache[ticker] = []
+            return []
+
+        data = resp.json()
+        recent = data.get("filings", {}).get("recent", {})
+        forms = recent.get("form", [])
+        dates = recent.get("filingDate", [])
+
+        filings = []
+        seen = set()
+        for form, date in zip(forms, dates):
+            if form in ("10-Q", "10-K") and date not in seen:
+                filings.append({"date": date, "form": form})
+                seen.add(date)
+
+        filings.sort(key=lambda x: x["date"])
+        cache[ticker] = filings
+
+        with open(cache_path, "w") as f:
+            json.dump(cache, f)
+
+        time.sleep(0.125)
+    except Exception:
+        cache[ticker] = []
+
+    return cache.get(ticker, [])
+
 
 def load_cik_lookup():
     """Load ticker -> CIK mapping from SEC."""
@@ -17,9 +71,79 @@ def load_cik_lookup():
     return {v["ticker"]: str(v["cik_str"]).zfill(10) for v in ticker_map.values()}
 
 
+def _reconcile_quarterly_with_annual(quarterly_entries, annual_entries):
+    """
+    Use audited 10-K annual figures to reconcile Q4 values.
+
+    Matches annual periods to their constituent quarters using start/end dates
+    (not calendar year), so this works correctly for non-calendar fiscal years.
+
+    For each annual period where we have 3 of 4 quarters, derives the missing
+    quarter as: Q_missing = Annual - sum(other 3 quarters).
+    Also corrects existing Q4 if all 4 quarters are present.
+
+    Args:
+        quarterly_entries: list of {start, end, val} dicts — standalone quarters
+        annual_entries: list of {start, end, val} dicts — annual periods from 10-K
+
+    Returns:
+        dict of {date_str: value} — quarterly values with Q4 reconciled
+    """
+    if not annual_entries:
+        return {e["end"]: e["val"] for e in quarterly_entries}
+
+    from datetime import datetime, timedelta
+
+    result = {}
+    q_by_end = {}
+    for e in quarterly_entries:
+        result[e["end"]] = e["val"]
+        q_by_end[e["end"]] = e
+
+    for ann in annual_entries:
+        ann_start = datetime.strptime(ann["start"], "%Y-%m-%d")
+        ann_end = datetime.strptime(ann["end"], "%Y-%m-%d")
+        ann_val = ann["val"]
+
+        # Find quarters that fall within this annual period
+        matched_qs = []
+        for e in quarterly_entries:
+            q_start = datetime.strptime(e["start"], "%Y-%m-%d")
+            q_end = datetime.strptime(e["end"], "%Y-%m-%d")
+            # Quarter belongs to this annual if it starts on or after annual start
+            # and ends on or before annual end
+            if q_start >= ann_start and q_end <= ann_end:
+                matched_qs.append(e)
+
+        if len(matched_qs) == 0:
+            # No quarterly data — split annual into 4 synthetic quarters
+            # so rolling-4 sum still produces the correct annual total.
+            # Space them ~90 days apart ending at the annual end date.
+            for i in range(4):
+                q_end = ann_end - timedelta(days=90 * (3 - i))
+                result[q_end.strftime("%Y-%m-%d")] = ann_val / 4
+        elif len(matched_qs) == 3:
+            # Missing one quarter — derive it
+            q_sum = sum(e["val"] for e in matched_qs)
+            derived_val = ann_val - q_sum
+            result[ann["end"]] = derived_val
+        elif len(matched_qs) == 4:
+            # All 4 present — correct the last quarter to match audited annual
+            matched_qs.sort(key=lambda e: e["end"])
+            last_q = matched_qs[-1]
+            other_sum = sum(e["val"] for e in matched_qs[:-1])
+            result[last_q["end"]] = ann_val - other_sum
+
+    return result
+
+
 def fetch_concept(tickers, concept, cache_file, cik_lookup, concept_type="instant"):
     """
     Fetch a US-GAAP concept from EDGAR for a list of tickers.
+
+    For duration concepts (income statement), fetches both quarterly and annual
+    frames. Uses audited annual (10-K) figures to reconcile Q4 values:
+    Q4 = Annual - Q1 - Q2 - Q3.
 
     Args:
         tickers: list of ticker strings
@@ -58,17 +182,24 @@ def fetch_concept(tickers, concept, cache_file, cik_lookup, concept_type="instan
                     data = resp.json()
                     entries = data.get("units", {}).get("USD", [])
                     by_date = {}
-                    for e in entries:
-                        if e["form"] in ("10-Q", "10-K") and "frame" in e:
-                            frame = e["frame"]
-                            # For duration concepts, only keep quarterly frames (CY2024Q1, not CY2024)
-                            # For instant concepts, keep quarterly instant frames (CY2024Q1I)
-                            if concept_type == "duration":
+                    if concept_type == "duration":
+                        quarterly_entries = []
+                        annual_entries = []
+                        for e in entries:
+                            if e["form"] in ("10-Q", "10-K") and "frame" in e and "start" in e:
+                                frame = e["frame"]
                                 if "Q" in frame and not frame.endswith("I"):
-                                    by_date[e["end"]] = e["val"]
-                            else:  # instant
+                                    quarterly_entries.append({"start": e["start"], "end": e["end"], "val": e["val"]})
+                                elif frame.startswith("CY") and "Q" not in frame and not frame.endswith("I"):
+                                    annual_entries.append({"start": e["start"], "end": e["end"], "val": e["val"]})
+                        by_date = _reconcile_quarterly_with_annual(quarterly_entries, annual_entries)
+                    else:  # instant
+                        for e in entries:
+                            if e["form"] in ("10-Q", "10-K") and "frame" in e:
+                                frame = e["frame"]
                                 if frame.endswith("I"):
                                     by_date[e["end"]] = e["val"]
+
                     cache[t] = by_date
                     if by_date:
                         got += 1
@@ -112,13 +243,22 @@ def build_daily_ttm(unstacked, trading_dates):
     """
     Convert quarterly duration data to trailing-twelve-month (TTM) daily values.
 
-    Sums the last 4 quarterly values, then forward-fills to trading dates.
+    For each ticker, sums the last 4 non-null quarterly values (skipping dates
+    where that ticker has no data), then forward-fills to trading dates.
     """
-    # Sort by date
     unstacked = unstacked.sort_index()
 
-    # Rolling sum of last 4 quarters
-    ttm = unstacked.rolling(window=4, min_periods=4).sum()
+    # Per-ticker: drop NaNs, rolling sum of last 4 actual quarterly values
+    ttm_parts = {}
+    for ticker in unstacked.columns:
+        series = unstacked[ticker].dropna()
+        if len(series) >= 4:
+            ttm_parts[ticker] = series.rolling(window=4, min_periods=4).sum()
+
+    if not ttm_parts:
+        return pd.DataFrame(index=trading_dates)
+
+    ttm = pd.DataFrame(ttm_parts)
 
     # Forward-fill to trading dates
     all_dates = ttm.index.union(trading_dates).sort_values()

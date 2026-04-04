@@ -51,15 +51,17 @@ def _build_alert_banner():
 
     alert_items = []
     for _, row in alerts_df.iterrows():
-        color = C["green"] if row["alert_type"] == "BUY" else C["red"]
+        is_buy = row["alert_type"] == "BUY"
+        color = C["green"] if is_buy else C["red"]
+        arrow = "\u25b2" if is_buy else "\u25bc"
         alert_items.append(
-            html.Span(
-                f"{row['symbol']} {row['rv_sig']} z={row['z_score']} {row['alert_reason']}",
-                style={
-                    "color": color, "fontSize": "10px", "fontFamily": FONT_FAMILY,
-                    "marginRight": "16px", "whiteSpace": "nowrap",
-                },
-            )
+            html.Span([
+                html.Span(f"{arrow} ", style={"fontSize": "8px"}),
+                html.Span(f"{row['symbol']} {row['rv_sig']} {row['alert_reason']}"),
+            ], style={
+                "color": color, "fontSize": "10px", "fontFamily": FONT_FAMILY,
+                "marginRight": "16px", "whiteSpace": "nowrap",
+            })
         )
 
     marquee_content = html.Div(
@@ -400,9 +402,9 @@ def layout():
 
         html.Div([
             _build_alert_banner(),
+            _build_news_ticker(),
             _build_filter_bar(),
             build_screener_table(),
-            _build_news_ticker(),
             _build_gainers_losers_bar(),
             _build_movers_panel(),
 

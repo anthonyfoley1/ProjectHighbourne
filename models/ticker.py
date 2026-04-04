@@ -89,7 +89,7 @@ class Universe:
 
     @property
     def sector_list(self):
-        return sorted(set(self.sectors.values()))
+        return sorted(s for s in set(self.sectors.values()) if isinstance(s, str))
 
     def symbols_in_sector(self, sector):
         return sorted(s for s, sec in self.sectors.items() if sec == sector)
@@ -163,19 +163,19 @@ def compute_alert(z_score, rsi, macd_signal, ma_trend):
         reasons = []
         reasons.append(f"z={z_score:.2f}")
         if rsi < 30:
-            reasons.append(f"RSI={rsi}")
+            reasons.append(f"RSI {rsi:.0f}")
         if macd_signal == "Bull":
             reasons.append("MACD Bull")
-        return {"type": "BUY", "reason": ", ".join(reasons)}
+        return {"type": "BUY", "reason": " + ".join(reasons)}
 
     if z_score > 1.5 and (rsi > 70 or macd_signal == "Bear"):
         reasons = []
         reasons.append(f"z={z_score:.2f}")
         if rsi > 70:
-            reasons.append(f"RSI={rsi}")
+            reasons.append(f"RSI {rsi:.0f}")
         if macd_signal == "Bear":
             reasons.append("MACD Bear")
-        return {"type": "SELL", "reason": ", ".join(reasons)}
+        return {"type": "SELL", "reason": " + ".join(reasons)}
 
     return {"type": None, "reason": ""}
 
