@@ -5,6 +5,7 @@ Pages import the module-level variables directly.
 """
 
 from data.loader import load_tickers, load_market_data, compute_all_ratios
+from data.ingest import full_refresh
 from data.market_data import compute_returns, compute_52w_range
 from data.technicals import (
     compute_rsi, compute_macd, compute_sma,
@@ -57,10 +58,14 @@ def init():
     mktcap, close_prices = load_market_data(years=5)
 
     # ------------------------------------------------------------------
-    # 3. Compute valuation ratios
+    # 3. Build/refresh quarterly financials store, then compute ratios
     # ------------------------------------------------------------------
+    print("Building quarterly financials store...")
+    ticker_list = tickers_df["Ticker"].tolist()
+    store = full_refresh(ticker_list)
+
     print("Computing ratios...")
-    ratio_dfs = compute_all_ratios(mktcap, ticker_list=tickers_df["Ticker"].tolist())
+    ratio_dfs = compute_all_ratios(mktcap, store=store, ticker_list=ticker_list)
 
     # ------------------------------------------------------------------
     # 4. Build Universe

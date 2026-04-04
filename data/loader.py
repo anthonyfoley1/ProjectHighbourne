@@ -293,89 +293,80 @@ def get_filing_dates(ticker):
     return fetch_filing_dates(ticker, cik)
 
 
-def compute_all_ratios(mktcap, ticker_list=None):
-    """Compute P/B, P/S, P/E, EV/EBITDA from cached EDGAR data.
+def compute_all_ratios(mktcap, store=None, ticker_list=None):
+    """Compute P/B, P/S, P/E, EV/EBITDA from the quarterly store.
 
     Args:
         mktcap: DataFrame of market cap with tickers as columns.
-        ticker_list: optional list of tickers to consider for yfinance
-                     fallback (e.g. from Tickers.csv). If None, uses
-                     all mktcap columns.
+        store: FinancialsStore instance. If None, loads from default parquet.
+        ticker_list: unused, kept for backward compatibility.
     """
-    trading_dates = mktcap.index
-    # Only try yfinance for tickers in our actual universe, not all of SimFin
-    all_tickers = ticker_list if ticker_list is not None else mktcap.columns.tolist()
+    from data.db import FinancialsStore
 
-    mc = mktcap.columns
-    _yf_args = dict(mktcap_cols=mc, mktcap_df=mktcap)
+    if store is None:
+        store = FinancialsStore()
+
+    trading_dates = mktcap.index
 
     # --- Price-to-Book ---
-    eq_cache = _load_cache("equity")
-    eq_unstacked = cache_to_unstacked(eq_cache)
-    eq_unstacked = _fill_missing_from_yfinance(eq_unstacked, all_tickers, "equity",
-                                               edgar_cache=eq_cache, **_yf_args)
-    equity_daily = build_daily_instant(eq_unstacked, trading_dates)
-    bad_mask = equity_daily.isna() | (equity_daily <= 0)
-    last_bad = bad_mask.apply(lambda col: col[col].index.max() if col.any() else pd.NaT)
-    for t in equity_daily.columns:
-        if pd.notna(last_bad[t]):
-            equity_daily.loc[:last_bad[t], t] = np.nan
-    common = mktcap.columns.intersection(equity_daily.columns)
-    pb_df = (mktcap[common] / equity_daily[common]).replace([np.inf, -np.inf], np.nan)
+    eq = store.get_field_series("stockholders_equity")
+    if not eq.empty:
+        equity_daily = build_daily_instant(eq, trading_dates)
+        # Clean: mask negative/zero equity
+        equity_daily = equity_daily.where(equity_daily > 0)
+        common = mktcap.columns.intersection(equity_daily.columns)
+        pb_df = (mktcap[common] / equity_daily[common]).replace([np.inf, -np.inf], np.nan)
+    else:
+        pb_df = pd.DataFrame(index=trading_dates)
 
     # --- Price-to-Sales (TTM) ---
-    rev_cache = _load_cache("revenue")
-    rev_unstacked = cache_to_unstacked(rev_cache)
-    rev_unstacked = _fill_missing_from_yfinance(rev_unstacked, all_tickers, "revenue",
-                                                edgar_cache=rev_cache, **_yf_args)
-    revenue_ttm = build_daily_ttm(rev_unstacked, trading_dates)
-    revenue_ttm = revenue_ttm.where(revenue_ttm > 0)
-    common = mktcap.columns.intersection(revenue_ttm.columns)
-    ps_df = (mktcap[common] / revenue_ttm[common]).replace([np.inf, -np.inf], np.nan)
+    rev = store.get_field_series("revenue")
+    if not rev.empty:
+        rev_ttm = build_daily_ttm(rev, trading_dates)
+        rev_ttm = rev_ttm.where(rev_ttm > 0)
+        common = mktcap.columns.intersection(rev_ttm.columns)
+        ps_df = (mktcap[common] / rev_ttm[common]).replace([np.inf, -np.inf], np.nan)
+    else:
+        ps_df = pd.DataFrame(index=trading_dates)
 
     # --- Price-to-Earnings (TTM) ---
-    ni_cache = _load_cache("net_income")
-    ni_unstacked = cache_to_unstacked(ni_cache)
-    ni_unstacked = _fill_missing_from_yfinance(ni_unstacked, all_tickers, "net_income",
-                                               edgar_cache=ni_cache, **_yf_args)
-    ni_ttm = build_daily_ttm(ni_unstacked, trading_dates)
-    ni_ttm = ni_ttm.where(ni_ttm > 0)
-    common = mktcap.columns.intersection(ni_ttm.columns)
-    pe_df = (mktcap[common] / ni_ttm[common]).replace([np.inf, -np.inf], np.nan)
+    ni = store.get_field_series("net_income")
+    if not ni.empty:
+        ni_ttm = build_daily_ttm(ni, trading_dates)
+        ni_ttm = ni_ttm.where(ni_ttm > 0)
+        common = mktcap.columns.intersection(ni_ttm.columns)
+        pe_df = (mktcap[common] / ni_ttm[common]).replace([np.inf, -np.inf], np.nan)
+    else:
+        pe_df = pd.DataFrame(index=trading_dates)
 
     # --- EV/EBITDA (TTM) ---
-    debt_cache = _load_cache("debt")
-    debt_unstacked = cache_to_unstacked(debt_cache)
-    debt_unstacked = _fill_missing_from_yfinance(debt_unstacked, all_tickers, "debt",
-                                                 edgar_cache=debt_cache, **_yf_args)
-    debt_daily = build_daily_instant(debt_unstacked, trading_dates)
+    ebitda_q = store.get_field_series("ebitda")
+    # If ebitda not available, compute from operating_income + D&A
+    if ebitda_q.empty:
+        oi = store.get_field_series("operating_income")
+        dna = store.get_field_series("depreciation_amortization")
+        if not oi.empty:
+            common_eb = oi.columns.intersection(dna.columns) if not dna.empty else oi.columns
+            ebitda_q = oi[common_eb] + dna[common_eb].fillna(0) if not dna.empty else oi
 
-    cash_cache = _load_cache("cash")
-    cash_unstacked = cache_to_unstacked(cash_cache)
-    cash_unstacked = _fill_missing_from_yfinance(cash_unstacked, all_tickers, "cash",
-                                                 edgar_cache=cash_cache, **_yf_args)
-    cash_daily = build_daily_instant(cash_unstacked, trading_dates)
+    if not ebitda_q.empty:
+        ebitda_ttm = build_daily_ttm(ebitda_q, trading_dates)
+        ebitda_ttm = ebitda_ttm.where(ebitda_ttm > 0)
 
-    oi_cache = _load_cache("op_income")
-    oi_unstacked = cache_to_unstacked(oi_cache)
-    oi_unstacked = _fill_missing_from_yfinance(oi_unstacked, all_tickers, "op_income",
-                                               edgar_cache=oi_cache, **_yf_args)
-    dna_cache = _load_cache("dna")
-    dna_unstacked = cache_to_unstacked(dna_cache)
-    dna_unstacked = _fill_missing_from_yfinance(dna_unstacked, all_tickers, "dna",
-                                                edgar_cache=dna_cache, **_yf_args)
-    common_ebitda = oi_unstacked.columns.intersection(dna_unstacked.columns)
-    ebitda_q = oi_unstacked[common_ebitda] + dna_unstacked[common_ebitda].fillna(0)
-    ebitda_ttm = build_daily_ttm(ebitda_q, trading_dates)
-    ebitda_ttm = ebitda_ttm.where(ebitda_ttm > 0)
+        debt = store.get_field_series("total_debt")
+        cash = store.get_field_series("cash")
+        debt_daily = build_daily_instant(debt, trading_dates) if not debt.empty else pd.DataFrame(index=trading_dates)
+        cash_daily = build_daily_instant(cash, trading_dates) if not cash.empty else pd.DataFrame(index=trading_dates)
 
-    ev_tickers = mktcap.columns.intersection(ebitda_ttm.columns)
-    ev_df = mktcap[ev_tickers].copy()
-    debt_overlap = ev_tickers.intersection(debt_daily.columns)
-    ev_df[debt_overlap] = ev_df[debt_overlap] + debt_daily[debt_overlap].fillna(0)
-    cash_overlap = ev_tickers.intersection(cash_daily.columns)
-    ev_df[cash_overlap] = ev_df[cash_overlap] - cash_daily[cash_overlap].fillna(0)
-    ev_ebitda_df = (ev_df / ebitda_ttm[ev_tickers]).replace([np.inf, -np.inf], np.nan)
+        ev_tickers = mktcap.columns.intersection(ebitda_ttm.columns)
+        ev_df = mktcap[ev_tickers].copy()
+        debt_overlap = ev_tickers.intersection(debt_daily.columns)
+        ev_df[debt_overlap] = ev_df[debt_overlap] + debt_daily[debt_overlap].fillna(0)
+        cash_overlap = ev_tickers.intersection(cash_daily.columns)
+        ev_df[cash_overlap] = ev_df[cash_overlap] - cash_daily[cash_overlap].fillna(0)
+        ev_ebitda_df = (ev_df / ebitda_ttm[ev_tickers]).replace([np.inf, -np.inf], np.nan)
+    else:
+        ev_ebitda_df = pd.DataFrame(index=trading_dates)
 
     return {
         "P/B": pb_df,
