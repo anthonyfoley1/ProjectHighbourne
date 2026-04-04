@@ -100,6 +100,37 @@ def signal_badge(signal):
     return html.Span(label, style=style)
 
 
+def _si_cell(si):
+    """Format short-interest percentage with color coding."""
+    if si is None:
+        return html.Span("\u2014", style={"color": C["dim"]})
+    if si > 20:
+        color = C["red"]
+    elif si > 10:
+        color = C["orange"]
+    else:
+        color = C["dim"]
+    return html.Span(f"{si:.1f}%", style={"color": color, "fontWeight": "bold" if si > 10 else "normal"})
+
+
+def _signal_with_squeeze(r):
+    """Signal badge, optionally followed by a SQUEEZE? badge."""
+    badge = signal_badge(r["signal"])
+    si = r.get("short_interest")
+    if si and si > 10 and r["z_score"] < -1 and r["rsi"] < 35:
+        squeeze = html.Span("SQUEEZE?", style={
+            "backgroundColor": C["orange"],
+            "color": "#000",
+            "padding": "1px 4px",
+            "fontSize": "7px",
+            "fontWeight": "bold",
+            "borderRadius": "2px",
+            "marginLeft": "3px",
+        })
+        return html.Span([badge, squeeze])
+    return badge
+
+
 # ---------------------------------------------------------------------------
 # Main table builder
 # ---------------------------------------------------------------------------
@@ -125,6 +156,7 @@ def build_screener_table(df=None):
         html.Th("MACD", style=_HEADER),
         html.Th("1D %", style={**_HEADER, "textAlign": "right"}),
         html.Th("3D %", style={**_HEADER, "textAlign": "right"}),
+        html.Th("SI%", style={**_HEADER, "textAlign": "right"}),
         html.Th("SIGNAL", style={**_HEADER, "textAlign": "center"}),
         html.Th("PRICE", style={**_HEADER, "textAlign": "right"}),
         html.Th("MA", style=_HEADER),
@@ -201,7 +233,8 @@ def build_screener_table(df=None):
             html.Td(macd, style={**_CELL, "color": macd_color}),
             html.Td(f"{ret1:+.1f}%", style={**_CELL, "color": r1_color, "textAlign": "right"}),
             html.Td(f"{ret3:+.1f}%", style={**_CELL, "color": r3_color, "textAlign": "right"}),
-            html.Td(signal_badge(r["signal"]), style={**_CELL, "textAlign": "center"}),
+            html.Td(_si_cell(r.get("short_interest")), style={**_CELL, "textAlign": "right"}),
+            html.Td(_signal_with_squeeze(r), style={**_CELL, "textAlign": "center"}),
             html.Td(fmt_price(r["price"]), style={**_CELL, "textAlign": "right"}),
             html.Td(ma, style={**_CELL, "color": ma_color}),
             html.Td(range_bar_52w(r.get("low_52w"), r.get("high_52w"), r["price"]),

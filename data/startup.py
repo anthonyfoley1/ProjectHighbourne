@@ -168,10 +168,32 @@ def init():
             "high_52w": high_52w,
             "pct_52w": round(pct_52w, 3) if pct_52w is not None else None,
             "price": round(float(current_price), 2),
+            "short_interest": None,
         })
 
     screener_df = pd.DataFrame(screener_rows).sort_values("z_score", ascending=True)
     print(f"  Screener built: {len(screener_df)} tickers")
+
+    # ------------------------------------------------------------------
+    # 6b. Fetch short interest for top/bottom 25 tickers (most likely viewed)
+    # ------------------------------------------------------------------
+    print("Fetching short interest for top movers...")
+    import yfinance as yf
+    top_tickers = (
+        screener_df.head(25)["symbol"].tolist()
+        + screener_df.tail(25)["symbol"].tolist()
+    )
+    si_count = 0
+    for sym in top_tickers[:50]:
+        try:
+            info = yf.Ticker(sym).info
+            si = info.get("shortPercentOfFloat")
+            if si is not None:
+                screener_df.loc[screener_df["symbol"] == sym, "short_interest"] = round(si * 100, 1)
+                si_count += 1
+        except Exception:
+            pass
+    print(f"  Short interest populated for {si_count} tickers")
 
     # ------------------------------------------------------------------
     # 8. Risk stats
