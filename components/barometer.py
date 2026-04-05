@@ -163,7 +163,7 @@ def _score_short_interest(symbol, valuation_score, technicals_score):
         si = row.get("short_interest")
 
     if si is None or pd.isna(si):
-        return 50, "N/A"
+        return 50, "Normal"  # Assume normal when data unavailable
 
     si = float(si)
 
