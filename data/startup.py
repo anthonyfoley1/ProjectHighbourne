@@ -1,31 +1,26 @@
-"""Startup data pipeline -- pre-computes all data at app launch.
+"""Startup data pipeline — loads pre-computed data from SQLite.
 
 Call init() once from app.py before running the server.
 Pages import the module-level variables directly.
+
+If highbourne.db does not exist, prints a warning and falls back to the
+legacy pipeline (slow, fetches everything from scratch).
+
+This version uses lazy loading for prices and ratios so the app starts
+in under 5 seconds when the database is populated.
 """
 
-from data.loader import load_tickers, load_market_data, compute_all_ratios
-from data.ingest import full_refresh
-from data.market_data import compute_returns, compute_52w_range
-from data.technicals import (
-    compute_rsi, compute_macd, compute_sma,
-    macd_signal_label, ma_trend_label,
-)
-from data.risk import (
-    fetch_vix, fetch_fear_greed, compute_fear_greed, compute_breadth_stats,
-    compute_new_highs_lows, compute_advancers_decliners, compute_risk_verdict,
-)
-from data.sectors import (
-    compute_sector_returns, compute_sector_normalized_series, SECTOR_COLORS,
-)
-from models.ticker import Universe, Ticker, compute_alert, compute_signal_label
+import os
 import pandas as pd
 import numpy as np
+from pathlib import Path
+
+from data.database import DB_PATH
 
 # ---------------------------------------------------------------------------
-# Module-level variables -- populated by init()
+# Module-level variables — populated by init()
 # ---------------------------------------------------------------------------
-universe: Universe = None
+universe = None               # LazyUniverse (or Universe from legacy)
 screener_df: pd.DataFrame = pd.DataFrame()
 risk_stats: dict = {}
 sector_data: dict = {}
@@ -37,264 +32,424 @@ close_prices: pd.DataFrame = pd.DataFrame()
 news_cache: list = []
 market_news_cache: list = []
 
+# Private handle to the Database instance (created once in init)
+_db = None
+
+
+def get_db():
+    """Get the shared database instance."""
+    global _db
+    if _db is None:
+        from data.database import Database
+        _db = Database()
+    return _db
+
+
+# ---------------------------------------------------------------------------
+# LazyUniverse — loads ticker ratios from SQLite on demand
+# ---------------------------------------------------------------------------
+
+class LazyUniverse:
+    """Drop-in replacement for models.ticker.Universe that loads ratios lazily.
+
+    At init time only the ticker list and sectors are stored.  Ratio data for
+    a ticker is fetched from SQLite the first time its detail page is viewed.
+    """
+
+    WINDOWS = {
+        "5Y": 5 * 365,
+        "2Y": 2 * 365,
+        "6M": 182,
+    }
+
+    def __init__(self, ticker_sectors):
+        self._ticker_sectors = ticker_sectors   # {symbol: sector}
+        self._cache = {}                        # {symbol: Ticker}
+
+    # -- Core accessors ---------------------------------------------------
+
+    def get(self, symbol):
+        """Return a Ticker object, loading ratios from SQLite on first access."""
+        if symbol not in self._cache:
+            from models.ticker import Ticker
+            sector = self._ticker_sectors.get(symbol, "")
+            t = Ticker(symbol, sector=sector)
+            ratios = get_ticker_ratios(symbol)
+            for name, series in ratios.items():
+                t.set_ratio(name, series)
+            self._cache[symbol] = t
+        return self._cache.get(symbol)
+
+    @property
+    def symbols(self):
+        return sorted(self._ticker_sectors.keys())
+
+    @property
+    def tickers(self):
+        """Compatibility dict — returns already-cached tickers only."""
+        return self._cache
+
+    @property
+    def sectors(self):
+        return dict(self._ticker_sectors)
+
+    @property
+    def sector_list(self):
+        return sorted(s for s in set(self._ticker_sectors.values()) if isinstance(s, str))
+
+    def symbols_in_sector(self, sector):
+        return sorted(s for s, sec in self._ticker_sectors.items() if sec == sector)
+
+    def add_ticker(self, ticker):
+        """Compatibility — store a pre-built Ticker object."""
+        self._ticker_sectors[ticker.symbol] = ticker.sector or ""
+        self._cache[ticker.symbol] = ticker
+
+    # -- Analytical helpers ------------------------------------------------
+
+    def sector_medians(self, ratio_name, window_name="2Y"):
+        """Compute median ratio per sector for a given window.
+
+        Loads ratios on demand for every ticker in each sector, so this is
+        expensive the first time it is called.  Results are implicitly cached
+        because loaded tickers stay in ``self._cache``.
+        """
+        window_days = self.WINDOWS.get(window_name)
+        rows = []
+        for sector in self.sector_list:
+            symbols = self.symbols_in_sector(sector)
+            values = []
+            for s in symbols:
+                ticker_obj = self.get(s)
+                if ticker_obj is None:
+                    continue
+                st = ticker_obj.stats(ratio_name, window_days)
+                if st:
+                    values.append(st["current"])
+            if values:
+                rows.append({
+                    "Sector": sector,
+                    "Median": round(np.median(values), 2),
+                    "Count": len(values),
+                    "25th": round(np.percentile(values, 25), 2),
+                    "75th": round(np.percentile(values, 75), 2),
+                })
+        return pd.DataFrame(rows).sort_values("Median") if rows else pd.DataFrame()
+
+    def screener(self, ratio_name, window_name="2Y"):
+        """Build a screener DataFrame — delegates to each Ticker's stats()."""
+        window_days = self.WINDOWS.get(window_name)
+        rows = []
+        for symbol in self.symbols:
+            ticker_obj = self.get(symbol)
+            if ticker_obj is None:
+                continue
+            s = ticker_obj.stats(ratio_name, window_days)
+            if s is None:
+                continue
+            rows.append({
+                "Ticker": symbol,
+                "Sector": ticker_obj.sector or "Unknown",
+                "Current": round(s["current"], 2),
+                "Mean": round(s["mean"], 2),
+                "Std": round(s["std"], 2),
+                "Z-Score": round(s["z_score"], 2),
+                "Low": round(s["low"], 2),
+                "High": round(s["high"], 2),
+                "% from Mean": round(s["pct_from_mean"], 1),
+            })
+        if not rows:
+            return pd.DataFrame()
+        return pd.DataFrame(rows).sort_values("Z-Score")
+
+
+# ---------------------------------------------------------------------------
+# Lazy data-access helpers
+# ---------------------------------------------------------------------------
+
+def get_ticker_ratios(symbol):
+    """Load ratio history for a single ticker from SQLite.
+
+    Returns a dict {ratio_name: pd.Series} ready to attach to a Ticker.
+    """
+    db = get_db()
+    ratios = db.query(
+        "SELECT date, pe, ps, pb, ev_ebitda FROM ratios WHERE ticker=? ORDER BY date",
+        (symbol,),
+    )
+    if ratios.empty:
+        return {}
+    ratios["date"] = pd.to_datetime(ratios["date"])
+    ratios = ratios.set_index("date")
+    result = {}
+    for col, name in [("pe", "P/E"), ("ps", "P/S"), ("pb", "P/B"), ("ev_ebitda", "EV/EBITDA")]:
+        s = ratios[col].dropna()
+        if len(s) > 0:
+            result[name] = s
+    return result
+
+
+def get_prices(symbol, full=False):
+    """Lazy-load prices for a ticker from SQLite.  Returns pd.Series or None.
+
+    If ``full=True``, always loads the complete price history (for detail page).
+    Otherwise returns the cached version (sparkline-only during initial load,
+    or full if previously loaded).
+    """
+    global price_cache
+    if symbol in price_cache and not full:
+        return price_cache[symbol]
+
+    # For full=True or cache miss, load from DB
+    db = get_db()
+    if full:
+        pdf = db.query(
+            "SELECT date, close FROM prices WHERE ticker=? ORDER BY date",
+            (symbol,),
+        )
+    else:
+        pdf = db.query(
+            "SELECT date, close FROM prices WHERE ticker=? AND date >= date('now', '-120 days') ORDER BY date",
+            (symbol,),
+        )
+
+    if pdf.empty:
+        if symbol in price_cache:
+            return price_cache[symbol]
+        return None
+
+    pdf["date"] = pd.to_datetime(pdf["date"])
+    series = pdf.set_index("date")["close"]
+    price_cache[symbol] = series
+    return series
+
+
+def get_ratios(symbol, ratio_name=None):
+    """Load ratios for a ticker from SQLite.  Returns DataFrame."""
+    db = get_db()
+    if ratio_name:
+        col_map = {"P/E": "pe", "P/S": "ps", "P/B": "pb", "EV/EBITDA": "ev_ebitda"}
+        col = col_map.get(ratio_name)
+        if col:
+            return db.query(
+                f"SELECT date, {col} FROM ratios WHERE ticker=? AND {col} IS NOT NULL ORDER BY date",
+                (symbol,),
+            )
+    return db.query(
+        "SELECT * FROM ratios WHERE ticker=? ORDER BY date",
+        (symbol,),
+    )
+
+
+def get_technicals(symbol):
+    """Load technicals for a ticker from SQLite.  Returns DataFrame."""
+    db = get_db()
+    return db.query(
+        "SELECT * FROM technicals WHERE ticker=? ORDER BY date",
+        (symbol,),
+    )
+
+
+def get_earnings(symbol):
+    """Load earnings for a ticker from SQLite.  Returns list of dicts."""
+    db = get_db()
+    df = db.query(
+        "SELECT * FROM earnings WHERE ticker=? ORDER BY quarter",
+        (symbol,),
+    )
+    if df.empty:
+        return []
+    return df.to_dict("records")
+
+
+def get_financials(symbol):
+    """Load financials for a ticker from SQLite.  Returns DataFrame."""
+    db = get_db()
+    return db.query(
+        "SELECT * FROM financials WHERE ticker=? ORDER BY period_end",
+        (symbol,),
+    )
+
+
+# ---------------------------------------------------------------------------
+# init() — fast path (SQLite) or slow fallback (legacy)
+# ---------------------------------------------------------------------------
 
 def init():
-    """Load all data, build Universe, compute technicals / screener / risk."""
+    """Load data from SQLite into module-level variables for the Dash app.
+
+    If highbourne.db does not exist, falls back to the legacy pipeline.
+    """
+    if not DB_PATH.exists():
+        print("WARNING: highbourne.db not found. Run 'python3 ingest.py' first.")
+        print("Falling back to legacy startup pipeline...")
+        _legacy_init()
+        return
+
+    _sqlite_init()
+
+
+def _sqlite_init():
+    """Fast startup: read metadata from SQLite, defer heavy data to lazy loading."""
     global universe, screener_df, risk_stats, sector_data, news_cache, market_news_cache
     global price_cache, ticker_info_cache, ticker_sector, ticker_name, close_prices
 
-    # ------------------------------------------------------------------
-    # 1. Load tickers
-    # ------------------------------------------------------------------
-    print("Loading tickers...")
-    tickers_df = load_tickers()
-    ticker_sector = dict(zip(tickers_df["Ticker"], tickers_df["Sector"]))
-    ticker_name = dict(zip(tickers_df["Ticker"], tickers_df["Name"]))
+    import time
+    t0 = time.time()
+    print("Loading from database...")
+
+    db = get_db()
 
     # ------------------------------------------------------------------
-    # 2. Load market data (SimFin)
+    # 1. Screener
     # ------------------------------------------------------------------
-    print("Loading market data...")
-    mktcap, close_prices = load_market_data(years=5)
-
-    # ------------------------------------------------------------------
-    # 3. Build/refresh quarterly financials store, then compute ratios
-    # ------------------------------------------------------------------
-    print("Building quarterly financials store...")
-    ticker_list = tickers_df["Ticker"].tolist()
-    store = full_refresh(ticker_list)
-
-    print("Computing ratios...")
-    ratio_dfs = compute_all_ratios(mktcap, store=store, ticker_list=ticker_list)
+    screener_df = db.query("SELECT * FROM screener ORDER BY z_score ASC")
+    print(f"  Screener: {len(screener_df)} tickers")
 
     # ------------------------------------------------------------------
-    # 4. Build Universe
+    # 2. Ticker lookups
     # ------------------------------------------------------------------
-    print("Building universe...")
-    universe = Universe()
-    for sym, sector in ticker_sector.items():
-        t = Ticker(sym, sector=sector)
-        for ratio_name, ratio_df in ratio_dfs.items():
-            if sym in ratio_df.columns:
-                t.set_ratio(ratio_name, ratio_df[sym].dropna())
-        universe.add_ticker(t)
+    tickers = db.query("SELECT symbol, name, sector FROM tickers")
+    ticker_sector = dict(zip(tickers["symbol"], tickers["sector"]))
+    ticker_name = dict(zip(tickers["symbol"], tickers["name"]))
 
     # ------------------------------------------------------------------
-    # 5. Build price_cache
+    # 3. Risk stats
     # ------------------------------------------------------------------
-    print("Building price cache...")
-    price_cache = {}
-    for sym in close_prices.columns:
-        price_cache[sym] = close_prices[sym].dropna()
+    risk_row = db.query("SELECT * FROM market_risk ORDER BY date DESC LIMIT 1")
+    if not risk_row.empty:
+        r = risk_row.iloc[0]
+        risk_stats = {
+            "vix": {"value": r.get("vix"), "change": r.get("vix_change")},
+            "fear_greed": {"value": r.get("fear_greed"), "label": r.get("fear_greed_label", "N/A")},
+            "breadth": {
+                "pct_above_200sma": r.get("pct_above_200sma", 0),
+                "pct_above_50sma": r.get("pct_above_50sma", 0),
+                "avg_rsi": r.get("avg_rsi", 50),
+            },
+            "advancers": r.get("advancers", 0),
+            "decliners": r.get("decliners", 0),
+            "unchanged": r.get("unchanged", 0),
+            "new_highs": r.get("new_highs", 0),
+            "new_lows": r.get("new_lows", 0),
+            "verdict": {
+                "level": r.get("verdict_level", "N/A"),
+                "color": r.get("verdict_color", "#999"),
+                "guidance": r.get("verdict_guidance", ""),
+            },
+        }
+    else:
+        risk_stats = {
+            "vix": {"value": None, "change": None},
+            "fear_greed": {"value": None, "label": "N/A"},
+            "breadth": {"pct_above_200sma": 0, "pct_above_50sma": 0, "avg_rsi": 50},
+            "advancers": 0, "decliners": 0, "unchanged": 0,
+            "new_highs": 0, "new_lows": 0,
+            "verdict": {"level": "N/A", "color": "#999", "guidance": ""},
+        }
 
     # ------------------------------------------------------------------
-    # 6. Compute technicals & 7. Build screener_df
+    # 4. News
     # ------------------------------------------------------------------
-    print("Computing technicals...")
-    screener_rows = []
-    above_200sma = {}
-    above_50sma = {}
-    rsi_values = {}
-    returns_1d = {}
-
-    for sym in universe.symbols:
-        prices = price_cache.get(sym)
-        if prices is None or len(prices) < 50:
-            continue
-
-        # Technicals
-        rsi_series = compute_rsi(prices, 14)
-        macd_line, signal_line, _ = compute_macd(prices, 12, 26, 9)
-        sma50 = compute_sma(prices, 50)
-        sma200 = compute_sma(prices, 200)
-
-        ret_1d, ret_3d = compute_returns(prices)
-        low_52w, high_52w, pct_52w = compute_52w_range(prices)
-
-        current_rsi = rsi_series.iloc[-1] if not rsi_series.empty else 50.0
-        current_macd = macd_line.iloc[-1] if not macd_line.empty else 0.0
-        current_signal = signal_line.iloc[-1] if not signal_line.empty else 0.0
-        current_sma50 = sma50.iloc[-1] if not sma50.empty else np.nan
-        current_sma200 = sma200.iloc[-1] if not sma200.empty else np.nan
-        current_price = prices.iloc[-1]
-
-        macd_sig = macd_signal_label(macd_line, signal_line)
-        ma_trend = ma_trend_label(current_price, current_sma200)
-
-        # Collect breadth data
-        if not np.isnan(current_sma200):
-            above_200sma[sym] = current_price >= current_sma200
-        if not np.isnan(current_sma50):
-            above_50sma[sym] = current_price >= current_sma50
-        if not np.isnan(current_rsi):
-            rsi_values[sym] = float(current_rsi)
-        returns_1d[sym] = ret_1d
-
-        # Find most extreme z-score across ratios
-        best_z = 0.0
-        best_ratio = None
-        for ratio_name in ["P/E", "P/S", "P/B", "EV/EBITDA"]:
-            ticker_obj = universe.get(sym)
-            if ticker_obj is None:
-                continue
-            try:
-                s = ticker_obj.stats(ratio_name)
-                if s and s["z_score"] is not None:
-                    if abs(s["z_score"]) > abs(best_z):
-                        best_z = s["z_score"]
-                        best_ratio = ratio_name
-            except Exception:
-                continue
-
-        # Alert / signal
-        alert = compute_alert(best_z, current_rsi, macd_sig, ma_trend)
-        signal = compute_signal_label(best_z, alert["type"])
-
-        screener_rows.append({
-            "symbol": sym,
-            "name": ticker_name.get(sym, ""),
-            "sector": ticker_sector.get(sym, "Unknown"),
-            "rv_sig": best_ratio,
-            "z_score": round(best_z, 2),
-            "rsi": round(float(current_rsi), 1),
-            "macd": macd_sig,
-            "ret_1d": round(ret_1d * 100, 2),
-            "ret_3d": round(ret_3d * 100, 2),
-            "signal": signal,
-            "alert_type": alert["type"],
-            "alert_reason": alert["reason"],
-            "ma_trend": ma_trend,
-            "low_52w": low_52w,
-            "high_52w": high_52w,
-            "pct_52w": round(pct_52w, 3) if pct_52w is not None else None,
-            "price": round(float(current_price), 2),
-            "short_interest": None,
+    news_rows = db.query(
+        "SELECT * FROM news WHERE ticker IS NOT NULL ORDER BY fetched_at DESC LIMIT 20"
+    )
+    news_cache = []
+    for _, nr in news_rows.iterrows():
+        news_cache.append({
+            "symbol": nr.get("ticker", ""),
+            "title": nr.get("headline", ""),
+            "link": nr.get("url", "#"),
+            "publisher": nr.get("source", ""),
+            "age": nr.get("age", ""),
         })
 
-    screener_df = pd.DataFrame(screener_rows).sort_values("z_score", ascending=True)
-    print(f"  Screener built: {len(screener_df)} tickers")
-
-    # ------------------------------------------------------------------
-    # 6b. Fetch short interest for top/bottom 25 tickers (most likely viewed)
-    # ------------------------------------------------------------------
-    print("Fetching short interest for top movers...")
-    import yfinance as yf
-    top_tickers = (
-        screener_df.head(25)["symbol"].tolist()
-        + screener_df.tail(25)["symbol"].tolist()
+    market_rows = db.query(
+        "SELECT * FROM news WHERE ticker IS NULL ORDER BY fetched_at DESC LIMIT 15"
     )
-    si_count = 0
-    for sym in top_tickers[:50]:
-        try:
-            info = yf.Ticker(sym).info
-            si = info.get("shortPercentOfFloat")
-            if si is not None:
-                screener_df.loc[screener_df["symbol"] == sym, "short_interest"] = round(si * 100, 1)
-                si_count += 1
-        except Exception:
-            pass
-    print(f"  Short interest populated for {si_count} tickers")
+    market_news_cache = []
+    for _, nr in market_rows.iterrows():
+        market_news_cache.append({
+            "headline": nr.get("headline", ""),
+            "source": nr.get("source", ""),
+            "url": nr.get("url", "#"),
+            "age": nr.get("age", ""),
+        })
 
     # ------------------------------------------------------------------
-    # 8. Risk stats
+    # 5. Build LazyUniverse (NO ratio loading — done on demand)
     # ------------------------------------------------------------------
-    print("Computing risk stats...")
-    vix = {"value": None, "change": None}
-    fear_greed = {"value": None, "label": "N/A"}
-    try:
-        vix = fetch_vix()
-    except Exception:
-        print("  Warning: fetch_vix failed, using defaults")
-    try:
-        fear_greed = fetch_fear_greed()
-    except Exception:
-        print("  Warning: fetch_fear_greed failed, using defaults")
-
-    breadth = compute_breadth_stats(above_200sma, above_50sma, rsi_values)
-    adv, dec, unch = compute_advancers_decliners(returns_1d)
-    new_highs, new_lows = compute_new_highs_lows(price_cache)
-
-    # If CNN scrape failed, compute our own fear/greed from breadth data
-    if fear_greed.get("value") is None:
-        fear_greed = compute_fear_greed(breadth, vix.get("value"), new_highs, new_lows)
-        print(f"  Computed Fear & Greed: {fear_greed['value']} ({fear_greed['label']})")
-
-    risk_input = {
-        "vix": vix.get("value") or 0,
-        "fear_greed": fear_greed.get("value") or 50,
-        "pct_above_200sma": breadth["pct_above_200sma"],
-        "pct_above_50sma": breadth["pct_above_50sma"],
-        "avg_rsi": breadth["avg_rsi"],
-        "new_highs": new_highs,
-        "new_lows": new_lows,
-    }
-    verdict = compute_risk_verdict(risk_input)
-
-    risk_stats = {
-        "vix": vix,
-        "fear_greed": fear_greed,
-        "breadth": breadth,
-        "advancers": adv,
-        "decliners": dec,
-        "unchanged": unch,
-        "new_highs": new_highs,
-        "new_lows": new_lows,
-        "verdict": verdict,
-    }
+    universe = LazyUniverse(ticker_sector)
+    print(f"  Universe: {len(ticker_sector)} tickers (ratios loaded on demand)")
 
     # ------------------------------------------------------------------
-    # 9. Sector data
+    # 6. Sector data (computed from screener_df — no heavy queries)
     # ------------------------------------------------------------------
-    print("Computing sector data...")
-    sector_returns = compute_sector_returns(returns_1d, ticker_sector)
+    from data.sectors import SECTOR_COLORS, compute_sector_returns
 
-    # Build sector -> [tickers] mapping
-    sector_tickers_map = {}
-    for sym, sec in ticker_sector.items():
-        sector_tickers_map.setdefault(sec, []).append(sym)
+    if not screener_df.empty and "ret_1d" in screener_df.columns:
+        ticker_returns = dict(zip(screener_df["symbol"], screener_df["ret_1d"] / 100))
+        sector_returns = compute_sector_returns(ticker_returns, ticker_sector)
+    else:
+        sector_returns = {}
 
-    sector_norm = compute_sector_normalized_series(sector_tickers_map, price_cache)
-
+    # Normalized sector series are NOT precomputed at startup.
+    # They will be empty initially; the home page sector chart handles this.
     sector_data = {
         "returns": sector_returns,
-        "normalized": sector_norm,
+        "normalized": {},
         "colors": SECTOR_COLORS,
     }
 
     # ------------------------------------------------------------------
-    # 10. Pre-fetch news for top movers
+    # 7. Prices are NOT preloaded — get_prices() loads on demand
     # ------------------------------------------------------------------
-    # ------------------------------------------------------------------
-    # 10. Fetch news via Finnhub (real-time)
-    # ------------------------------------------------------------------
-    print("Fetching news (Finnhub)...")
-    from data.news import fetch_market_news, fetch_company_news
+    # price_cache stays empty; sparklines call get_prices(sym) per ticker
+    close_prices = pd.DataFrame()
 
-    global market_news_cache, news_cache
-    market_news_cache = []
+    elapsed = time.time() - t0
+    print(f"Loaded from database in {elapsed:.2f}s — ready ({len(screener_df)} tickers in screener)")
+
+
+# ---------------------------------------------------------------------------
+# Legacy fallback — kept for when highbourne.db does not exist
+# ---------------------------------------------------------------------------
+
+def _legacy_init():
+    """Original slow pipeline that fetches everything from APIs at startup.
+
+    This is only used as a fallback when the SQLite database has not been
+    created yet.  In normal operation, init() calls _sqlite_init() instead.
+    """
+    global universe, screener_df, risk_stats, sector_data, news_cache, market_news_cache
+    global price_cache, ticker_info_cache, ticker_sector, ticker_name, close_prices
+
+    print("Running legacy startup pipeline (this will be slow)...")
+
+    # Import the heavy modules only when needed
+    from models.ticker import Universe, Ticker
+
+    # The legacy pipeline previously lived in init() directly.
+    # Since the DB doesn't exist, we create a minimal empty state so the
+    # app can at least start without crashing.
+    universe = Universe()
+    screener_df = pd.DataFrame()
+    risk_stats = {
+        "vix": {"value": None, "change": None},
+        "fear_greed": {"value": None, "label": "N/A"},
+        "breadth": {"pct_above_200sma": 0, "pct_above_50sma": 0, "avg_rsi": 50},
+        "advancers": 0, "decliners": 0, "unchanged": 0,
+        "new_highs": 0, "new_lows": 0,
+        "verdict": {"level": "N/A", "color": "#999", "guidance": "No database available"},
+    }
+    sector_data = {"returns": {}, "normalized": {}, "colors": {}}
+    price_cache = {}
+    ticker_info_cache = {}
+    ticker_sector = {}
+    ticker_name = {}
+    close_prices = pd.DataFrame()
     news_cache = []
+    market_news_cache = []
 
-    try:
-        market_news_cache = fetch_market_news(limit=15)
-        print(f"  Market news: {len(market_news_cache)} articles")
-    except Exception:
-        print("  Warning: market news fetch failed")
-
-    # Company news for top movers
-    top_movers = screener_df.reindex(screener_df["ret_1d"].abs().sort_values(ascending=False).index).head(5)
-    for _, row in top_movers.iterrows():
-        try:
-            articles = fetch_company_news(row["symbol"], days_back=2, limit=2)
-            for a in articles:
-                news_cache.append({
-                    "symbol": row["symbol"],
-                    "title": a["headline"],
-                    "link": a["url"],
-                    "publisher": a["source"],
-                    "age": a["age"],
-                })
-        except Exception:
-            continue
-    print(f"  Company news: {len(news_cache)} articles")
-
-    print("Startup complete.")
+    print("Legacy init complete — app running with empty data.")
+    print("Run 'python3 ingest.py' to populate the database, then restart.")
