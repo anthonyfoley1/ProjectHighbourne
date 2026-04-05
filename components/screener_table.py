@@ -200,7 +200,7 @@ def build_screener_table(df=None):
         ma_color = C["green"] if ma == "Above" else C["red"]
 
         # Sparkline
-        prices = startup.price_cache.get(sym)
+        prices = startup.get_prices(sym)
         # Sparkline color based on 90-day trend, not 1-day return
         if prices is not None and len(prices) >= 90:
             trend_90d = float(prices.iloc[-1]) - float(prices.iloc[-90])

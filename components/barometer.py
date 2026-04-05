@@ -245,7 +245,7 @@ def compute_barometer(symbol, info=None):
     dict with keys: composite, label, color, factors
     """
     ticker_obj = startup.universe.get(symbol) if startup.universe else None
-    prices = startup.price_cache.get(symbol) if hasattr(startup, "price_cache") else None
+    prices = startup.get_prices(symbol, full=True) if hasattr(startup, "get_prices") else None
     price_val = float(prices.iloc[-1]) if prices is not None and not prices.empty else None
 
     # --- Factor scores ---

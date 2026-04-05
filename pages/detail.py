@@ -88,7 +88,7 @@ def layout(symbol="AAPL"):
 
     symbol = symbol.upper()
     ticker_obj = startup.universe.get(symbol)
-    prices = startup.price_cache.get(symbol)
+    prices = startup.get_prices(symbol, full=True)
 
     if ticker_obj is None:
         return html.Div([
@@ -650,7 +650,7 @@ def _build_earnings_data_table(symbol):
     if not earnings:
         return html.Div()
 
-    prices = startup.price_cache.get(symbol)
+    prices = startup.get_prices(symbol)
 
     hdr_style = {
         "color": C["orange"], "fontSize": "8px", "fontWeight": "bold",
@@ -759,7 +759,7 @@ def _build_financials_placeholder():
 def _build_rv_summary_table(symbol):
     """Bloomberg-style RV summary: all ratios at a glance with current, hist avg, range, implied price."""
     ticker_obj = startup.universe.get(symbol)
-    prices = startup.price_cache.get(symbol)
+    prices = startup.get_prices(symbol)
     current_price = float(prices.iloc[-1]) if prices is not None and len(prices) > 0 else None
 
     cell = {"padding": "3px 6px", "fontSize": "10px", "fontFamily": FONT_FAMILY,
@@ -967,7 +967,7 @@ def _build_earnings_chart(symbol):
     quarters = [e["quarter"] for e in earnings]
     actuals = [e.get("actual") for e in earnings]
     estimates = [e.get("estimate") for e in earnings]
-    prices = startup.price_cache.get(symbol)
+    prices = startup.get_prices(symbol)
 
     # Estimate markers (hollow circles) — hover disabled, shown via Actual hover
     fig.add_trace(go.Scatter(
@@ -1189,7 +1189,7 @@ def update_price_chart(period, overlays, pathname):
     if not pathname or "/detail/" not in pathname:
         return empty_fig()
     symbol = pathname.split("/detail/")[-1].upper()
-    prices = startup.price_cache.get(symbol)
+    prices = startup.get_prices(symbol, full=True)
     if prices is None or prices.empty:
         return empty_fig("No price data")
 
