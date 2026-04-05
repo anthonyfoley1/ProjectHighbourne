@@ -508,19 +508,23 @@ def _build_news(info, symbol=None):
         except Exception:
             pass
 
-        # DefeatBeta news if Finnhub returned nothing
-        if not news_items:
-            try:
-                db_news = get_defeatbeta_news(symbol, limit=5)
-                for n in db_news:
+        # Also pull DefeatBeta company-specific news (merge, don't just fallback)
+        try:
+            db_news = get_defeatbeta_news(symbol, limit=5)
+            for n in db_news:
+                title = n.get("title", "")
+                # Avoid duplicates
+                if title and not any(title == existing["title"] for existing in news_items):
                     news_items.append({
-                        "title": n.get("title", ""),
+                        "title": title,
                         "link": n.get("link", "#"),
                         "publisher": n.get("publisher", ""),
-                        "age": n.get("report_date", ""),
+                        "age": str(n.get("report_date", ""))[:10] if n.get("report_date") else "",
                     })
-            except Exception:
-                pass
+        except Exception:
+            pass
+        # Keep only top 6
+        news_items = news_items[:6]
 
     # yfinance fallback
     if not news_items:
@@ -597,8 +601,11 @@ def _build_news(info, symbol=None):
                 fq = tc.get("fiscal_quarter", "")
                 rd = tc.get("report_date", "")
                 label = f"Q{fq} FY{fy} Earnings Call"
+                # Link to Seeking Alpha transcript search (most reliable free source)
+                sa_link = f"https://seekingalpha.com/symbol/{symbol}/earnings/transcripts"
                 section_children.append(html.Div([
-                    html.Span(label, style={"color": C["white"], "fontSize": "10px"}),
+                    html.A(label, href=sa_link, target="_blank",
+                           style={"color": "#6699cc", "textDecoration": "none", "fontSize": "10px"}),
                     html.Span(rd, style={"color": C["gray"], "fontSize": "10px", "marginLeft": "auto"}),
                 ], style={
                     "display": "flex", "justifyContent": "space-between",
