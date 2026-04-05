@@ -555,7 +555,34 @@ def _build_recent_earnings(symbol, sub_label):
                 "borderBottom": f"1px solid {C['border']}",
             },
         )
+        # LLM summary (expandable)
+        try:
+            from data.defeatbeta import get_earnings_summary
+            summary = get_earnings_summary(symbol, fy, fq)
+            if summary:
+                summary_el = html.Details([
+                    html.Summary("View AI Summary", style={
+                        "color": C["cyan"], "fontSize": "9px", "cursor": "pointer",
+                        "fontFamily": FONT_FAMILY, "padding": "2px 0",
+                    }),
+                    html.Div(
+                        # Render markdown-like text with line breaks
+                        [html.Span(line, style={"display": "block", "fontSize": "9px",
+                                                "color": C["gray"], "lineHeight": "1.5",
+                                                "fontFamily": FONT_FAMILY})
+                         for line in summary.split("\n") if line.strip()],
+                        style={"padding": "4px 8px", "backgroundColor": "#111",
+                               "borderRadius": "3px", "marginTop": "4px"},
+                    ),
+                ], style={"marginLeft": "8px", "marginBottom": "4px"})
+            else:
+                summary_el = None
+        except Exception:
+            summary_el = None
+
         children.extend([header_line, metrics_line])
+        if summary_el:
+            children.append(summary_el)
 
     return children
 
