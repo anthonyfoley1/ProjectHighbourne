@@ -354,10 +354,11 @@ def _build_description(info, symbol, barometer_data=None):
                 html.P(description_text, style={"color": C["gray"], "fontSize": "10px", "lineHeight": "1.5", "margin": 0}),
                 html.Div(details, style={"marginTop": "6px", "borderTop": f"1px solid {C['border']}", "paddingTop": "6px"}) if details else None,
             ], style={**PANEL_STYLE, "flex": "1", "marginBottom": 0}),
-            html.Div([
-                peers_content,
-                html.Div(barometer_el, style={"marginTop": "10px", "borderTop": f"1px solid {C['border']}", "paddingTop": "10px"}) if barometer_el else None,
-            ], style={**PANEL_STYLE, "width": "340px", "flexShrink": "0", "marginBottom": 0, "overflowX": "auto"}),
+            html.Div(
+                (peers_content if isinstance(peers_content, list) else [peers_content])
+                + ([html.Div(barometer_el, style={"marginTop": "10px", "borderTop": f"1px solid {C['border']}", "paddingTop": "10px"})] if barometer_el else []),
+                style={**PANEL_STYLE, "width": "340px", "flexShrink": "0", "marginBottom": 0, "overflowX": "auto"},
+            ),
         ],
     )
 
