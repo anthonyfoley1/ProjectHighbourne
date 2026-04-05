@@ -192,43 +192,47 @@ def fetch_vix() -> dict:
 
 
 def compute_fear_greed(breadth_stats, vix_value, new_highs, new_lows):
-    """Compute our own Fear & Greed composite from R3000 breadth data.
+    """Compute Fear & Greed composite modeled after CNN's methodology.
 
     Scores 0-100 where 0 = Extreme Fear, 100 = Extreme Greed.
-    Based on: % above SMAs, avg RSI, VIX level, new highs vs lows ratio.
+    Uses 5 sub-indicators, each scored 0-100, then averaged.
     """
-    score = 50  # start neutral
+    components = []
 
-    # Breadth: % above 200 SMA (0-100 range, centered at 50)
+    # 1. Market Breadth (% above 200 SMA → 0-100 directly)
     pct200 = breadth_stats.get("pct_above_200sma", 50)
-    score += (pct200 - 50) * 0.3  # contributes up to ±15
+    components.append(min(100, max(0, pct200)))
 
-    # Breadth: % above 50 SMA
+    # 2. Market Momentum (% above 50 SMA → 0-100 directly)
     pct50 = breadth_stats.get("pct_above_50sma", 50)
-    score += (pct50 - 50) * 0.2  # contributes up to ±10
+    components.append(min(100, max(0, pct50)))
 
-    # RSI: avg RSI (centered at 50)
-    avg_rsi = breadth_stats.get("avg_rsi", 50)
-    score += (avg_rsi - 50) * 0.3  # contributes up to ±15
-
-    # VIX: lower = greed, higher = fear
-    if vix_value:
-        if vix_value < 15: score += 10
-        elif vix_value < 20: score += 5
-        elif vix_value > 30: score -= 15
-        elif vix_value > 25: score -= 10
-        elif vix_value > 20: score -= 5
-
-    # New highs vs lows ratio
+    # 3. Stock Price Strength (highs vs lows ratio → 0-100)
     total = (new_highs or 0) + (new_lows or 0)
     if total > 0:
-        hl_ratio = (new_highs or 0) / total  # 0 to 1
-        score += (hl_ratio - 0.5) * 20  # contributes up to ±10
+        hl_score = ((new_highs or 0) / total) * 100
+    else:
+        hl_score = 50
+    components.append(hl_score)
 
-    # Clamp to 0-100
-    score = max(0, min(100, int(round(score))))
+    # 4. Market Volatility (VIX inverted → 0-100)
+    if vix_value:
+        # VIX 10 → score 95, VIX 20 → score 50, VIX 35 → score 10, VIX 50+ → score 0
+        vix_score = max(0, min(100, 100 - (vix_value - 10) * 2.5))
+        components.append(vix_score)
+    else:
+        components.append(50)
 
-    # Label
+    # 5. Internal Momentum (avg RSI → 0-100, already on 0-100 scale)
+    avg_rsi = breadth_stats.get("avg_rsi", 50)
+    # RSI 30 → score 15, RSI 50 → score 50, RSI 70 → score 85
+    rsi_score = max(0, min(100, (avg_rsi - 20) * 1.25))
+    components.append(rsi_score)
+
+    # Simple average of all components
+    score = int(round(sum(components) / len(components)))
+    score = max(0, min(100, score))
+
     if score <= 20:
         label = "EXTREME FEAR"
     elif score <= 40:
