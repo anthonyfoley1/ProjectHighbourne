@@ -22,11 +22,8 @@ app.layout = html.Div([
 def display_page(pathname):
     if pathname and pathname.startswith("/detail/"):
         symbol = pathname.split("/detail/")[-1].upper()
-        result = detail.layout(symbol)
-    else:
-        result = home.layout()
-    # Dash 4.x requires explicit list wrap when pattern-matching callbacks exist
-    return result
+        return [detail.layout(symbol)]
+    return [home.layout()]
 
 
 @app.callback(

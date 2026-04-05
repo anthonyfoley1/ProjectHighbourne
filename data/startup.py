@@ -168,24 +168,123 @@ class LazyUniverse:
 # ---------------------------------------------------------------------------
 
 def get_ticker_ratios(symbol):
-    """Load ratio history for a single ticker from SQLite.
+    """Compute ratio history for a single ticker from prices + financials in SQLite.
 
     Returns a dict {ratio_name: pd.Series} ready to attach to a Ticker.
     """
     db = get_db()
-    ratios = db.query(
-        "SELECT date, pe, ps, pb, ev_ebitda FROM ratios WHERE ticker=? ORDER BY date",
-        (symbol,),
-    )
-    if ratios.empty:
+
+    # First try pre-computed ratios table
+    try:
+        ratios = db.query(
+            "SELECT date, pe, ps, pb, ev_ebitda FROM ratios WHERE ticker=? ORDER BY date",
+            (symbol,),
+        )
+        if not ratios.empty:
+            ratios["date"] = pd.to_datetime(ratios["date"])
+            ratios = ratios.set_index("date")
+            result = {}
+            for col, name in [("pe", "P/E"), ("ps", "P/S"), ("pb", "P/B"), ("ev_ebitda", "EV/EBITDA")]:
+                s = ratios[col].dropna()
+                if len(s) > 0:
+                    result[name] = s
+            if result:
+                return result
+    except Exception:
+        pass
+
+    # Fallback: compute on the fly from prices + financials
+    import numpy as np
+    from edgar_utils import build_daily_ttm, build_daily_instant
+
+    prices_df = db.query("SELECT date, close FROM prices WHERE ticker=? ORDER BY date", (symbol,))
+    if prices_df.empty:
         return {}
-    ratios["date"] = pd.to_datetime(ratios["date"])
-    ratios = ratios.set_index("date")
+    prices_df["date"] = pd.to_datetime(prices_df["date"])
+    prices_df = prices_df.set_index("date")
+    close = prices_df["close"]
+
+    shares_row = db.query("SELECT shares FROM shares_outstanding WHERE ticker=?", (symbol,))
+    shares = float(shares_row["shares"].iloc[0]) if not shares_row.empty else None
+    if not shares:
+        return {}
+
+    mktcap = close * shares
+    trading_dates = mktcap.index
+
+    fin = db.query("SELECT period_end, revenue, net_income, operating_income, depreciation_amortization, "
+                    "stockholders_equity, total_debt, cash FROM financials WHERE ticker=? ORDER BY period_end",
+                    (symbol,))
+    if fin.empty:
+        return {}
+    fin["period_end"] = pd.to_datetime(fin["period_end"])
+    fin = fin.set_index("period_end")
+
     result = {}
-    for col, name in [("pe", "P/E"), ("ps", "P/S"), ("pb", "P/B"), ("ev_ebitda", "EV/EBITDA")]:
-        s = ratios[col].dropna()
-        if len(s) > 0:
-            result[name] = s
+
+    # P/B
+    if "stockholders_equity" in fin.columns:
+        eq = fin[["stockholders_equity"]].dropna().rename(columns={"stockholders_equity": symbol})
+        if not eq.empty:
+            eq_daily = build_daily_instant(eq, trading_dates)
+            if symbol in eq_daily.columns:
+                eq_d = eq_daily[symbol].where(eq_daily[symbol] > 0)
+                pb = (mktcap / eq_d).replace([np.inf, -np.inf], np.nan).dropna()
+                if len(pb) > 10:
+                    result["P/B"] = pb
+
+    # P/S
+    if "revenue" in fin.columns:
+        rev = fin[["revenue"]].dropna().rename(columns={"revenue": symbol})
+        if not rev.empty:
+            rev_ttm = build_daily_ttm(rev, trading_dates)
+            if symbol in rev_ttm.columns:
+                rev_t = rev_ttm[symbol].where(rev_ttm[symbol] > 0)
+                ps = (mktcap / rev_t).replace([np.inf, -np.inf], np.nan).dropna()
+                if len(ps) > 10:
+                    result["P/S"] = ps
+
+    # P/E
+    if "net_income" in fin.columns:
+        ni = fin[["net_income"]].dropna().rename(columns={"net_income": symbol})
+        if not ni.empty:
+            ni_ttm = build_daily_ttm(ni, trading_dates)
+            if symbol in ni_ttm.columns:
+                ni_t = ni_ttm[symbol].where(ni_ttm[symbol] > 0)
+                pe = (mktcap / ni_t).replace([np.inf, -np.inf], np.nan).dropna()
+                if len(pe) > 10:
+                    result["P/E"] = pe
+
+    # EV/EBITDA
+    if "operating_income" in fin.columns:
+        oi = fin[["operating_income"]].dropna().rename(columns={"operating_income": symbol})
+        da = fin[["depreciation_amortization"]].dropna().rename(columns={"depreciation_amortization": symbol}) if "depreciation_amortization" in fin.columns else pd.DataFrame()
+        if not oi.empty:
+            if not da.empty and symbol in da.columns:
+                ebitda_q = oi.add(da, fill_value=0)
+            else:
+                ebitda_q = oi
+            ebitda_ttm = build_daily_ttm(ebitda_q, trading_dates)
+            if symbol in ebitda_ttm.columns:
+                ebitda_t = ebitda_ttm[symbol].where(ebitda_ttm[symbol] > 0)
+                # EV = mktcap + debt - cash
+                ev = mktcap.copy()
+                if "total_debt" in fin.columns:
+                    debt = fin[["total_debt"]].dropna().rename(columns={"total_debt": symbol})
+                    if not debt.empty:
+                        debt_d = build_daily_instant(debt, trading_dates)
+                        if symbol in debt_d.columns:
+                            ev = ev + debt_d[symbol].fillna(0)
+                if "cash" in fin.columns:
+                    cash = fin[["cash"]].dropna().rename(columns={"cash": symbol})
+                    if not cash.empty:
+                        cash_d = build_daily_instant(cash, trading_dates)
+                        if symbol in cash_d.columns:
+                            ev = ev - cash_d[symbol].fillna(0)
+                ev_ebitda = (ev / ebitda_t).replace([np.inf, -np.inf], np.nan).dropna()
+                if len(ev_ebitda) > 10:
+                    result["EV/EBITDA"] = ev_ebitda
+
     return result
 
 
