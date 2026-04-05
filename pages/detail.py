@@ -898,19 +898,26 @@ def _build_rv_summary_table(symbol):
 
 def _build_rv_controls(symbol):
     """RV summary table (with clickable ratio rows) + window toggle + RV chart."""
-    # Hidden dropdown — updated by clicking ratio rows in the summary table
-    hidden_dropdown = dcc.Dropdown(
-        id="ratio-dropdown",
-        options=[{"label": r, "value": r} for r in RATIO_NAMES],
-        value="P/E",
-        style={"display": "none"},
-        clearable=False,
-    )
-
-    # Window toggle only
+    # Ratio + window controls inline
     window_row = html.Div(
-        style={"display": "flex", "gap": "8px", "alignItems": "center", "marginBottom": "6px"},
+        style={"display": "flex", "gap": "12px", "alignItems": "center", "marginBottom": "6px"},
         children=[
+            html.Label("RATIO", style={"color": C["gray"], "fontSize": "8px", "marginRight": "4px",
+                                        "fontFamily": FONT_FAMILY}),
+            dcc.RadioItems(
+                id="ratio-dropdown",
+                options=[{"label": r, "value": r} for r in RATIO_NAMES],
+                value="P/E",
+                inline=True,
+                inputStyle={"display": "none"},
+                labelStyle={
+                    "padding": "3px 8px", "fontSize": "9px", "cursor": "pointer",
+                    "fontFamily": FONT_FAMILY, "border": f"1px solid {C['border']}",
+                    "marginRight": "2px", "color": C["gray"], "background": "#000",
+                },
+                className="bbg-period-selector",
+            ),
+            html.Span("|", style={"color": C["border"], "margin": "0 4px"}),
             html.Label("WINDOW", style={"color": C["gray"], "fontSize": "8px", "marginRight": "4px",
                                         "fontFamily": FONT_FAMILY}),
             dcc.RadioItems(
@@ -930,7 +937,6 @@ def _build_rv_controls(symbol):
     )
 
     return html.Div([
-        hidden_dropdown,
         _build_rv_summary_table(symbol),
         window_row,
         dcc.Graph(id="rv-chart", config={"displayModeBar": False}, style={"height": "320px"}),
@@ -1389,23 +1395,6 @@ def update_price_chart(period, overlays, pathname):
     return fig
 
 
-@callback(
-    Output("ratio-dropdown", "value"),
-    [Input(f"rv-select-{r.replace('/', '-')}", "n_clicks") for r in RATIO_NAMES],
-    prevent_initial_call=True,
-)
-def select_ratio_from_table(*args):
-    """Update hidden ratio dropdown when a ratio row in the summary table is clicked."""
-    ctx = dash.callback_context
-    if not ctx.triggered:
-        return dash.no_update
-    prop_id = ctx.triggered[0]["prop_id"]
-    # Extract ratio from button ID: "rv-select-P-E.n_clicks" -> "P/E"
-    btn_id = prop_id.split(".")[0]
-    ratio = btn_id.replace("rv-select-", "").replace("-", "/")
-    if ratio in RATIO_NAMES:
-        return ratio
-    return dash.no_update
 
 
 @callback(
