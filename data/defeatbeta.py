@@ -16,8 +16,8 @@ from __future__ import annotations
 from typing import Dict, Optional
 
 import pandas as pd
-import logging
 
+from utils.logger import log
 from defeatbeta_api.data.ticker import Ticker
 from defeatbeta_api.client.duckdb_client import Configuration
 
@@ -42,7 +42,8 @@ def _get_ticker(symbol: str) -> Optional[Ticker]:
     """Get or create a DefeatBeta Ticker object.  Cached per symbol."""
     if symbol not in _ticker_cache:
         try:
-            _ticker_cache[symbol] = Ticker(symbol, log_level=logging.WARNING, config=_CONFIG)
+            import logging as _logging
+            _ticker_cache[symbol] = Ticker(symbol, log_level=_logging.WARNING, config=_CONFIG)
         except Exception:
             return None
     return _ticker_cache[symbol]
@@ -189,6 +190,70 @@ def get_fundamentals(symbol: str) -> Dict[str, pd.DataFrame]:
         except Exception:
             pass
 
+    return result
+
+
+# ---------------------------------------------------------------------------
+# Company info, officers, news, industry ratios
+# ---------------------------------------------------------------------------
+
+def get_company_info(symbol):
+    """Get company info: description, officers, industry, etc."""
+    t = _get_ticker(symbol)
+    if t is None:
+        return {}
+    try:
+        info = t.info()
+        # info returns a DataFrame or dict -- check the format
+        return info if info is not None else {}
+    except Exception:
+        return {}
+
+def get_officers(symbol):
+    """Get company officers/executives."""
+    t = _get_ticker(symbol)
+    if t is None:
+        return []
+    try:
+        officers = t.officers()
+        if officers is not None:
+            return officers
+        return []
+    except Exception:
+        return []
+
+def get_news(symbol):
+    """Get news for a ticker from DefeatBeta."""
+    t = _get_ticker(symbol)
+    if t is None:
+        return []
+    try:
+        news = t.news()
+        if news is not None:
+            return news
+        return []
+    except Exception:
+        return []
+
+def get_industry_ratios(symbol):
+    """Get industry-level comparison ratios."""
+    t = _get_ticker(symbol)
+    if t is None:
+        return {}
+    result = {}
+    for method, key in [
+        ("industry_pb_ratio", "P/B"),
+        ("industry_ps_ratio", "P/S"),
+        ("industry_ttm_pe", "P/E"),
+        ("industry_roe", "ROE"),
+        ("industry_roic", "ROIC"),
+    ]:
+        try:
+            df = getattr(t, method)()
+            if df is not None and not df.empty:
+                result[key] = df
+        except Exception:
+            pass
     return result
 
 

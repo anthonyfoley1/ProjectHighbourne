@@ -15,7 +15,8 @@ import pandas as pd
 import numpy as np
 from pathlib import Path
 
-from data.database import DB_PATH
+from config import DB_PATH
+from utils.logger import log
 
 # ---------------------------------------------------------------------------
 # Module-level variables — populated by init()
@@ -427,8 +428,8 @@ def init():
     If highbourne.db does not exist, falls back to the legacy pipeline.
     """
     if not DB_PATH.exists():
-        print("WARNING: highbourne.db not found. Run 'python3 ingest.py' first.")
-        print("Falling back to legacy startup pipeline...")
+        log.warning("highbourne.db not found. Run 'python3 ingest.py' first.")
+        log.info("Falling back to legacy startup pipeline...")
         _legacy_init()
         return
 
@@ -442,7 +443,7 @@ def _sqlite_init():
 
     import time
     t0 = time.time()
-    print("Loading from database...")
+    log.info("Loading from database...")
 
     db = get_db()
 
@@ -450,7 +451,7 @@ def _sqlite_init():
     # 1. Screener
     # ------------------------------------------------------------------
     screener_df = db.query("SELECT * FROM screener ORDER BY z_score ASC")
-    print(f"  Screener: {len(screener_df)} tickers")
+    log.info(f"  Screener: {len(screener_df)} tickers")
 
     # ------------------------------------------------------------------
     # 2. Ticker lookups
@@ -526,7 +527,7 @@ def _sqlite_init():
     # 5. Build LazyUniverse (NO ratio loading — done on demand)
     # ------------------------------------------------------------------
     universe = LazyUniverse(ticker_sector)
-    print(f"  Universe: {len(ticker_sector)} tickers (ratios loaded on demand)")
+    log.info(f"  Universe: {len(ticker_sector)} tickers (ratios loaded on demand)")
 
     # ------------------------------------------------------------------
     # 6. Sector data (computed from screener_df — no heavy queries)
@@ -559,16 +560,16 @@ def _sqlite_init():
     from data.risk import compute_regime
     try:
         regime_data = compute_regime(risk_stats)
-        print(f"  Regime: {regime_data.get('regime', 'N/A')} (score {regime_data.get('score', 'N/A')})")
+        log.info(f"  Regime: {regime_data.get('regime', 'N/A')} (score {regime_data.get('score', 'N/A')})")
     except Exception as e:
-        print(f"  Regime detection failed: {e}")
+        log.error(f"  Regime detection failed: {e}")
         regime_data = {
             "regime": "N/A", "color": "#999999", "indicators": [],
             "score": 50, "guidance": "Regime detection unavailable.",
         }
 
     elapsed = time.time() - t0
-    print(f"Loaded from database in {elapsed:.2f}s — ready ({len(screener_df)} tickers in screener)")
+    log.info(f"Loaded from database in {elapsed:.2f}s -- ready ({len(screener_df)} tickers in screener)")
 
 
 # ---------------------------------------------------------------------------
@@ -584,7 +585,7 @@ def _legacy_init():
     global universe, screener_df, risk_stats, regime_data, sector_data, news_cache, market_news_cache
     global price_cache, ticker_info_cache, ticker_sector, ticker_name, close_prices
 
-    print("Running legacy startup pipeline (this will be slow)...")
+    log.info("Running legacy startup pipeline (this will be slow)...")
 
     # Import the heavy modules only when needed
     from models.ticker import Universe, Ticker
@@ -615,5 +616,5 @@ def _legacy_init():
     news_cache = []
     market_news_cache = []
 
-    print("Legacy init complete — app running with empty data.")
-    print("Run 'python3 ingest.py' to populate the database, then restart.")
+    log.info("Legacy init complete -- app running with empty data.")
+    log.info("Run 'python3 ingest.py' to populate the database, then restart.")

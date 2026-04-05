@@ -4,7 +4,7 @@ import sqlite3
 import pandas as pd
 from pathlib import Path
 
-DB_PATH = Path(__file__).parent.parent / "highbourne.db"
+from config import DB_PATH
 
 
 class Database:

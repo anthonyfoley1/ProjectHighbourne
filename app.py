@@ -119,4 +119,5 @@ import data.startup as startup
 startup.init()
 
 if __name__ == "__main__":
-    app.run(debug=True, use_reloader=False, port=8050)
+    from config import APP_PORT, APP_DEBUG
+    app.run(debug=APP_DEBUG, use_reloader=False, port=APP_PORT)

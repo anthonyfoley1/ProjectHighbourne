@@ -359,7 +359,8 @@ def load_market_data(years=5):
         print(f"  Got prices for {len(close.columns)} tickers")
 
     # 2. Get shares outstanding from SimFin (share counts are stable year-to-year)
-    sf.set_api_key("4e0d0ff7-a1af-4333-9f4b-55d97e801b35")
+    from config import SIMFIN_API_KEY
+    sf.set_api_key(SIMFIN_API_KEY)
     sf.set_data_dir("~/simfin_data/")
     df_prices = sf.load_shareprices(market="us", variant="daily")
     shares_df = df_prices["Shares Outstanding"].unstack("Ticker")

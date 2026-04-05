@@ -247,7 +247,8 @@ def ingest_simfin_gaps(store):
         print("  SimFin not installed, skipping")
         return
 
-    sf.set_api_key("4e0d0ff7-a1af-4333-9f4b-55d97e801b35")
+    from config import SIMFIN_API_KEY
+    sf.set_api_key(SIMFIN_API_KEY)
     sf.set_data_dir("~/simfin_data/")
 
     SIMFIN_MAP = {

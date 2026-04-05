@@ -3,7 +3,7 @@
 import finnhub
 from datetime import datetime, timedelta
 
-FINNHUB_API_KEY = "d78hojpr01qsbhvtsqo0d78hojpr01qsbhvtsqog"
+from config import FINNHUB_API_KEY
 
 # ---------------------------------------------------------------------------
 # Source quality scoring for news prioritization

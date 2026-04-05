@@ -9,3 +9,8 @@ cache/
 ~$*
 av_cache/
 highbourne.db*
+.env
+highbourne.log
+*.db
+*.db-shm
+*.db-wal
