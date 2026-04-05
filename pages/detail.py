@@ -789,7 +789,11 @@ def _build_rv_summary_table(symbol):
             st = None
         if st is None:
             rows.append(html.Tr([
-                html.Td(ratio_name, style={**cell, "color": C["white"]}),
+                html.Td(
+                    html.Span(ratio_name, id=f"rv-select-{ratio_name.replace('/', '-')}",
+                              style={"color": C["dim"]}),
+                    style=cell,
+                ),
                 *[html.Td("—", style={**cell, "color": C["dim"], "textAlign": "right"}) for _ in range(7)],
                 html.Td("—", style={**cell, "color": C["dim"], "textAlign": "right"}),
             ]))
