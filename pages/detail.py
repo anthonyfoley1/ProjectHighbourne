@@ -648,8 +648,23 @@ def _build_news(info, symbol=None):
                     })
         except Exception:
             pass
-        # Keep only top 6
-        news_items = news_items[:6]
+        # Filter to company-specific news — must mention ticker or company name
+        company_name = (info.get("description") or "")[:50].split(".")[0].split(",")[0].strip()
+        company_keywords = [symbol.lower()]
+        if company_name and len(company_name) > 3:
+            company_keywords.append(company_name.lower())
+        # Also add common short names (e.g., "Apple" from "Apple Inc.")
+        short_name = company_name.split(" ")[0].lower() if company_name else ""
+        if short_name and len(short_name) > 3:
+            company_keywords.append(short_name)
+
+        filtered = []
+        for n in news_items:
+            title_lower = n["title"].lower()
+            if any(kw in title_lower for kw in company_keywords):
+                filtered.append(n)
+        # If filtering removed everything, keep original (API already filtered by ticker)
+        news_items = filtered[:6] if filtered else news_items[:4]
 
     # yfinance fallback
     if not news_items:
