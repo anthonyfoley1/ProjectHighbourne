@@ -134,6 +134,207 @@ def _build_headline_bar():
     })
 
 
+def _build_convergence_screen():
+    """Signal Convergence Screen — ranks stocks by aligned bullish/bearish signals."""
+    df = startup.screener_df
+    if df.empty:
+        return html.Div()
+
+    # ---- Compute bullish & bearish scores for every row ----
+    rows = []
+    for _, r in df.iterrows():
+        bull_score = 0
+        bull_count = 0
+        bull_total = 7  # number of possible bullish signals
+
+        bear_score = 0
+        bear_count = 0
+        bear_total = 7
+
+        z = r.get("z_score", 0) or 0
+        rsi = r.get("rsi", 50) or 50
+        macd = r.get("macd", "") or ""
+        ma = r.get("ma_trend", "") or ""
+        pct52 = r.get("pct_52w", 0.5) or 0.5
+        si = r.get("short_interest", 0) or 0
+        ret3 = r.get("ret_3d", 0) or 0
+
+        # --- Bullish signals ---
+        if z < -1.0:
+            bull_score += 20; bull_count += 1
+            if z < -2.0:
+                bull_score += 10
+        if rsi < 30:
+            bull_score += 15; bull_count += 1
+            if rsi < 20:
+                bull_score += 5
+        if macd == "Bull":
+            bull_score += 10; bull_count += 1
+        if ma == "Above":
+            bull_score += 10; bull_count += 1
+        if pct52 < 0.25:
+            bull_score += 10; bull_count += 1
+        if si > 10:
+            bull_score += 5; bull_count += 1
+        if ret3 < -5:
+            bull_score += 5; bull_count += 1
+
+        # --- Bearish signals ---
+        if z > 1.0:
+            bear_score += 20; bear_count += 1
+            if z > 2.0:
+                bear_score += 10
+        if rsi > 70:
+            bear_score += 15; bear_count += 1
+        if macd == "Bear":
+            bear_score += 10; bear_count += 1
+        if ma == "Below":
+            bear_score += 10; bear_count += 1
+        if pct52 > 0.75:
+            bear_score += 10; bear_count += 1
+        if ret3 > 5:
+            bear_score += 5; bear_count += 1
+
+        # Normalize to 0-100 (max raw = 90)
+        bull_norm = min(100, round(bull_score / 90 * 100))
+        bear_norm = min(100, round(bear_score / 90 * 100))
+
+        rows.append({
+            "symbol": r.get("symbol", ""),
+            "name": r.get("name", ""),
+            "sector": r.get("sector", ""),
+            "bull_score": bull_norm,
+            "bull_count": bull_count,
+            "bull_total": bull_total,
+            "bear_score": bear_norm,
+            "bear_count": bear_count,
+            "bear_total": bear_total,
+            "z_score": z,
+            "rsi": rsi,
+            "price": r.get("price", 0) or 0,
+            "ret_1d": r.get("ret_1d", 0) or 0,
+        })
+
+    # Sort for top buys (highest bullish) and top sells (highest bearish)
+    top_buys = sorted(rows, key=lambda x: x["bull_score"], reverse=True)[:15]
+    top_sells = sorted(rows, key=lambda x: x["bear_score"], reverse=True)[:15]
+
+    # ---- Helper to build a score bar ----
+    def _score_bar(score, color):
+        return html.Div(
+            html.Div(style={
+                "width": f"{score}%", "height": "100%",
+                "backgroundColor": color, "borderRadius": "2px",
+            }),
+            style={
+                "width": "60px", "height": "10px",
+                "backgroundColor": "#1a1a1a", "borderRadius": "2px",
+                "display": "inline-block", "verticalAlign": "middle",
+            },
+        )
+
+    # ---- Helper to build a table ----
+    def _convergence_table(items, color, label):
+        header = html.Tr([
+            html.Th("#", style={**_TH, "width": "20px"}),
+            html.Th("SYMBOL", style={**_TH, "width": "90px", "textAlign": "left"}),
+            html.Th("SECTOR", style={**_TH, "width": "80px", "textAlign": "left"}),
+            html.Th("SCORE", style={**_TH, "width": "80px"}),
+            html.Th("SIGNALS", style={**_TH, "width": "55px"}),
+            html.Th("Z", style={**_TH, "width": "40px"}),
+            html.Th("RSI", style={**_TH, "width": "35px"}),
+            html.Th("PRICE", style={**_TH, "width": "55px", "textAlign": "right"}),
+            html.Th("1D%", style={**_TH, "width": "45px", "textAlign": "right"}),
+        ])
+
+        body_rows = []
+        score_key = "bull_score" if color == C["green"] else "bear_score"
+        count_key = "bull_count" if color == C["green"] else "bear_count"
+        total_key = "bull_total" if color == C["green"] else "bear_total"
+
+        for i, item in enumerate(items, 1):
+            sc = item[score_key]
+            if sc == 0:
+                continue
+            ret_color = C["green"] if item["ret_1d"] > 0 else C["red"] if item["ret_1d"] < 0 else C["gray"]
+            body_rows.append(html.Tr([
+                html.Td(str(i), style={**_TD, "color": C["gray"]}),
+                html.Td([
+                    html.Div(item["symbol"], style={"color": C["white"], "fontWeight": "bold", "fontSize": "10px"}),
+                    html.Div(item["name"][:20], style={"color": C["gray"], "fontSize": "8px"}),
+                ], style={**_TD, "padding": "2px 4px"}),
+                html.Td(item["sector"][:12], style={**_TD, "color": C["gray"]}),
+                html.Td([
+                    _score_bar(sc, color),
+                    html.Span(f" {sc}", style={"color": color, "fontSize": "9px", "marginLeft": "4px"}),
+                ], style={**_TD}),
+                html.Td(f"{item[count_key]}/{item[total_key]}", style={**_TD, "color": C["yellow"]}),
+                html.Td(f"{item['z_score']:.1f}", style={**_TD, "color": C["cyan"]}),
+                html.Td(f"{item['rsi']:.0f}", style={**_TD}),
+                html.Td(fmt_price(item["price"]), style={**_TD, "textAlign": "right"}),
+                html.Td(f"{item['ret_1d']:+.1f}%", style={**_TD, "textAlign": "right", "color": ret_color}),
+            ]))
+
+        if not body_rows:
+            body_rows.append(html.Tr(html.Td(
+                "No signals", colSpan=9,
+                style={**_TD, "color": C["gray"], "textAlign": "center"},
+            )))
+
+        return html.Table([
+            html.Thead(header),
+            html.Tbody(body_rows),
+        ], style={"width": "100%", "borderCollapse": "collapse"})
+
+    # ---- Assemble the panel ----
+    return html.Div([
+        # Header
+        html.Div([
+            html.Div("SIGNAL CONVERGENCE", style={
+                "color": C["orange"], "fontSize": "12px", "fontWeight": "bold",
+                "fontFamily": FONT_FAMILY, "letterSpacing": "1px",
+            }),
+            html.Div('\u2014 "What to trade today"', style={
+                "color": C["yellow"], "fontSize": "10px", "fontFamily": FONT_FAMILY,
+                "marginLeft": "8px",
+            }),
+            html.Div("Stocks ranked by number of aligned bullish / bearish signals", style={
+                "color": C["gray"], "fontSize": "9px", "fontFamily": FONT_FAMILY,
+                "marginLeft": "auto",
+            }),
+        ], style={"display": "flex", "alignItems": "baseline", "marginBottom": "6px"}),
+        # Two side-by-side tables
+        html.Div([
+            html.Div([
+                html.Div("TOP BUYS", style={**SECTION_HEADER, "color": C["green"]}),
+                _convergence_table(top_buys, C["green"], "BUY"),
+            ], style={**PANEL_STYLE, "flex": "1", "marginRight": "4px", "overflowX": "auto"}),
+            html.Div([
+                html.Div("TOP SELLS", style={**SECTION_HEADER, "color": C["red"]}),
+                _convergence_table(top_sells, C["red"], "SELL"),
+            ], style={**PANEL_STYLE, "flex": "1", "marginLeft": "4px", "overflowX": "auto"}),
+        ], style={"display": "flex"}),
+    ], style={
+        "backgroundColor": C["panel"], "border": f"1px solid {C['border']}",
+        "borderLeft": f"3px solid {C['orange']}",
+        "padding": "8px 10px", "marginBottom": "8px", "fontFamily": FONT_FAMILY,
+    })
+
+
+# Table cell styles for convergence screen
+_TH = {
+    "color": C["orange"], "fontSize": "8px", "fontFamily": FONT_FAMILY,
+    "padding": "3px 4px", "textAlign": "center",
+    "borderBottom": f"2px solid {C['border']}", "textTransform": "uppercase",
+}
+
+_TD = {
+    "color": C["white"], "fontSize": "10px", "fontFamily": FONT_FAMILY,
+    "padding": "2px 4px", "textAlign": "center",
+    "borderBottom": f"1px solid {C['border']}",
+}
+
+
 def _build_filter_bar():
     """Sector dropdown, view toggle, and ticker count."""
     sector_options = [{"label": "All", "value": "All"}]
@@ -421,6 +622,7 @@ def layout():
         html.Div([
             _build_headline_bar(),
             _build_filter_bar(),
+            _build_convergence_screen(),
             build_screener_table(),
             _build_gainers_losers_bar(),
             _build_movers_panel(),
