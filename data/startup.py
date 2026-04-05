@@ -23,6 +23,7 @@ from data.database import DB_PATH
 universe = None               # LazyUniverse (or Universe from legacy)
 screener_df: pd.DataFrame = pd.DataFrame()
 risk_stats: dict = {}
+regime_data: dict = {}
 sector_data: dict = {}
 price_cache: dict = {}
 ticker_info_cache: dict = {}
@@ -390,7 +391,7 @@ def init():
 
 def _sqlite_init():
     """Fast startup: read metadata from SQLite, defer heavy data to lazy loading."""
-    global universe, screener_df, risk_stats, sector_data, news_cache, market_news_cache
+    global universe, screener_df, risk_stats, regime_data, sector_data, news_cache, market_news_cache
     global price_cache, ticker_info_cache, ticker_sector, ticker_name, close_prices
 
     import time
@@ -506,6 +507,20 @@ def _sqlite_init():
     # price_cache stays empty; sparklines call get_prices(sym) per ticker
     close_prices = pd.DataFrame()
 
+    # ------------------------------------------------------------------
+    # 8. Market Regime Detection (equity + fixed income)
+    # ------------------------------------------------------------------
+    from data.risk import compute_regime
+    try:
+        regime_data = compute_regime(risk_stats)
+        print(f"  Regime: {regime_data.get('regime', 'N/A')} (score {regime_data.get('score', 'N/A')})")
+    except Exception as e:
+        print(f"  Regime detection failed: {e}")
+        regime_data = {
+            "regime": "N/A", "color": "#999999", "indicators": [],
+            "score": 50, "guidance": "Regime detection unavailable.",
+        }
+
     elapsed = time.time() - t0
     print(f"Loaded from database in {elapsed:.2f}s — ready ({len(screener_df)} tickers in screener)")
 
@@ -520,7 +535,7 @@ def _legacy_init():
     This is only used as a fallback when the SQLite database has not been
     created yet.  In normal operation, init() calls _sqlite_init() instead.
     """
-    global universe, screener_df, risk_stats, sector_data, news_cache, market_news_cache
+    global universe, screener_df, risk_stats, regime_data, sector_data, news_cache, market_news_cache
     global price_cache, ticker_info_cache, ticker_sector, ticker_name, close_prices
 
     print("Running legacy startup pipeline (this will be slow)...")
@@ -542,6 +557,10 @@ def _legacy_init():
         "verdict": {"level": "N/A", "color": "#999", "guidance": "No database available"},
     }
     sector_data = {"returns": {}, "normalized": {}, "colors": {}}
+    regime_data = {
+        "regime": "N/A", "color": "#999999", "indicators": [],
+        "score": 50, "guidance": "Regime detection unavailable — no database.",
+    }
     price_cache = {}
     ticker_info_cache = {}
     ticker_sector = {}

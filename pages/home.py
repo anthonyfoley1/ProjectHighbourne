@@ -521,6 +521,130 @@ def _build_scatter_plot():
     return dcc.Graph(figure=fig, config={"displayModeBar": False})
 
 
+def _build_regime_panel():
+    """Market Regime Detection panel — equity + fixed income composite."""
+    rd = getattr(startup, "regime_data", None) or {}
+    regime = rd.get("regime", "N/A")
+    color = rd.get("color", C["gray"])
+    score = rd.get("score", 50)
+    guidance = rd.get("guidance", "")
+    indicators = rd.get("indicators", [])
+
+    # --- Score gauge bar ---
+    gauge_pct = max(0, min(100, score))
+    gauge_bar = html.Div([
+        html.Div([
+            html.Span("RISK-ON", style={"color": "#00ff00", "fontSize": "9px", "fontFamily": FONT_FAMILY}),
+            html.Div(style={
+                "flex": "1", "height": "8px", "margin": "0 10px",
+                "background": "linear-gradient(to right, #ff4444, #ff8c00, #ffff00, #00ff00)",
+                "borderRadius": "4px", "position": "relative",
+            }, children=[
+                html.Div(style={
+                    "position": "absolute", "top": "-4px",
+                    "left": f"{gauge_pct}%", "transform": "translateX(-50%)",
+                    "width": "4px", "height": "16px",
+                    "backgroundColor": C["white"], "borderRadius": "2px",
+                    "boxShadow": "0 0 4px rgba(255,255,255,0.5)",
+                }),
+            ]),
+            html.Span("RISK-OFF", style={"color": "#ff4444", "fontSize": "9px", "fontFamily": FONT_FAMILY}),
+        ], style={"display": "flex", "alignItems": "center", "marginBottom": "2px"}),
+        html.Div(f"{score:.0f}", style={
+            "textAlign": "center", "color": color, "fontSize": "14px",
+            "fontWeight": "bold", "fontFamily": FONT_FAMILY,
+        }),
+    ], style={"marginBottom": "10px"})
+
+    # --- Indicator rows ---
+    def _indicator_row(ind):
+        s = ind.get("score", 50)
+        filled = int(s / 10)
+        bar_chars = "\u2588" * filled + "\u2591" * (10 - filled)
+        return html.Div([
+            html.Span(ind["name"], style={
+                "color": C["gray"], "fontSize": "10px", "fontFamily": FONT_FAMILY,
+                "width": "110px", "display": "inline-block",
+            }),
+            html.Span(ind.get("value", "N/A"), style={
+                "color": C["white"], "fontSize": "10px", "fontFamily": FONT_FAMILY,
+                "width": "75px", "display": "inline-block", "textAlign": "right",
+                "marginRight": "8px",
+            }),
+            html.Span(bar_chars, style={
+                "color": ind.get("color", C["gray"]), "fontSize": "10px",
+                "fontFamily": FONT_FAMILY, "letterSpacing": "1px",
+                "width": "110px", "display": "inline-block",
+            }),
+            html.Span(f"{s:.0f}", style={
+                "color": C["white"], "fontSize": "10px", "fontFamily": FONT_FAMILY,
+                "width": "30px", "display": "inline-block", "textAlign": "right",
+                "marginRight": "8px",
+            }),
+            html.Span(ind.get("signal", ""), style={
+                "color": ind.get("color", C["gray"]), "fontSize": "9px",
+                "fontFamily": FONT_FAMILY, "fontWeight": "bold",
+            }),
+        ], style={"padding": "2px 0"})
+
+    equity_indicators = [i for i in indicators if i.get("group") == "EQUITY"]
+    fi_indicators = [i for i in indicators if i.get("group") == "FIXED INCOME"]
+
+    equity_section = html.Div([
+        html.Div("EQUITY SIGNALS", style={
+            "color": C["cyan"], "fontSize": "9px", "fontWeight": "bold",
+            "fontFamily": FONT_FAMILY, "letterSpacing": "1px",
+            "marginBottom": "4px", "marginTop": "6px",
+        }),
+        *[_indicator_row(ind) for ind in equity_indicators],
+    ])
+
+    fi_section = html.Div([
+        html.Div("FIXED INCOME SIGNALS", style={
+            "color": C["cyan"], "fontSize": "9px", "fontWeight": "bold",
+            "fontFamily": FONT_FAMILY, "letterSpacing": "1px",
+            "marginBottom": "4px", "marginTop": "8px",
+        }),
+        *[_indicator_row(ind) for ind in fi_indicators],
+    ])
+
+    # --- Guidance ---
+    guidance_section = html.Div([
+        html.Div("GUIDANCE", style={
+            "color": C["orange"], "fontSize": "9px", "fontWeight": "bold",
+            "fontFamily": FONT_FAMILY, "letterSpacing": "1px",
+            "marginTop": "10px", "marginBottom": "4px",
+        }),
+        html.Div(guidance, style={
+            "color": C["white"], "fontSize": "10px", "fontFamily": FONT_FAMILY,
+            "lineHeight": "1.4",
+        }),
+    ])
+
+    # --- Assemble ---
+    return html.Div([
+        # Header row
+        html.Div([
+            html.Span("MARKET REGIME", style={
+                "color": C["orange"], "fontSize": "12px", "fontWeight": "bold",
+                "fontFamily": FONT_FAMILY, "letterSpacing": "1px",
+            }),
+            html.Span(regime, style={
+                "color": color, "fontSize": "14px", "fontWeight": "bold",
+                "fontFamily": FONT_FAMILY, "marginLeft": "auto",
+            }),
+        ], style={"display": "flex", "alignItems": "center", "marginBottom": "6px"}),
+        html.Hr(style={"border": "none", "borderTop": f"2px solid {C['border']}", "margin": "0 0 8px 0"}),
+        gauge_bar,
+        equity_section,
+        fi_section,
+        guidance_section,
+    ], style={
+        **PANEL_STYLE,
+        "borderLeft": f"3px solid {color}",
+    })
+
+
 def _build_sector_performance():
     """Two-panel layout: sector returns table + normalized sector chart."""
     sd = startup.sector_data
@@ -627,10 +751,11 @@ def layout():
             _build_gainers_losers_bar(),
             _build_movers_panel(),
 
-            # Market movers scatter + risk dashboard side by side
+            # Market movers scatter + risk dashboard + regime panel
             html.Div([
                 html.Div(_build_scatter_plot(), style={"flex": "1", "marginRight": "4px"}),
-                html.Div(build_risk_dashboard(), style={"flex": "1", "marginLeft": "4px"}),
+                html.Div(build_risk_dashboard(), style={"flex": "1", "marginLeft": "4px", "marginRight": "4px"}),
+                html.Div(_build_regime_panel(), style={"flex": "1", "marginLeft": "4px"}),
             ], style={"display": "flex", "marginBottom": "8px"}),
 
             _build_sector_performance(),
