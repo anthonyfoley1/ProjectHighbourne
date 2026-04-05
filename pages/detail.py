@@ -555,30 +555,42 @@ def _build_recent_earnings(symbol, sub_label):
                 "borderBottom": f"1px solid {C['border']}",
             },
         )
-        # LLM summary (expandable)
+        # LLM summary — shown inline, not hidden
+        summary_el = None
         try:
             from data.defeatbeta import get_earnings_summary
             summary = get_earnings_summary(symbol, fy, fq)
             if summary:
-                summary_el = html.Details([
-                    html.Summary("View AI Summary", style={
-                        "color": C["cyan"], "fontSize": "9px", "cursor": "pointer",
-                        "fontFamily": FONT_FAMILY, "padding": "2px 0",
-                    }),
-                    html.Div(
-                        # Render markdown-like text with line breaks
-                        [html.Span(line, style={"display": "block", "fontSize": "9px",
-                                                "color": C["gray"], "lineHeight": "1.5",
-                                                "fontFamily": FONT_FAMILY})
-                         for line in summary.split("\n") if line.strip()],
-                        style={"padding": "4px 8px", "backgroundColor": "#111",
-                               "borderRadius": "3px", "marginTop": "4px"},
-                    ),
-                ], style={"marginLeft": "8px", "marginBottom": "4px"})
-            else:
-                summary_el = None
+                # Parse into styled lines — bold headers, normal bullets
+                lines = []
+                for line in summary.split("\n"):
+                    line = line.strip()
+                    if not line:
+                        continue
+                    if line.startswith("**") and line.endswith("**"):
+                        # Section header
+                        lines.append(html.Div(line.replace("**", ""), style={
+                            "color": C["orange"], "fontSize": "9px", "fontWeight": "bold",
+                            "marginTop": "4px", "fontFamily": FONT_FAMILY,
+                        }))
+                    elif line.startswith("*") or line.startswith("-") or line.startswith("•"):
+                        # Bullet point
+                        lines.append(html.Div(line.lstrip("*- •"), style={
+                            "color": C["gray"], "fontSize": "9px", "lineHeight": "1.5",
+                            "fontFamily": FONT_FAMILY, "paddingLeft": "10px",
+                        }))
+                    else:
+                        lines.append(html.Div(line, style={
+                            "color": C["gray"], "fontSize": "9px", "lineHeight": "1.5",
+                            "fontFamily": FONT_FAMILY,
+                        }))
+                summary_el = html.Div(lines, style={
+                    "padding": "6px 10px", "backgroundColor": "#0a0a0a",
+                    "border": f"1px solid {C['border']}", "borderRadius": "3px",
+                    "marginTop": "4px", "marginLeft": "4px", "marginBottom": "6px",
+                })
         except Exception:
-            summary_el = None
+            pass
 
         children.extend([header_line, metrics_line])
         if summary_el:
