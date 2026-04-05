@@ -17,3 +17,8 @@ DB_PATH = PROJECT_ROOT / "highbourne.db"
 # App
 APP_PORT = int(os.environ.get("HIGHBOURNE_PORT", "8050"))
 APP_DEBUG = os.environ.get("HIGHBOURNE_DEBUG", "false").lower() == "true"
+
+# LLM (Groq — OpenAI-compatible, free tier)
+GROQ_API_KEY = os.environ.get("GROQ_API_KEY", "")
+GROQ_BASE_URL = "https://api.groq.com/openai/v1"
+GROQ_MODEL = "llama-3.1-8b-instant"

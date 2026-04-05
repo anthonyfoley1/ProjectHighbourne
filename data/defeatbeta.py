@@ -194,6 +194,118 @@ def get_fundamentals(symbol: str) -> Dict[str, pd.DataFrame]:
 
 
 # ---------------------------------------------------------------------------
+# LLM-powered earnings analysis (via Groq)
+# ---------------------------------------------------------------------------
+
+_llm_client = None
+
+def _get_llm():
+    """Get or create the Groq OpenAI-compatible client."""
+    global _llm_client
+    if _llm_client is None:
+        try:
+            from openai import OpenAI
+            from config import GROQ_API_KEY, GROQ_BASE_URL
+            _llm_client = OpenAI(api_key=GROQ_API_KEY, base_url=GROQ_BASE_URL)
+        except Exception as e:
+            log.warning(f"Could not initialize Groq LLM client: {e}")
+            return None
+    return _llm_client
+
+
+def _get_llm_config():
+    """Get OpenAI config tuned for Groq."""
+    from defeatbeta_api.client.openai_conf import OpenAIConfiguration
+    from config import GROQ_MODEL
+    return OpenAIConfiguration(model=GROQ_MODEL, temperature=0)
+
+
+def get_earnings_summary(symbol: str, fiscal_year: int, fiscal_quarter: int) -> Optional[str]:
+    """Get LLM-generated summary of an earnings call.
+
+    Uses Groq directly with a simple prompt (bypasses DefeatBeta's tool-call schema
+    which Groq rejects). Returns a summary string or None.
+    """
+    t = _get_ticker(symbol)
+    llm = _get_llm()
+    if t is None or llm is None:
+        return None
+    try:
+        tc = t.earning_call_transcripts()
+        transcript_df = tc.get_transcript(fiscal_year, fiscal_quarter)
+        if transcript_df is None or transcript_df.empty:
+            return None
+
+        # Build condensed transcript (take key paragraphs to fit context)
+        lines = []
+        for _, row in transcript_df.iterrows():
+            speaker = row.get("speaker", "")
+            content = row.get("content", "")
+            if content and len(content) > 20:
+                lines.append(f"{speaker}: {content}")
+        # Limit to ~8000 chars to fit Groq context
+        text = "\n".join(lines)
+        if len(text) > 8000:
+            text = text[:8000] + "\n...[truncated]"
+
+        from config import GROQ_MODEL
+        response = llm.chat.completions.create(
+            model=GROQ_MODEL,
+            messages=[{
+                "role": "user",
+                "content": f"""Summarize this {symbol} Q{fiscal_quarter} FY{fiscal_year} earnings call into these buckets:
+
+1. **Revenue & Growth**: key revenue figures, YoY growth, segment highlights
+2. **Profitability**: margins, EPS, any beats/misses vs estimates
+3. **Guidance**: forward-looking statements, next quarter expectations
+4. **Key Risks**: any concerns management flagged
+5. **Strategic Highlights**: major initiatives, M&A, product launches
+
+Be concise — 2-3 bullet points per bucket. Use actual numbers from the transcript.
+
+TRANSCRIPT:
+{text}"""
+            }],
+            temperature=0,
+            max_tokens=1000,
+        )
+        return response.choices[0].message.content
+    except Exception as e:
+        log.warning(f"Earnings summary failed for {symbol} Q{fiscal_quarter} FY{fiscal_year}: {e}")
+        return None
+
+
+def get_earnings_changes(symbol: str, fiscal_year: int, fiscal_quarter: int) -> Optional[pd.DataFrame]:
+    """Get LLM analysis of what changed this quarter vs prior."""
+    t = _get_ticker(symbol)
+    llm = _get_llm()
+    if t is None or llm is None:
+        return None
+    try:
+        tc = t.earning_call_transcripts()
+        result = tc.analyze_financial_metrics_change_for_this_quarter_with_ai(fiscal_year, fiscal_quarter, llm, config=_get_llm_config())
+        return result if result is not None and not result.empty else None
+    except Exception as e:
+        log.warning(f"Earnings changes analysis failed for {symbol}: {e}")
+        return None
+
+
+def get_earnings_forecast(symbol: str, fiscal_year: int, fiscal_quarter: int) -> Optional[pd.DataFrame]:
+    """Get LLM-generated forward-looking analysis from earnings call."""
+    t = _get_ticker(symbol)
+    llm = _get_llm()
+    if t is None or llm is None:
+        return None
+    try:
+        tc = t.earning_call_transcripts()
+        result = tc.analyze_financial_metrics_forecast_for_future_with_ai(fiscal_year, fiscal_quarter, llm, config=_get_llm_config())
+        return result if result is not None and not result.empty else None
+    except Exception as e:
+        log.warning(f"Earnings forecast analysis failed for {symbol}: {e}")
+        return None
+
+
+# ---------------------------------------------------------------------------
 # Company info, officers, news, industry ratios
 # ---------------------------------------------------------------------------
 
