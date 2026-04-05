@@ -16,8 +16,20 @@ from __future__ import annotations
 from typing import Dict, Optional
 
 import pandas as pd
+import logging
 
 from defeatbeta_api.data.ticker import Ticker
+from defeatbeta_api.client.duckdb_client import Configuration
+
+# Optimized config — on-disk cache, persistent connections, metadata caching
+_CONFIG = Configuration(
+    memory_limit="80%",
+    http_keep_alive=True,
+    http_timeout=60,
+    http_retries=3,
+    cache_httpfs_type="on_disk",
+    parquet_metadata_cache=True,
+)
 
 # ---------------------------------------------------------------------------
 # Ticker-object cache (one instance per symbol, lightweight)
@@ -30,7 +42,7 @@ def _get_ticker(symbol: str) -> Optional[Ticker]:
     """Get or create a DefeatBeta Ticker object.  Cached per symbol."""
     if symbol not in _ticker_cache:
         try:
-            _ticker_cache[symbol] = Ticker(symbol)
+            _ticker_cache[symbol] = Ticker(symbol, log_level=logging.WARNING, config=_CONFIG)
         except Exception:
             return None
     return _ticker_cache[symbol]
