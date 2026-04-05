@@ -896,28 +896,19 @@ def _build_rv_summary_table(symbol):
 
 
 def _build_rv_controls(symbol):
-    """RV summary table + ratio/window selectors + RV chart."""
-    # Compact controls: ratio selector + window toggle
+    """RV summary table + window selector + RV chart. Ratio selected via table rows."""
+    # Hidden ratio RadioItems — updated by JavaScript when table rows are clicked
+    hidden_ratio = dcc.RadioItems(
+        id="ratio-dropdown",
+        options=[{"label": r, "value": r} for r in RATIO_NAMES],
+        value="P/E",
+        style={"display": "none"},
+    )
+
+    # Window toggle only
     window_row = html.Div(
-        style={"display": "flex", "gap": "12px", "alignItems": "center", "marginBottom": "6px",
-               "borderTop": f"1px solid {C['border']}", "paddingTop": "6px"},
+        style={"display": "flex", "gap": "12px", "alignItems": "center", "marginBottom": "6px"},
         children=[
-            html.Label("SELECT RATIO", style={"color": C["orange"], "fontSize": "8px", "marginRight": "4px",
-                                        "fontFamily": FONT_FAMILY, "fontWeight": "bold"}),
-            dcc.RadioItems(
-                id="ratio-dropdown",
-                options=[{"label": r, "value": r} for r in RATIO_NAMES],
-                value="P/E",
-                inline=True,
-                inputStyle={"display": "none"},
-                labelStyle={
-                    "padding": "4px 10px", "fontSize": "10px", "cursor": "pointer",
-                    "fontFamily": FONT_FAMILY, "border": f"1px solid {C['border']}",
-                    "marginRight": "2px", "color": C["cyan"], "background": "#000",
-                },
-                className="bbg-period-selector",
-            ),
-            html.Span("|", style={"color": C["border"], "margin": "0 8px"}),
             html.Label("WINDOW", style={"color": C["orange"], "fontSize": "8px", "marginRight": "4px",
                                         "fontFamily": FONT_FAMILY, "fontWeight": "bold"}),
             dcc.RadioItems(
@@ -938,6 +929,7 @@ def _build_rv_controls(symbol):
 
     return html.Div([
         _build_rv_summary_table(symbol),
+        hidden_ratio,
         window_row,
         html.Div(id="rv-chart-container"),
     ], style=PANEL_STYLE)
