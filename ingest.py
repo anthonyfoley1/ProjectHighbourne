@@ -348,6 +348,24 @@ def main():
     )
     print(f"   {db.table_count('screener')} tickers in screener")
 
+    # Fetch short interest for top 50 cheapest + richest
+    print("   Fetching short interest for top movers...")
+    import yfinance as yf
+    screener_df = db.query("SELECT symbol, z_score FROM screener ORDER BY z_score ASC")
+    top_tickers = screener_df.head(25)["symbol"].tolist() + screener_df.tail(25)["symbol"].tolist()
+    si_count = 0
+    for sym in top_tickers:
+        try:
+            info = yf.Ticker(sym).info
+            si = info.get("shortPercentOfFloat")
+            if si is not None:
+                db.execute("UPDATE screener SET short_interest=? WHERE symbol=?",
+                          (round(si * 100, 1), sym))
+                si_count += 1
+        except Exception:
+            continue
+    print(f"   Short interest populated for {si_count} tickers")
+
     # ------------------------------------------------------------------
     # Step 8: Market risk
     # ------------------------------------------------------------------
