@@ -122,6 +122,18 @@ def get_ratios(symbol: str) -> Dict[str, pd.Series]:
     except Exception:
         pass
 
+    # EV/EBITDA --------------------------------------------------------------
+    try:
+        ev_eb = t.enterprise_to_ebitda()
+        if ev_eb is not None and not ev_eb.empty and "ev_to_ebitda" in ev_eb.columns:
+            ev_eb["report_date"] = pd.to_datetime(ev_eb["report_date"])
+            s = ev_eb.set_index("report_date")["ev_to_ebitda"].dropna().sort_index()
+            s = s[s > 0]
+            if len(s) > _MIN_POINTS:
+                result["EV/EBITDA"] = s
+    except Exception:
+        pass
+
     return result
 
 
