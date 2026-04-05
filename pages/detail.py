@@ -1,7 +1,8 @@
 """Detail page -- per-ticker deep-dive view for the Highbourne Terminal."""
 
 from datetime import datetime
-from dash import html, dcc, callback, Input, Output, State
+import dash
+from dash import html, dcc, callback, Input, Output, State, ALL
 import plotly.graph_objects as go
 import pandas as pd
 import numpy as np
@@ -830,7 +831,12 @@ def _build_rv_summary_table(symbol):
         ], style={"width": "100px", "display": "inline-block"})
 
         rows.append(html.Tr([
-            html.Td(ratio_name, style={**cell, "color": C["white"], "fontWeight": "bold"}),
+            html.Td(
+                html.Span(ratio_name, id={"type": "rv-ratio-select", "index": ratio_name},
+                           style={"cursor": "pointer", "color": C["cyan"], "fontWeight": "bold",
+                                  "textDecoration": "underline", "textDecorationColor": C["border"]}),
+                style=cell,
+            ),
             html.Td(f"{current:.1f}x", style={**cell, "color": val_color, "fontWeight": "bold", "textAlign": "right"}),
             html.Td(f"{mean:.1f}x", style={**cell, "color": C["orange"], "textAlign": "right"}),
             html.Td(f"{diff_pct:+.0f}%", style={**cell, "color": val_color, "textAlign": "right"}),
@@ -870,45 +876,42 @@ def _build_rv_summary_table(symbol):
 
 
 def _build_rv_controls(symbol):
-    """RV summary table + ratio dropdown + window toggle + RV chart."""
-    # Inline controls row: ratio dropdown + window toggle
-    controls_row = html.Div(
-        style={"display": "flex", "gap": "12px", "alignItems": "center", "marginBottom": "8px"},
+    """RV summary table (with clickable ratio rows) + window toggle + RV chart."""
+    # Hidden dropdown — updated by clicking ratio rows in the summary table
+    hidden_dropdown = dcc.Dropdown(
+        id="ratio-dropdown",
+        options=[{"label": r, "value": r} for r in RATIO_NAMES],
+        value="P/E",
+        style={"display": "none"},
+        clearable=False,
+    )
+
+    # Window toggle only
+    window_row = html.Div(
+        style={"display": "flex", "gap": "8px", "alignItems": "center", "marginBottom": "6px"},
         children=[
-            html.Div([
-                html.Label("RATIO", style={"color": C["gray"], "fontSize": "8px", "marginRight": "4px",
-                                           "fontFamily": FONT_FAMILY}),
-                dcc.Dropdown(
-                    id="ratio-dropdown",
-                    options=[{"label": r, "value": r} for r in RATIO_NAMES],
-                    value="P/E",
-                    style={"width": "120px", "backgroundColor": C["panel"], "fontFamily": FONT_FAMILY, "fontSize": "10px"},
-                    clearable=False,
-                ),
-            ], style={"display": "flex", "alignItems": "center"}),
-            html.Div([
-                html.Label("WINDOW", style={"color": C["gray"], "fontSize": "8px", "marginRight": "4px",
-                                            "fontFamily": FONT_FAMILY}),
-                dcc.RadioItems(
-                    id="window-toggle",
-                    options=WINDOW_OPTIONS,
-                    value="2Y",
-                    inline=True,
-                    inputStyle={"display": "none"},
-                    labelStyle={
-                        "padding": "3px 8px", "fontSize": "9px", "cursor": "pointer",
-                        "fontFamily": FONT_FAMILY, "border": f"1px solid {C['border']}",
-                        "marginRight": "2px", "color": C["gray"], "background": "#000",
-                    },
-                    className="bbg-period-selector",
-                ),
-            ], style={"display": "flex", "alignItems": "center"}),
+            html.Label("WINDOW", style={"color": C["gray"], "fontSize": "8px", "marginRight": "4px",
+                                        "fontFamily": FONT_FAMILY}),
+            dcc.RadioItems(
+                id="window-toggle",
+                options=WINDOW_OPTIONS,
+                value="2Y",
+                inline=True,
+                inputStyle={"display": "none"},
+                labelStyle={
+                    "padding": "3px 8px", "fontSize": "9px", "cursor": "pointer",
+                    "fontFamily": FONT_FAMILY, "border": f"1px solid {C['border']}",
+                    "marginRight": "2px", "color": C["gray"], "background": "#000",
+                },
+                className="bbg-period-selector",
+            ),
         ],
     )
 
     return html.Div([
+        hidden_dropdown,
         _build_rv_summary_table(symbol),
-        controls_row,
+        window_row,
         dcc.Graph(id="rv-chart", config={"displayModeBar": False}, style={"height": "320px"}),
         html.Div(id="rv-sector-attribution"),
     ], style=PANEL_STYLE)
@@ -992,7 +995,7 @@ def _build_earnings_chart(symbol):
             lines.append(f"Estimate: ${est:.2f}")
         if surp is not None:
             arrow = "▲" if surp >= 0 else "▼"
-            lines.append(f"Px Surprise: {arrow} {surp:+.1f}%")
+            lines.append(f"EPS Surprise: {arrow} {surp:+.1f}%")
 
         # 3-day price reaction
         q_date = e.get("quarter")
@@ -1007,7 +1010,7 @@ def _build_earnings_chart(symbol):
                         p_start = float(prices.iloc[pos])
                         p_end = float(prices.iloc[pos + 3])
                         ret_3d = (p_end - p_start) / p_start * 100
-                        lines.append(f"Px Surprise (3D): {ret_3d:+.1f}%")
+                        lines.append(f"Px Move (3D): {ret_3d:+.1f}%")
             except Exception:
                 pass
 
@@ -1361,6 +1364,26 @@ def update_price_chart(period, overlays, pathname):
 
     fig.update_layout(**layout_kwargs)
     return fig
+
+
+@callback(
+    Output("ratio-dropdown", "value"),
+    Input({"type": "rv-ratio-select", "index": dash.ALL}, "n_clicks"),
+    prevent_initial_call=True,
+)
+def select_ratio_from_table(n_clicks):
+    """Update hidden ratio dropdown when a ratio row in the summary table is clicked."""
+    ctx = dash.callback_context
+    if not ctx.triggered:
+        return dash.no_update
+    prop_id = ctx.triggered[0]["prop_id"]
+    # Extract the ratio name from the pattern-matching ID
+    import json as _json
+    try:
+        id_dict = _json.loads(prop_id.split(".")[0])
+        return id_dict["index"]
+    except Exception:
+        return dash.no_update
 
 
 @callback(

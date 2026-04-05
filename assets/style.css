@@ -554,6 +554,21 @@ div[class*="-ValueContainer"] { color: #e0e0e0 !important; }
 .dash-dropdown input,
 .dash-dropdown div { background-color: #1a1a1a; color: #e0e0e0; }
 
+/* Dash 4.x uses css modules — target by attribute */
+[data-dash-is-loading] div[class*="control"] { background: #1a1a1a !important; }
+
+/* Absolutely force white background away on ALL divs that have white bg */
+.dash-dropdown div,
+.Select div,
+div[id*="dropdown"] div,
+div[id*="ratio"] div,
+div[id*="sector"] div,
+div[id*="filter"] div {
+    background-color: #1a1a1a !important;
+    color: #e0e0e0 !important;
+    border-color: #444 !important;
+}
+
 /* --- Marquee Animation ----------------------------------------- */
 @keyframes marquee {
     0% { transform: translateX(0%); }
