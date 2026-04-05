@@ -557,6 +557,19 @@ div[class*="-ValueContainer"] { color: #e0e0e0 !important; }
 /* Dash 4.x uses css modules — target by attribute */
 [data-dash-is-loading] div[class*="control"] { background: #1a1a1a !important; }
 
+/* Dark dropdown — class-based targeting */
+.dark-dropdown,
+.dark-dropdown > div,
+.dark-dropdown > div > div,
+.dark-dropdown > div > div > div,
+.dark-dropdown input,
+.dark-dropdown span {
+    background-color: #1a1a1a !important;
+    background: #1a1a1a !important;
+    color: #e0e0e0 !important;
+    border-color: #444 !important;
+}
+
 /* Absolutely force white background away on ALL divs that have white bg */
 .dash-dropdown div,
 .Select div,

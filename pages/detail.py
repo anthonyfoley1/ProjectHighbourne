@@ -2,7 +2,7 @@
 
 from datetime import datetime
 import dash
-from dash import html, dcc, callback, Input, Output, State, ALL
+from dash import html, dcc, callback, Input, Output, State
 import plotly.graph_objects as go
 import pandas as pd
 import numpy as np
@@ -837,7 +837,7 @@ def _build_rv_summary_table(symbol):
 
         rows.append(html.Tr([
             html.Td(
-                html.Span(ratio_name, id={"type": "rv-ratio-select", "index": ratio_name},
+                html.Span(ratio_name, id=f"rv-select-{ratio_name.replace('/', '-')}",
                            style={"cursor": "pointer", "color": C["cyan"], "fontWeight": "bold",
                                   "textDecoration": "underline", "textDecorationColor": C["border"]}),
                 style=cell,
@@ -1375,22 +1375,21 @@ def update_price_chart(period, overlays, pathname):
 
 @callback(
     Output("ratio-dropdown", "value"),
-    Input({"type": "rv-ratio-select", "index": dash.ALL}, "n_clicks"),
+    [Input(f"rv-select-{r.replace('/', '-')}", "n_clicks") for r in RATIO_NAMES],
     prevent_initial_call=True,
 )
-def select_ratio_from_table(n_clicks):
+def select_ratio_from_table(*args):
     """Update hidden ratio dropdown when a ratio row in the summary table is clicked."""
     ctx = dash.callback_context
     if not ctx.triggered:
         return dash.no_update
     prop_id = ctx.triggered[0]["prop_id"]
-    # Extract the ratio name from the pattern-matching ID
-    import json as _json
-    try:
-        id_dict = _json.loads(prop_id.split(".")[0])
-        return id_dict["index"]
-    except Exception:
-        return dash.no_update
+    # Extract ratio from button ID: "rv-select-P-E.n_clicks" -> "P/E"
+    btn_id = prop_id.split(".")[0]
+    ratio = btn_id.replace("rv-select-", "").replace("-", "/")
+    if ratio in RATIO_NAMES:
+        return ratio
+    return dash.no_update
 
 
 @callback(

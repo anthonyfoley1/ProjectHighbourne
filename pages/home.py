@@ -158,6 +158,7 @@ def _build_filter_bar():
                 options=sector_options,
                 value="All",
                 clearable=False,
+                className="dark-dropdown",
                 style=dropdown_style,
             ),
         ], style={"display": "flex", "alignItems": "center", "marginRight": "20px"}),
