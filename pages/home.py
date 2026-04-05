@@ -260,7 +260,7 @@ def _build_convergence_screen():
             body_rows.append(html.Tr([
                 html.Td(str(i), style={**_TD, "color": C["gray"]}),
                 html.Td([
-                    html.Div(item["symbol"], style={"color": C["white"], "fontWeight": "bold", "fontSize": "10px"}),
+                    html.A(item["symbol"], href=f"/detail/{item['symbol']}", style={"color": C["white"], "fontWeight": "bold", "fontSize": "10px", "textDecoration": "none"}),
                     html.Div(item["name"][:20], style={"color": C["gray"], "fontSize": "8px"}),
                 ], style={**_TD, "padding": "2px 4px"}),
                 html.Td(item["sector"][:12], style={**_TD, "color": C["gray"]}),
