@@ -12,6 +12,21 @@ PREFERRED_SOURCES = ["Reuters", "Bloomberg", "CNBC", "Dow Jones", "WSJ",
                      "Wall Street Journal", "Financial Times", "Barron's", "MarketWatch"]
 DEPRIORITIZED = ["Yahoo", "Motley Fool", "Seeking Alpha", "Benzinga"]
 
+# Filter out clickbait/listicle headlines
+SPAM_KEYWORDS = [
+    "best stocks to", "top stocks to", "stocks to buy", "buy now",
+    "top picks", "must-buy", "don't miss", "millionaire", "retire early",
+    "get rich", "best investment", "hot stocks", "penny stocks",
+    "stocks to watch today", "best stocks for", "top investment",
+    "should you buy", "is it time to buy", "stocks under $",
+]
+
+
+def _is_spam(headline):
+    """Return True if headline looks like clickbait."""
+    h = headline.lower()
+    return any(kw in h for kw in SPAM_KEYWORDS)
+
 
 def _source_score(source):
     source_lower = source.lower()
@@ -56,6 +71,7 @@ def fetch_market_news(category="general", limit=20):
                 "age": age,
                 "summary": a.get("summary", ""),
             })
+        results = [r for r in results if not _is_spam(r.get("headline", ""))]
         results.sort(key=lambda x: _source_score(x.get("source", "")), reverse=True)
         return results
     except Exception as e:
@@ -90,6 +106,7 @@ def fetch_company_news(symbol, days_back=3, limit=5):
                 "age": age,
                 "summary": a.get("summary", ""),
             })
+        results = [r for r in results if not _is_spam(r.get("headline", ""))]
         results.sort(key=lambda x: _source_score(x.get("source", "")), reverse=True)
         return results
     except Exception as e:
