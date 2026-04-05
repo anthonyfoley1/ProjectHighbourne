@@ -745,8 +745,8 @@ def layout():
 
         html.Div([
             _build_headline_bar(),
-            _build_filter_bar(),
             _build_convergence_screen(),
+            _build_filter_bar(),
             build_screener_table(),
             _build_gainers_losers_bar(),
             _build_movers_panel(),
