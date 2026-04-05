@@ -52,14 +52,28 @@ def update_search_suggestions(query):
     if not query or len(query) < 2:
         return dash.no_update, dash.no_update
 
-    query_lower = query.lower()
-    matches = []
+    query_lower = query.lower().strip()
+
+    # Priority buckets: exact ticker > ticker starts-with > name starts-with > name contains
+    exact = []
+    ticker_prefix = []
+    name_prefix = []
+    name_contains = []
 
     for ticker, name in startup.ticker_name.items():
-        if query_lower in ticker.lower() or query_lower in (name or "").lower():
-            matches.append((ticker, name or ""))
-        if len(matches) >= 8:
-            break
+        t_lower = ticker.lower()
+        n_lower = (name or "").lower()
+
+        if t_lower == query_lower:
+            exact.append((ticker, name or ""))
+        elif t_lower.startswith(query_lower):
+            ticker_prefix.append((ticker, name or ""))
+        elif n_lower.startswith(query_lower):
+            name_prefix.append((ticker, name or ""))
+        elif query_lower in n_lower or query_lower in t_lower:
+            name_contains.append((ticker, name or ""))
+
+    matches = (exact + ticker_prefix + name_prefix + name_contains)[:10]
 
     if not matches:
         return [], {"display": "none"}

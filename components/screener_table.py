@@ -148,7 +148,6 @@ def build_screener_table(df=None):
     header = html.Tr([
         html.Th("", style={**_HEADER, "width": "20px"}),
         html.Th("TICKER", style=_HEADER),
-        html.Th("NAME", style=_HEADER),
         html.Th("SECTOR", style=_HEADER),
         html.Th("RV", style=_HEADER),
         html.Th("Z-SCR", style=_HEADER),
@@ -215,14 +214,14 @@ def build_screener_table(df=None):
         row = html.Tr([
             html.Td(icon, style=_CELL),
             html.Td(
-                html.A(sym, href=f"/detail/{sym}",
-                       style={"color": "#fff", "fontWeight": "bold", "textDecoration": "none"}),
+                html.A([
+                    html.Div(sym, style={"fontWeight": "bold", "fontSize": "10px"}),
+                    html.Div(r.get("name", ""), style={"fontSize": "7px", "color": C["dim"],
+                             "maxWidth": "100px", "overflow": "hidden", "textOverflow": "ellipsis",
+                             "whiteSpace": "nowrap", "lineHeight": "1.2"}),
+                ], href=f"/detail/{sym}", style={"color": "#fff", "textDecoration": "none"}),
                 style=_CELL,
             ),
-            html.Td(r.get("name", ""), style={
-                **_CELL, "color": C["gray"], "fontSize": "9px",
-                "maxWidth": "120px", "overflow": "hidden", "textOverflow": "ellipsis",
-            }),
             html.Td(r["sector"], style={**_CELL, "color": C["dim"], "fontSize": "9px"}),
             html.Td(r["rv_sig"], style={**_CELL, "color": C["green"] if z < 0 else C["orange"]}),
             html.Td(f"{z:.1f}", style={**_CELL, "color": z_color, "fontWeight": "bold"}),
