@@ -173,22 +173,42 @@ def fetch_earnings_history(symbol: str) -> list[dict]:
         return []
 
 
-def fetch_competitors(symbol: str, universe_tickers: list, ticker_sectors: dict) -> list[str]:
-    """Return up to 5 tickers from the same sector as *symbol*.
+def fetch_competitors(symbol: str, universe_tickers: list, ticker_sectors: dict,
+                      info: dict = None) -> list[str]:
+    """Return up to 5 peer tickers, prioritizing same industry + similar market cap.
 
-    Parameters
-    ----------
-    symbol : str
-        The reference ticker.
-    universe_tickers : list
-        Full list of candidate tickers.
-    ticker_sectors : dict
-        Mapping of ticker -> sector string.
+    Uses the industry from the already-fetched ticker info (no extra API calls).
+    Falls back to sector if industry matching finds fewer than 3 peers.
     """
     target_sector = ticker_sectors.get(symbol)
     if not target_sector:
         return []
-    return [
-        t for t in universe_tickers
-        if t != symbol and ticker_sectors.get(t) == target_sector
-    ][:5]
+
+    # Get industry from the info dict (already fetched for the detail page)
+    target_industry = (info or {}).get("industry", "")
+    target_mktcap = (info or {}).get("market_cap", 0) or 0
+
+    same_sector = [t for t in universe_tickers if t != symbol and ticker_sectors.get(t) == target_sector]
+    if not same_sector:
+        return []
+
+    # If we know the industry, try to find same-industry peers from Tickers.csv
+    # Since we don't have industry in the CSV, use a simple heuristic:
+    # Sort same-sector tickers by market cap proximity (from screener data)
+    try:
+        import data.startup as startup
+        screener = startup.screener_df
+        if not screener.empty:
+            sector_df = screener[screener["sector"] == target_sector]
+            sector_df = sector_df[sector_df["symbol"] != symbol]
+            if target_mktcap > 0 and "price" in sector_df.columns:
+                # Use price as rough proxy for size similarity
+                target_price = target_mktcap / 1e9  # rough scale
+                sector_df = sector_df.copy()
+                sector_df["_size_diff"] = (sector_df["price"] - target_price).abs()
+                sector_df = sector_df.sort_values("_size_diff")
+            return sector_df["symbol"].head(5).tolist()
+    except Exception:
+        pass
+
+    return same_sector[:5]

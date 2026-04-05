@@ -339,7 +339,7 @@ def _build_description(info, symbol, barometer_data=None):
             details.extend(exec_items)
 
     try:
-        competitors = fetch_competitors(symbol, startup.universe.symbols, startup.ticker_sector)
+        competitors = fetch_competitors(symbol, startup.universe.symbols, startup.ticker_sector, info=info)
     except Exception:
         competitors = []
 
