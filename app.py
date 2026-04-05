@@ -50,7 +50,7 @@ def search_navigate(n_submit, value):
 )
 def update_search_suggestions(query):
     if not query or len(query) < 2:
-        return [], {"display": "none"}
+        return dash.no_update, dash.no_update
 
     query_lower = query.lower()
     matches = []
@@ -103,4 +103,4 @@ import data.startup as startup
 startup.init()
 
 if __name__ == "__main__":
-    app.run(debug=False, port=8050)
+    app.run(debug=True, use_reloader=False, port=8050)
