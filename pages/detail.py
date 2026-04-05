@@ -929,13 +929,13 @@ def _build_technicals_section(prices, symbol):
                                                "letterSpacing": "1px", "marginBottom": "4px"}),
         html.Div([
             html.Span("RSI ", style={"color": C["orange"], "fontSize": "9px", "fontWeight": "bold"}),
-            html.Span("[?]", title=rsi_tooltip, style={"color": C["dim"], "fontSize": "9px", "cursor": "help", "marginLeft": "4px"}),
+            html.Span("i", title=rsi_tooltip, style={"color": C["dim"], "fontSize": "8px", "cursor": "help", "marginLeft": "4px", "border": f"1px solid {C['dim']}", "borderRadius": "50%", "width": "14px", "height": "14px", "display": "inline-flex", "alignItems": "center", "justifyContent": "center", "fontStyle": "italic"}),
         ], style={"marginBottom": "2px"}),
         dcc.Graph(id="ta-rsi-chart", figure=_build_ta_rsi_chart(prices, symbol),
                   config={"displayModeBar": False}, style={"height": "300px", "marginBottom": "4px"}),
         html.Div([
             html.Span("MACD ", style={"color": C["orange"], "fontSize": "9px", "fontWeight": "bold"}),
-            html.Span("[?]", title=macd_tooltip, style={"color": C["dim"], "fontSize": "9px", "cursor": "help", "marginLeft": "4px"}),
+            html.Span("i", title=macd_tooltip, style={"color": C["dim"], "fontSize": "8px", "cursor": "help", "marginLeft": "4px", "border": f"1px solid {C['dim']}", "borderRadius": "50%", "width": "14px", "height": "14px", "display": "inline-flex", "alignItems": "center", "justifyContent": "center", "fontStyle": "italic"}),
         ], style={"marginBottom": "2px"}),
         dcc.Graph(id="ta-macd-chart", figure=_build_ta_macd_chart(prices, symbol),
                   config={"displayModeBar": False}, style={"height": "300px"}),
