@@ -23,6 +23,9 @@ from components.barometer import compute_barometer, build_barometer
 from theme import C, FONT_FAMILY, CONTAINER_STYLE, header_bar, function_key_bar, stat_card
 from components.charts import make_chart_layout, empty_fig
 from utils.formatters import fmt_val, fmt_large, fmt_pct, fmt_price, fmt_date_friendly, fmt_volume
+from data.defeatbeta import (
+    get_earnings_transcripts, get_sec_filings, get_defeatbeta_news,
+)
 
 # ---------------------------------------------------------------------------
 # Constants
@@ -472,11 +475,29 @@ def _build_peers_ratios(symbol, competitors):
 
 
 def _build_news(info, symbol=None):
-    """Recent news section — uses Finnhub for real-time news, falls back to yfinance."""
+    """Recent news, SEC filings, and earnings transcripts section."""
     from data.news import fetch_company_news
 
+    sub_label = {
+        "color": C["orange"], "fontSize": "9px", "fontWeight": "bold",
+        "letterSpacing": "1px", "marginBottom": "4px", "marginTop": "10px",
+    }
+    section_children = [
+        html.Div("RECENT NEWS & FILINGS", style={
+            "color": C["orange"], "fontSize": "10px", "fontWeight": "bold",
+            "letterSpacing": "1px", "marginBottom": "6px",
+            "borderBottom": f"2px solid {C['orange']}", "paddingBottom": "4px",
+        }),
+    ]
+
+    has_content = False
+
+    # ------------------------------------------------------------------
+    # 1) NEWS  (Finnhub -> DefeatBeta -> yfinance fallback)
+    # ------------------------------------------------------------------
     news_items = []
     if symbol:
+        # Finnhub first
         try:
             articles = fetch_company_news(symbol, days_back=5, limit=5)
             for a in articles:
@@ -487,7 +508,21 @@ def _build_news(info, symbol=None):
         except Exception:
             pass
 
-    # Fallback to yfinance news if Finnhub returned nothing
+        # DefeatBeta news if Finnhub returned nothing
+        if not news_items:
+            try:
+                db_news = get_defeatbeta_news(symbol, limit=5)
+                for n in db_news:
+                    news_items.append({
+                        "title": n.get("title", ""),
+                        "link": n.get("link", "#"),
+                        "publisher": n.get("publisher", ""),
+                        "age": n.get("report_date", ""),
+                    })
+            except Exception:
+                pass
+
+    # yfinance fallback
     if not news_items:
         for n in (info.get("news") or [])[:3]:
             news_items.append({
@@ -495,22 +530,86 @@ def _build_news(info, symbol=None):
                 "publisher": n.get("publisher", ""), "age": "",
             })
 
-    if not news_items:
+    if news_items:
+        has_content = True
+        section_children.append(html.Div("NEWS", style=sub_label))
+        for n in news_items:
+            age = n.get("age", "")
+            section_children.append(html.Div([
+                html.A(n["title"], href=n["link"], target="_blank",
+                       style={"color": "#6699cc", "textDecoration": "none", "fontSize": "10px"}),
+                html.Span(f"  {n['publisher']}", style={"color": C["gray"], "fontSize": "9px"}),
+                html.Span(f"  {age}", style={"color": "#555", "fontSize": "9px"}) if age else None,
+            ], style={"marginBottom": "3px", "borderBottom": f"1px solid {C['border']}", "paddingBottom": "3px"}))
+
+    # ------------------------------------------------------------------
+    # 2) SEC FILINGS
+    # ------------------------------------------------------------------
+    if symbol:
+        try:
+            filings = get_sec_filings(symbol, limit=8)
+        except Exception:
+            filings = []
+
+        if filings:
+            has_content = True
+            section_children.append(html.Div("SEC FILINGS", style=sub_label))
+
+            filing_hdr_style = {
+                "display": "grid", "gridTemplateColumns": "60px 1fr 120px",
+                "padding": "3px 0", "borderBottom": f"1px solid {C['orange']}",
+                "fontSize": "8px", "fontWeight": "bold", "color": C["orange"],
+                "fontFamily": FONT_FAMILY,
+            }
+            section_children.append(html.Div([
+                html.Span("Type"), html.Span("Description"), html.Span("Filed", style={"textAlign": "right"}),
+            ], style=filing_hdr_style))
+
+            for f in filings:
+                filed = f.get("filing_date", "")
+                url = f.get("filing_url", "#")
+                section_children.append(html.Div([
+                    html.Span(f.get("form_type", ""), style={"color": C["white"], "fontWeight": "bold"}),
+                    html.A(f.get("form_type_description", ""), href=url, target="_blank",
+                           style={"color": "#6699cc", "textDecoration": "none"}),
+                    html.Span(filed, style={"textAlign": "right", "color": C["gray"]}),
+                ], style={
+                    "display": "grid", "gridTemplateColumns": "60px 1fr 120px",
+                    "padding": "3px 0", "borderBottom": f"1px solid {C['border']}",
+                    "fontSize": "10px", "fontFamily": FONT_FAMILY,
+                }))
+
+    # ------------------------------------------------------------------
+    # 3) EARNINGS TRANSCRIPTS
+    # ------------------------------------------------------------------
+    if symbol:
+        try:
+            transcripts = get_earnings_transcripts(symbol)[:8]
+        except Exception:
+            transcripts = []
+
+        if transcripts:
+            has_content = True
+            section_children.append(html.Div("EARNINGS TRANSCRIPTS", style=sub_label))
+
+            for tc in transcripts:
+                fy = tc.get("fiscal_year", "")
+                fq = tc.get("fiscal_quarter", "")
+                rd = tc.get("report_date", "")
+                label = f"Q{fq} FY{fy} Earnings Call"
+                section_children.append(html.Div([
+                    html.Span(label, style={"color": C["white"], "fontSize": "10px"}),
+                    html.Span(rd, style={"color": C["gray"], "fontSize": "10px", "marginLeft": "auto"}),
+                ], style={
+                    "display": "flex", "justifyContent": "space-between",
+                    "padding": "3px 0", "borderBottom": f"1px solid {C['border']}",
+                    "fontFamily": FONT_FAMILY,
+                }))
+
+    if not has_content:
         return html.Div()
 
-    children = [
-        html.Div("RECENT NEWS", style={"color": C["orange"], "fontSize": "9px", "fontWeight": "bold",
-                                        "letterSpacing": "1px", "marginBottom": "4px"}),
-    ]
-    for n in news_items:
-        age = n.get("age", "")
-        children.append(html.Div([
-            html.A(n["title"], href=n["link"], target="_blank",
-                   style={"color": "#6699cc", "textDecoration": "none", "fontSize": "10px"}),
-            html.Span(f"  {n['publisher']}", style={"color": C["gray"], "fontSize": "9px"}),
-            html.Span(f"  {age}", style={"color": "#555", "fontSize": "9px"}) if age else None,
-        ], style={"marginBottom": "3px", "borderBottom": f"1px solid {C['border']}", "paddingBottom": "3px"}))
-    return html.Div(children, style={**PANEL_STYLE, "marginBottom": "8px"})
+    return html.Div(section_children, style={**PANEL_STYLE, "marginBottom": "8px"})
 
 
 def _build_price_section(info, prices):

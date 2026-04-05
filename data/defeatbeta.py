@@ -258,6 +258,122 @@ def get_industry_ratios(symbol):
 
 
 # ---------------------------------------------------------------------------
+# Earnings transcripts, SEC filings, earnings calendar
+# ---------------------------------------------------------------------------
+
+def get_earnings_transcripts(symbol: str) -> list:
+    """Get available earnings-call transcript metadata.
+
+    Returns a list of dicts with keys:
+        fiscal_year, fiscal_quarter, report_date
+    Most-recent first.  Empty list on failure.
+    """
+    t = _get_ticker(symbol)
+    if t is None:
+        return []
+    try:
+        tc = t.earning_call_transcripts()
+        if tc is None:
+            return []
+        tl = tc.get_transcripts_list()
+        if tl is None or tl.empty:
+            return []
+        # Keep only the columns we need and convert to list of dicts
+        cols = ["fiscal_year", "fiscal_quarter", "report_date"]
+        out = tl[cols].copy()
+        out["report_date"] = pd.to_datetime(out["report_date"]).dt.strftime("%Y-%m-%d")
+        return out.sort_values("report_date", ascending=False).to_dict("records")
+    except Exception:
+        return []
+
+
+def get_sec_filings(symbol: str, form_types=None, limit: int = 15) -> list:
+    """Get recent SEC filings.
+
+    Parameters
+    ----------
+    symbol : str
+    form_types : list[str] or None
+        Filing types to include, e.g. ``['10-K','10-Q','8-K']``.
+        Defaults to ``['10-K','10-Q','8-K']``.
+    limit : int
+        Max rows to return (most-recent first).
+
+    Returns list of dicts with keys:
+        form_type, form_type_description, filing_date, filing_url
+    """
+    if form_types is None:
+        form_types = ["10-K", "10-Q", "8-K"]
+    t = _get_ticker(symbol)
+    if t is None:
+        return []
+    try:
+        sf = t.sec_filing()
+        if sf is None or sf.empty:
+            return []
+        sf = sf[sf["form_type"].isin(form_types)].copy()
+        sf = sf.sort_values("filing_date", ascending=False).head(limit)
+        cols = ["form_type", "form_type_description", "filing_date", "filing_url"]
+        return sf[cols].to_dict("records")
+    except Exception:
+        return []
+
+
+def get_earnings_calendar(symbol: str):
+    """Get the next upcoming earnings date.
+
+    Returns a dict ``{"report_date": "YYYY-MM-DD", "time": "...", ...}``
+    or *None* if no future date is found.
+    """
+    t = _get_ticker(symbol)
+    if t is None:
+        return None
+    try:
+        cal = t.calendar()
+        if cal is None or cal.empty:
+            return None
+        cal["report_date"] = pd.to_datetime(cal["report_date"])
+        today = pd.Timestamp.now().normalize()
+        future = cal[cal["report_date"] >= today].sort_values("report_date")
+        if future.empty:
+            # Return most recent if no future date
+            row = cal.sort_values("report_date", ascending=False).iloc[0]
+        else:
+            row = future.iloc[0]
+        return {
+            "report_date": row["report_date"].strftime("%Y-%m-%d"),
+            "time": row.get("time", ""),
+            "fiscal_quarter_ending": str(row.get("fiscal_quarter_ending", "")),
+        }
+    except Exception:
+        return None
+
+
+def get_defeatbeta_news(symbol: str, limit: int = 10) -> list:
+    """Get news articles from DefeatBeta.
+
+    Returns list of dicts with keys:
+        title, publisher, report_date, link, type
+    Most-recent first.
+    """
+    t = _get_ticker(symbol)
+    if t is None:
+        return []
+    try:
+        news_obj = t.news()
+        if news_obj is None:
+            return []
+        nl = news_obj.get_news_list()
+        if nl is None or nl.empty:
+            return []
+        nl = nl.sort_values("report_date", ascending=False).head(limit)
+        cols = ["title", "publisher", "report_date", "link", "type"]
+        return nl[cols].to_dict("records")
+    except Exception:
+        return []
+
+
+# ---------------------------------------------------------------------------
 # Health check
 # ---------------------------------------------------------------------------
 
