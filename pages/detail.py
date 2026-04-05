@@ -223,7 +223,10 @@ def _compute_period_returns(prices, price_val):
     """Compute YTD and 1-year returns."""
     ytd_ret = y1_ret = None
     if prices is not None and len(prices) > 252:
-        ytd_start = prices.index[prices.index >= pd.Timestamp(datetime(datetime.now().year, 1, 1))]
+        ytd_ts = pd.Timestamp(datetime(datetime.now().year, 1, 1))
+        if prices.index.tz is not None:
+            ytd_ts = ytd_ts.tz_localize(prices.index.tz)
+        ytd_start = prices.index[prices.index >= ytd_ts]
         if len(ytd_start) > 0:
             ytd_ret = (price_val - float(prices.loc[ytd_start[0]])) / float(prices.loc[ytd_start[0]])
         y1_ret = (price_val - float(prices.iloc[-252])) / float(prices.iloc[-252])
@@ -683,6 +686,8 @@ def _build_earnings_data_table(symbol):
         if q_label and prices is not None and len(prices) > 5:
             try:
                 er_date = pd.Timestamp(q_label)
+                if prices.index.tz is not None:
+                    er_date = er_date.tz_localize(prices.index.tz)
                 mask = prices.index >= er_date
                 if mask.any():
                     idx_start = prices.index[mask][0]
@@ -1002,6 +1007,8 @@ def _build_earnings_chart(symbol):
         if q_date and prices is not None and len(prices) > 5:
             try:
                 er_date = pd.Timestamp(q_date)
+                if prices.index.tz is not None:
+                    er_date = er_date.tz_localize(prices.index.tz)
                 mask = prices.index >= er_date
                 if mask.any():
                     idx_start = prices.index[mask][0]
