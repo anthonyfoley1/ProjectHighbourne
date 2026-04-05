@@ -162,7 +162,7 @@ def layout(symbol="AAPL"):
     sec_news = _build_news(info, symbol=symbol)
     sec_price = _build_price_section(info, prices)
     sec_earnings = _build_earnings_section(symbol)
-    sec_financials = _build_financials_placeholder()
+    sec_financials = None
 
     # Stat cards
     sma50 = compute_sma(prices, 50) if prices is not None and len(prices) > 50 else pd.Series(dtype=float)
@@ -200,7 +200,6 @@ def layout(symbol="AAPL"):
         sec_news,
         sec_price,
         sec_earnings,
-        sec_financials,
         sec_stat_cards,
         sec_rv,
         sec_technicals,
@@ -939,8 +938,7 @@ def _build_rv_controls(symbol):
     return html.Div([
         _build_rv_summary_table(symbol),
         window_row,
-        dcc.Graph(id="rv-chart", config={"displayModeBar": False}, style={"height": "320px"}),
-        html.Div(id="rv-sector-attribution"),
+        html.Div(id="rv-chart-container"),
     ], style=PANEL_STYLE)
 
 
@@ -1398,8 +1396,7 @@ def update_price_chart(period, overlays, pathname):
 
 
 @callback(
-    Output("rv-chart", "figure"),
-    Output("rv-sector-attribution", "children"),
+    Output("rv-chart-container", "children"),
     Input("ratio-dropdown", "value"),
     Input("window-toggle", "value"),
     State("url", "pathname"),
@@ -1407,12 +1404,12 @@ def update_price_chart(period, overlays, pathname):
 def update_rv_chart(ratio_name, window_name, pathname):
     """Update the RV chart based on ratio and window selection."""
     if not pathname or "/detail/" not in pathname:
-        return empty_fig(), html.Div()
+        return [dcc.Graph(figure=empty_fig(), config={"displayModeBar": False}, style={"height": "320px"})]
     symbol = pathname.split("/detail/")[-1].upper()
 
     ticker_obj = startup.universe.get(symbol)
     if ticker_obj is None:
-        return empty_fig(f"{symbol} not found"), html.Div()
+        return [dcc.Graph(figure=empty_fig(f"{symbol} not found"), config={"displayModeBar": False}, style={"height": "320px"})]
 
     window_days = WINDOW_MAP.get(window_name)
     try:
@@ -1421,27 +1418,27 @@ def update_rv_chart(ratio_name, window_name, pathname):
         series = pd.Series(dtype=float)
 
     if series is None or len(series) < 10:
-        return empty_fig(f"Insufficient {ratio_name} data for {symbol}"), html.Div()
+        return [dcc.Graph(figure=empty_fig(f"Insufficient {ratio_name} data for {symbol}"), config={"displayModeBar": False}, style={"height": "320px"})]
 
     # Filter out negative and extreme values (e.g., EV/EBITDA when EBITDA near zero)
     # Only keep positive values and cap at a reasonable ceiling
     series = series[series > 0]
     if len(series) < 10:
-        return empty_fig(f"Insufficient positive {ratio_name} data for {symbol}"), html.Div()
+        return [dcc.Graph(figure=empty_fig(f"Insufficient positive {ratio_name} data for {symbol}"), config={"displayModeBar": False}, style={"height": "320px"})]
 
     # Remove extreme outliers: cap at 99th percentile to avoid chart distortion
     p99 = series.quantile(0.99)
     p01 = series.quantile(0.01)
     series = series[(series <= p99 * 1.5) & (series >= p01 * 0.5)]
     if len(series) < 10:
-        return empty_fig(f"Insufficient {ratio_name} data for {symbol}"), html.Div()
+        return [dcc.Graph(figure=empty_fig(f"Insufficient {ratio_name} data for {symbol}"), config={"displayModeBar": False}, style={"height": "320px"})]
 
     # Recompute stats on the cleaned series
     current = float(series.iloc[-1])
     mean = float(series.mean())
     std = float(series.std())
     if std == 0:
-        return empty_fig(f"No variation in {ratio_name} for {symbol}"), html.Div()
+        return [dcc.Graph(figure=empty_fig(f"No variation in {ratio_name} for {symbol}"), config={"displayModeBar": False}, style={"height": "320px"})]
 
     fig = go.Figure()
 
@@ -1607,4 +1604,7 @@ def update_rv_chart(ratio_name, window_name, pathname):
     except Exception:
         pass
 
-    return fig, sector_attr
+    return [
+        dcc.Graph(figure=fig, config={"displayModeBar": False}, style={"height": "320px"}),
+        sector_attr,
+    ]
