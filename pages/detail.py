@@ -25,6 +25,7 @@ from components.charts import make_chart_layout, empty_fig
 from utils.formatters import fmt_val, fmt_large, fmt_pct, fmt_price, fmt_date_friendly, fmt_volume
 from data.defeatbeta import (
     get_earnings_transcripts, get_sec_filings, get_defeatbeta_news,
+    get_recent_earnings,
 )
 
 # ---------------------------------------------------------------------------
@@ -474,6 +475,91 @@ def _build_peers_ratios(symbol, competitors):
     ]
 
 
+def _build_recent_earnings(symbol, sub_label):
+    """Build inline earnings summary for the last 2 quarters.
+
+    Returns a list of Dash components to extend into the news section.
+    """
+    try:
+        quarters = get_recent_earnings(symbol, n=2)
+    except Exception:
+        quarters = []
+
+    if not quarters:
+        return []
+
+    children = [html.Div("RECENT EARNINGS", style=sub_label)]
+
+    for q in quarters:
+        fy = q["fiscal_year"]
+        fq = q["fiscal_quarter"]
+        rd = q["report_date"]
+
+        # -- format revenue ---------------------------------------------------
+        rev = q.get("revenue")
+        rev_yoy = q.get("rev_yoy")
+        if rev is not None:
+            rev_b = rev / 1e9
+            rev_str = f"Rev: ${rev_b:,.1f}B"
+            if rev_yoy is not None:
+                sign = "+" if rev_yoy >= 0 else ""
+                rev_yoy_color = "#00cc66" if rev_yoy >= 0 else "#ff4444"
+                rev_str_full = html.Span([
+                    html.Span(rev_str, style={"color": C["white"]}),
+                    html.Span(f" ({sign}{rev_yoy:.1%} YoY)", style={"color": rev_yoy_color}),
+                ])
+            else:
+                rev_str_full = html.Span(rev_str, style={"color": C["white"]})
+        else:
+            rev_str_full = html.Span("Rev: --", style={"color": C["gray"]})
+
+        # -- format EPS -------------------------------------------------------
+        eps = q.get("eps")
+        if eps is not None:
+            eps_str = html.Span(f"EPS: ${eps:.2f}", style={"color": C["white"]})
+        else:
+            eps_str = html.Span("EPS: --", style={"color": C["gray"]})
+
+        # -- format operating margin ------------------------------------------
+        opm = q.get("op_margin")
+        if opm is not None:
+            opm_str = html.Span(f"Op Margin: {opm:.1%}", style={"color": C["white"]})
+        else:
+            opm_str = html.Span("Op Margin: --", style={"color": C["gray"]})
+
+        # -- format Px move ---------------------------------------------------
+        px = q.get("px_move")
+        if px is not None:
+            sign = "+" if px >= 0 else ""
+            px_color = "#00cc66" if px >= 0 else "#ff4444"
+            px_str = html.Span(f"Px Move: {sign}{px:.1%}", style={"color": px_color})
+        else:
+            px_str = html.Span("Px Move: --", style={"color": C["gray"]})
+
+        # Quarter header line
+        header_line = html.Div(
+            f"Q{fq} FY{fy} \u2014 {rd}",
+            style={
+                "color": C["orange"], "fontSize": "10px", "fontWeight": "bold",
+                "marginTop": "6px", "fontFamily": FONT_FAMILY,
+            },
+        )
+        # Metrics line
+        sep = html.Span("  \u2502  ", style={"color": C["border"], "fontSize": "10px"})
+        metrics_line = html.Div(
+            [rev_str_full, sep, eps_str, html.Span("  \u2502  ", style={"color": C["border"], "fontSize": "10px"}),
+             opm_str, html.Span("  \u2502  ", style={"color": C["border"], "fontSize": "10px"}), px_str],
+            style={
+                "fontSize": "10px", "fontFamily": FONT_FAMILY,
+                "padding": "2px 0 4px 8px",
+                "borderBottom": f"1px solid {C['border']}",
+            },
+        )
+        children.extend([header_line, metrics_line])
+
+    return children
+
+
 def _build_news(info, symbol=None):
     """Recent news, SEC filings, and earnings transcripts section."""
     from data.news import fetch_company_news
@@ -584,34 +670,13 @@ def _build_news(info, symbol=None):
                 }))
 
     # ------------------------------------------------------------------
-    # 3) EARNINGS TRANSCRIPTS
+    # 3) RECENT EARNINGS (inline key metrics for last 2 quarters)
     # ------------------------------------------------------------------
     if symbol:
-        try:
-            transcripts = get_earnings_transcripts(symbol)[:8]
-        except Exception:
-            transcripts = []
-
-        if transcripts:
+        earnings_components = _build_recent_earnings(symbol, sub_label)
+        if earnings_components:
+            section_children.extend(earnings_components)
             has_content = True
-            section_children.append(html.Div("EARNINGS TRANSCRIPTS", style=sub_label))
-
-            for tc in transcripts:
-                fy = tc.get("fiscal_year", "")
-                fq = tc.get("fiscal_quarter", "")
-                rd = tc.get("report_date", "")
-                label = f"Q{fq} FY{fy} Earnings Call"
-                # Link to Seeking Alpha transcript search (most reliable free source)
-                sa_link = f"https://seekingalpha.com/symbol/{symbol}/earnings/transcripts"
-                section_children.append(html.Div([
-                    html.A(label, href=sa_link, target="_blank",
-                           style={"color": "#6699cc", "textDecoration": "none", "fontSize": "10px"}),
-                    html.Span(rd, style={"color": C["gray"], "fontSize": "10px", "marginLeft": "auto"}),
-                ], style={
-                    "display": "flex", "justifyContent": "space-between",
-                    "padding": "3px 0", "borderBottom": f"1px solid {C['border']}",
-                    "fontFamily": FONT_FAMILY,
-                }))
 
     if not has_content:
         return html.Div()

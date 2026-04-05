@@ -319,6 +319,113 @@ def get_sec_filings(symbol: str, form_types=None, limit: int = 15) -> list:
         return []
 
 
+def get_recent_earnings(symbol: str, n: int = 2) -> list:
+    """Get key metrics for the last *n* earnings quarters.
+
+    Returns a list of dicts (most-recent first) with keys:
+        fiscal_year, fiscal_quarter, report_date,
+        revenue, rev_yoy, eps, op_margin, px_move
+    Empty list on failure.
+    """
+    t = _get_ticker(symbol)
+    if t is None:
+        return []
+    try:
+        # -- transcript list for quarter labels & earnings dates ---------------
+        tc = t.earning_call_transcripts()
+        if tc is None:
+            return []
+        tl = tc.get_transcripts_list()
+        if tl is None or tl.empty:
+            return []
+        tl["report_date"] = pd.to_datetime(tl["report_date"])
+        tl = tl.sort_values("report_date", ascending=False).head(n).reset_index(drop=True)
+
+        # -- revenue YoY ------------------------------------------------------
+        rev_df = t.quarterly_revenue_yoy_growth()
+        if rev_df is not None and not rev_df.empty:
+            rev_df["report_date"] = pd.to_datetime(rev_df["report_date"])
+        else:
+            rev_df = pd.DataFrame()
+
+        # -- EPS YoY ----------------------------------------------------------
+        eps_df = t.quarterly_eps_yoy_growth()
+        if eps_df is not None and not eps_df.empty:
+            eps_df["report_date"] = pd.to_datetime(eps_df["report_date"])
+        else:
+            eps_df = pd.DataFrame()
+
+        # -- Operating margin --------------------------------------------------
+        opm_df = t.quarterly_operating_margin()
+        if opm_df is not None and not opm_df.empty:
+            opm_df["report_date"] = pd.to_datetime(opm_df["report_date"])
+        else:
+            opm_df = pd.DataFrame()
+
+        # -- Prices for Px Move ------------------------------------------------
+        prices = get_prices(symbol)
+
+        results = []
+        for _, row in tl.iterrows():
+            rd = row["report_date"]
+            # Find the fiscal quarter-end date closest to earnings report_date
+            # Revenue etc. are keyed by quarter-end, not earnings call date.
+            # Quarter-end is typically ~1 month before earnings call.
+            quarter_end = rd - pd.DateOffset(months=1)
+            entry = {
+                "fiscal_year": int(row["fiscal_year"]),
+                "fiscal_quarter": int(row["fiscal_quarter"]),
+                "report_date": rd.strftime("%b %d, %Y"),
+                "revenue": None,
+                "rev_yoy": None,
+                "eps": None,
+                "op_margin": None,
+                "px_move": None,
+            }
+
+            # Match metrics by closest quarter-end date
+            def _closest(df, target, col):
+                if df.empty or col not in df.columns:
+                    return None
+                diffs = (df["report_date"] - target).abs()
+                idx = diffs.idxmin()
+                if diffs[idx].days > 60:
+                    return None
+                return df.loc[idx]
+
+            rev_row = _closest(rev_df, quarter_end, "revenue")
+            if rev_row is not None:
+                entry["revenue"] = rev_row["revenue"]
+                entry["rev_yoy"] = rev_row["yoy_growth"]
+
+            eps_row = _closest(eps_df, quarter_end, "eps")
+            if eps_row is not None:
+                entry["eps"] = eps_row["eps"]
+
+            opm_row = _closest(opm_df, quarter_end, "operating_margin")
+            if opm_row is not None:
+                entry["op_margin"] = opm_row["operating_margin"]
+
+            # 3-day price reaction around earnings date
+            if prices is not None and not prices.empty:
+                try:
+                    loc = prices.index.get_indexer([rd], method="nearest")[0]
+                    # day before earnings -> 2 days after
+                    pre = max(loc - 1, 0)
+                    post = min(loc + 2, len(prices) - 1)
+                    p0 = prices.iloc[pre]["close"]
+                    p1 = prices.iloc[post]["close"]
+                    if p0 and p0 > 0:
+                        entry["px_move"] = (p1 - p0) / p0
+                except Exception:
+                    pass
+
+            results.append(entry)
+        return results
+    except Exception:
+        return []
+
+
 def get_earnings_calendar(symbol: str):
     """Get the next upcoming earnings date.
 
