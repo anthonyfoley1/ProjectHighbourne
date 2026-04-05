@@ -63,8 +63,8 @@ def update_search_suggestions(query):
     name_contains = []
 
     for ticker, name in startup.ticker_name.items():
-        t_lower = ticker.lower()
-        n_lower = (name or "").lower()
+        t_lower = str(ticker).lower()
+        n_lower = str(name).lower() if isinstance(name, str) else ""
 
         if t_lower == query_lower:
             exact.append((ticker, name or ""))
