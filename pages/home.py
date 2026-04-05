@@ -456,9 +456,9 @@ def update_screener(sector, view):
     if sector and sector != "All":
         df = df[df["sector"] == sector]
     if view == "Cheap":
-        df = df[df["z_score"] < 0].sort_values("z_score", ascending=True)
+        df = df[df["z_score"] < -0.5].sort_values("z_score", ascending=True)
     elif view == "Rich":
-        df = df[df["z_score"] > 0].sort_values("z_score", ascending=False)
+        df = df[df["z_score"] > 0.5].sort_values("z_score", ascending=False)
 
     table = build_screener_table(df)
     return table.children, f"Showing {len(df)} tickers"
