@@ -293,9 +293,9 @@ def load_market_data(years=5):
         close = pd.read_parquet(cache_path)
     else:
         import time as _time
-        BATCH_SIZE = 100
-        PAUSE_SECS = 10
-        MAX_RETRIES = 3
+        BATCH_SIZE = 30
+        PAUSE_SECS = 2
+        MAX_RETRIES = 2
         print(f"  Downloading {len(symbols)} tickers from yfinance in batches of {BATCH_SIZE}...")
         close_dict = {}
 
