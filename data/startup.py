@@ -171,13 +171,33 @@ class LazyUniverse:
 _ratios_cache = {}
 
 def get_ticker_ratios(symbol):
-    """Compute ratio history for a single ticker from prices + financials in SQLite.
-    Cached after first computation.
+    """Get ratio history for a single ticker.
 
-    Returns a dict {ratio_name: pd.Series} ready to attach to a Ticker.
+    Primary source: DefeatBeta pre-computed ratios (fast, DuckDB-backed).
+    Fallback: SQLite ``ratios`` table, then on-the-fly computation from
+    prices + financials.
+
+    Cached after first retrieval.
+    Returns a dict ``{ratio_name: pd.Series}`` ready to attach to a Ticker.
     """
     if symbol in _ratios_cache:
         return _ratios_cache[symbol]
+
+    # ------------------------------------------------------------------
+    # Primary: DefeatBeta
+    # ------------------------------------------------------------------
+    try:
+        from data.defeatbeta import get_ratios as db_get_ratios
+        result = db_get_ratios(symbol)
+        if result:
+            _ratios_cache[symbol] = result
+            return result
+    except Exception:
+        pass
+
+    # ------------------------------------------------------------------
+    # Fallback: SQLite
+    # ------------------------------------------------------------------
     db = get_db()
 
     # First try pre-computed ratios table
@@ -297,17 +317,36 @@ def get_ticker_ratios(symbol):
 
 
 def get_prices(symbol, full=False):
-    """Lazy-load prices for a ticker from SQLite.  Returns pd.Series or None.
+    """Lazy-load close prices for a ticker.  Returns ``pd.Series`` or *None*.
 
-    If ``full=True``, always loads the complete price history (for detail page).
-    Otherwise returns the cached version (sparkline-only during initial load,
-    or full if previously loaded).
+    Primary source: DefeatBeta (full history via DuckDB).
+    Fallback: SQLite ``prices`` table.
+
+    If ``full=True``, always loads the complete price history (for detail
+    page).  Otherwise returns the cached version (sparkline-only during
+    initial load, or full if previously loaded).
     """
     global price_cache
     if symbol in price_cache and not full:
         return price_cache[symbol]
 
-    # For full=True or cache miss, load from DB
+    # ------------------------------------------------------------------
+    # Primary: DefeatBeta
+    # ------------------------------------------------------------------
+    try:
+        from data.defeatbeta import get_close_prices as db_close
+        prices = db_close(symbol)
+        if prices is not None and not prices.empty:
+            if not full:
+                prices = prices.iloc[-120:]
+            price_cache[symbol] = prices
+            return prices
+    except Exception:
+        pass
+
+    # ------------------------------------------------------------------
+    # Fallback: SQLite
+    # ------------------------------------------------------------------
     db = get_db()
     if full:
         pdf = db.query(
