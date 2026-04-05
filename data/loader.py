@@ -269,20 +269,106 @@ def load_tickers():
 
 
 def load_market_data(years=5):
-    """Load SimFin prices and compute market cap for the lookback period."""
+    """Load daily close prices from yfinance, shares from SimFin, compute market cap."""
+    import json as _json
+
+    # 1. Get close prices from yfinance (current data)
+    tickers_df = load_tickers()
+    symbols = tickers_df["Ticker"].tolist()
+
+    cache_path = os.path.join(PROJECT_ROOT, "cache", "yf_close.parquet")
+    cache_meta = os.path.join(PROJECT_ROOT, "cache", "yf_close_meta.json")
+    os.makedirs(os.path.join(PROJECT_ROOT, "cache"), exist_ok=True)
+
+    use_cache = False
+    if os.path.exists(cache_path) and os.path.exists(cache_meta):
+        with open(cache_meta) as f:
+            meta = _json.load(f)
+        saved = datetime.fromisoformat(meta["saved_at"])
+        if datetime.now() - saved < timedelta(hours=20):
+            use_cache = True
+
+    if use_cache:
+        print("  Loading cached yfinance prices...")
+        close = pd.read_parquet(cache_path)
+    else:
+        import time as _time
+        BATCH_SIZE = 200
+        PAUSE_SECS = 10
+        MAX_RETRIES = 2
+        print(f"  Downloading {len(symbols)} tickers from yfinance in batches of {BATCH_SIZE}...")
+        close_dict = {}
+
+        def _extract_close(raw_df, syms):
+            """Extract close prices from a yf.download result."""
+            extracted = {}
+            if len(syms) == 1:
+                sym = syms[0]
+                if "Close" in raw_df.columns:
+                    s = raw_df["Close"].dropna()
+                    if len(s) > 0:
+                        extracted[sym] = s
+            else:
+                for sym in syms:
+                    try:
+                        if sym in raw_df.columns.get_level_values(0):
+                            s = raw_df[sym]["Close"].dropna()
+                            if len(s) > 0:
+                                extracted[sym] = s
+                    except Exception:
+                        continue
+            return extracted
+
+        def _download_batch(syms, label=""):
+            """Download a batch, return dict of extracted close prices."""
+            try:
+                raw = yf.download(syms, period=f"{years}y", group_by="ticker", threads=True, progress=False)
+                return _extract_close(raw, syms)
+            except Exception as e:
+                print(f"    {label} download error: {e}")
+                return {}
+
+        for i in range(0, len(symbols), BATCH_SIZE):
+            batch = [s for s in symbols[i : i + BATCH_SIZE] if s]
+            batch_num = i // BATCH_SIZE + 1
+            total_batches = (len(symbols) + BATCH_SIZE - 1) // BATCH_SIZE
+            print(f"    Batch {batch_num}/{total_batches} ({len(batch)} tickers)...")
+            result = _download_batch(batch, f"Batch {batch_num}")
+            close_dict.update(result)
+
+            # Identify tickers that failed (not in result)
+            missed = [s for s in batch if s not in result]
+            for retry in range(MAX_RETRIES):
+                if not missed:
+                    break
+                print(f"    Retrying {len(missed)} missed tickers (attempt {retry + 1})...")
+                _time.sleep(15)
+                retry_result = _download_batch(missed, f"Retry {retry + 1}")
+                close_dict.update(retry_result)
+                missed = [s for s in missed if s not in retry_result]
+
+            # Pause between batches to avoid rate limiting
+            if i + BATCH_SIZE < len(symbols):
+                _time.sleep(PAUSE_SECS)
+
+        close = pd.DataFrame(close_dict)
+        close.to_parquet(cache_path)
+        with open(cache_meta, "w") as f:
+            _json.dump({"saved_at": datetime.now().isoformat()}, f)
+        print(f"  Got prices for {len(close.columns)} tickers")
+
+    # 2. Get shares outstanding from SimFin (share counts are stable year-to-year)
     sf.set_api_key("4e0d0ff7-a1af-4333-9f4b-55d97e801b35")
     sf.set_data_dir("~/simfin_data/")
-
     df_prices = sf.load_shareprices(market="us", variant="daily")
-    cutoff = (datetime.now() - timedelta(days=years * 365)).strftime("%Y-%m-%d")
-    prices = df_prices[df_prices.index.get_level_values("Date") >= cutoff].copy()
+    shares_df = df_prices["Shares Outstanding"].unstack("Ticker")
+    # Use the latest shares outstanding for each ticker
+    latest_shares = shares_df.ffill().iloc[-1]
 
-    mktcap = (prices["Close"] * prices["Shares Outstanding"]).unstack("Ticker")
-    mktcap = mktcap.loc[:, mktcap.columns.notna()]
-
-    # Store close prices for key metrics
-    close = prices["Close"].unstack("Ticker")
-    close = close.loc[:, close.columns.notna()]
+    # 3. Compute market cap = close * shares outstanding
+    common = close.columns.intersection(latest_shares.index)
+    mktcap = close[common].multiply(latest_shares[common], axis=1)
+    mktcap = mktcap.dropna(axis=1, how="all")
 
     return mktcap, close
 
