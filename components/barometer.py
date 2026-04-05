@@ -335,6 +335,26 @@ def build_barometer(barometer_data):
                         "position": "absolute", "top": "5px", "left": "0", "right": "0",
                         "height": "4px", "backgroundColor": "#333", "borderRadius": "2px",
                     }),
+                    # U/W threshold at 35%
+                    html.Div(style={
+                        "position": "absolute", "top": "0", "left": "35%",
+                        "width": "1px", "height": "14px",
+                        "borderLeft": "2px dashed #ff4444", "opacity": "0.6",
+                    }),
+                    html.Div("35", style={
+                        "position": "absolute", "top": "14px", "left": "34%",
+                        "fontSize": "7px", "color": "#ff4444", "fontFamily": FONT_FAMILY,
+                    }),
+                    # O/W threshold at 65%
+                    html.Div(style={
+                        "position": "absolute", "top": "0", "left": "65%",
+                        "width": "1px", "height": "14px",
+                        "borderLeft": "2px dashed #00ff00", "opacity": "0.6",
+                    }),
+                    html.Div("65", style={
+                        "position": "absolute", "top": "14px", "left": "64%",
+                        "fontSize": "7px", "color": "#00ff00", "fontFamily": FONT_FAMILY,
+                    }),
                     # Dot marker
                     html.Div(style={
                         "position": "absolute", "top": "2px",
