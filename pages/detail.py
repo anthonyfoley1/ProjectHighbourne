@@ -767,7 +767,7 @@ def _build_financials_placeholder():
     ], style=PANEL_STYLE)
 
 
-def _build_rv_summary_table(symbol):
+def _build_rv_summary_table(symbol, window_days=None):
     """Bloomberg-style RV summary: all ratios at a glance with current, hist avg, range, implied price."""
     ticker_obj = startup.universe.get(symbol)
     prices = startup.get_prices(symbol)
@@ -795,7 +795,7 @@ def _build_rv_summary_table(symbol):
         if ticker_obj is None:
             continue
         try:
-            st = ticker_obj.stats(ratio_name)
+            st = ticker_obj.stats(ratio_name, window_days)
         except Exception:
             st = None
         if st is None:
@@ -928,7 +928,7 @@ def _build_rv_controls(symbol):
     )
 
     return html.Div([
-        _build_rv_summary_table(symbol),
+        html.Div(id="rv-summary-container", children=_build_rv_summary_table(symbol)),
         hidden_ratio,
         window_row,
         html.Div(id="rv-chart-container"),
@@ -1386,6 +1386,20 @@ def update_price_chart(period, overlays, pathname):
     return fig
 
 
+
+
+@callback(
+    Output("rv-summary-container", "children"),
+    Input("window-toggle", "value"),
+    State("url", "pathname"),
+)
+def update_rv_summary(window_name, pathname):
+    """Update RV summary table when window changes."""
+    if not pathname or "/detail/" not in pathname:
+        return html.Div()
+    symbol = pathname.split("/detail/")[-1].upper()
+    window_days = WINDOW_MAP.get(window_name)
+    return _build_rv_summary_table(symbol, window_days)
 
 
 @callback(
