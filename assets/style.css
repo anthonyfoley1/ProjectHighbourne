@@ -638,6 +638,46 @@ div[id*="filter"] div {
     display: none !important;
 }
 
+/* --- Info Tooltip ----------------------------------------------- */
+.info-tip {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 14px;
+    height: 14px;
+    border: 1px solid var(--dim);
+    border-radius: 50%;
+    font-size: 8px;
+    font-style: italic;
+    color: var(--dim);
+    cursor: pointer;
+    margin-left: 4px;
+}
+
+.info-tip .info-text {
+    display: none;
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--header);
+    border: 1px solid var(--border);
+    color: var(--white);
+    font-size: 9px;
+    font-style: normal;
+    padding: 8px 10px;
+    border-radius: 3px;
+    width: 250px;
+    line-height: 1.4;
+    z-index: 100;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+}
+
+.info-tip:hover .info-text {
+    display: block;
+}
+
 /* --- Container ------------------------------------------------- */
 .bbg-container {
     max-width: 1100px;
