@@ -295,7 +295,19 @@ def _build_ticker_header(symbol, sector, industry, price_val, daily_chg,
 
 def _build_description(info, symbol, barometer_data=None):
     """Description text with company details + peers ratio comparison panel + barometer."""
-    description_text = info.get("description", "No description available.")
+    # Break long description into paragraphs (split on ". " after ~200 chars)
+    raw_desc = info.get("description", "No description available.") or "No description available."
+    sentences = raw_desc.replace(". ", ".|").split("|")
+    paragraphs = []
+    current = ""
+    for s in sentences:
+        current += s
+        if len(current) > 200:
+            paragraphs.append(current.strip())
+            current = ""
+    if current.strip():
+        paragraphs.append(current.strip())
+    description_text = paragraphs
 
     # Company details from yfinance info
     details = []
@@ -355,7 +367,7 @@ def _build_description(info, symbol, barometer_data=None):
         style={"display": "flex", "gap": "10px", "marginBottom": "8px"},
         children=[
             html.Div([
-                html.P(description_text, style={"color": C["gray"], "fontSize": "10px", "lineHeight": "1.5", "margin": 0}),
+                *[html.P(p, style={"color": C["gray"], "fontSize": "10px", "lineHeight": "1.5", "margin": "0 0 6px 0"}) for p in description_text],
                 html.Div(details, style={"marginTop": "6px", "borderTop": f"1px solid {C['border']}", "paddingTop": "6px"}) if details else None,
             ], style={**PANEL_STYLE, "flex": "1", "marginBottom": 0}),
             html.Div(
