@@ -202,6 +202,39 @@ def main():
 
     print(f"   Ratios computed: {', '.join(f'{k}: {len(v.columns)} tickers' for k, v in ratio_dfs.items())}")
 
+    # Write ratios to SQLite
+    print("   Writing ratios to database...")
+    db.execute("DELETE FROM ratios")
+    ratio_rows = []
+    all_ratio_tickers = set()
+    for rdf in ratio_dfs.values():
+        all_ratio_tickers.update(rdf.columns)
+
+    for sym in all_ratio_tickers:
+        pe = ratio_dfs.get("P/E", pd.DataFrame()).get(sym)
+        ps = ratio_dfs.get("P/S", pd.DataFrame()).get(sym)
+        pb = ratio_dfs.get("P/B", pd.DataFrame()).get(sym)
+        ev = ratio_dfs.get("EV/EBITDA", pd.DataFrame()).get(sym)
+
+        # Get all dates across all ratios for this ticker
+        dates = set()
+        for s in [pe, ps, pb, ev]:
+            if s is not None:
+                dates.update(s.dropna().index)
+
+        for d in sorted(dates):
+            ratio_rows.append((
+                sym, str(d.date()),
+                float(pe.loc[d]) if pe is not None and d in pe.index and pd.notna(pe.loc[d]) else None,
+                float(ps.loc[d]) if ps is not None and d in ps.index and pd.notna(ps.loc[d]) else None,
+                float(pb.loc[d]) if pb is not None and d in pb.index and pd.notna(pb.loc[d]) else None,
+                float(ev.loc[d]) if ev is not None and d in ev.index and pd.notna(ev.loc[d]) else None,
+            ))
+
+    if ratio_rows:
+        db.executemany("INSERT OR REPLACE INTO ratios (ticker, date, pe, ps, pb, ev_ebitda) VALUES (?,?,?,?,?,?)", ratio_rows)
+        print(f"   {len(ratio_rows)} ratio rows written")
+
     # ------------------------------------------------------------------
     # Step 6: Compute technicals
     # ------------------------------------------------------------------

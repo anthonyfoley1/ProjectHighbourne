@@ -168,11 +168,16 @@ class LazyUniverse:
 # Lazy data-access helpers
 # ---------------------------------------------------------------------------
 
+_ratios_cache = {}
+
 def get_ticker_ratios(symbol):
     """Compute ratio history for a single ticker from prices + financials in SQLite.
+    Cached after first computation.
 
     Returns a dict {ratio_name: pd.Series} ready to attach to a Ticker.
     """
+    if symbol in _ratios_cache:
+        return _ratios_cache[symbol]
     db = get_db()
 
     # First try pre-computed ratios table
@@ -190,11 +195,12 @@ def get_ticker_ratios(symbol):
                 if len(s) > 0:
                     result[name] = s
             if result:
+                _ratios_cache[symbol] = result
                 return result
     except Exception:
         pass
 
-    # Fallback: compute on the fly from prices + financials
+    # Fallback: compute on the fly from prices + financials (slow, only if ratios table is empty)
     import numpy as np
     from edgar_utils import build_daily_ttm, build_daily_instant
 
@@ -286,6 +292,7 @@ def get_ticker_ratios(symbol):
                 if len(ev_ebitda) > 10:
                     result["EV/EBITDA"] = ev_ebitda
 
+    _ratios_cache[symbol] = result
     return result
 
 

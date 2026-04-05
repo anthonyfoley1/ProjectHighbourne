@@ -896,13 +896,14 @@ def _build_rv_summary_table(symbol):
 
 
 def _build_rv_controls(symbol):
-    """RV summary table (with clickable ratio rows) + window toggle + RV chart."""
-    # Ratio + window controls inline
+    """RV summary table + ratio/window selectors + RV chart."""
+    # Compact controls: ratio selector + window toggle
     window_row = html.Div(
-        style={"display": "flex", "gap": "12px", "alignItems": "center", "marginBottom": "6px"},
+        style={"display": "flex", "gap": "12px", "alignItems": "center", "marginBottom": "6px",
+               "borderTop": f"1px solid {C['border']}", "paddingTop": "6px"},
         children=[
-            html.Label("RATIO", style={"color": C["gray"], "fontSize": "8px", "marginRight": "4px",
-                                        "fontFamily": FONT_FAMILY}),
+            html.Label("SELECT RATIO", style={"color": C["orange"], "fontSize": "8px", "marginRight": "4px",
+                                        "fontFamily": FONT_FAMILY, "fontWeight": "bold"}),
             dcc.RadioItems(
                 id="ratio-dropdown",
                 options=[{"label": r, "value": r} for r in RATIO_NAMES],
@@ -910,15 +911,15 @@ def _build_rv_controls(symbol):
                 inline=True,
                 inputStyle={"display": "none"},
                 labelStyle={
-                    "padding": "3px 8px", "fontSize": "9px", "cursor": "pointer",
+                    "padding": "4px 10px", "fontSize": "10px", "cursor": "pointer",
                     "fontFamily": FONT_FAMILY, "border": f"1px solid {C['border']}",
-                    "marginRight": "2px", "color": C["gray"], "background": "#000",
+                    "marginRight": "2px", "color": C["cyan"], "background": "#000",
                 },
                 className="bbg-period-selector",
             ),
-            html.Span("|", style={"color": C["border"], "margin": "0 4px"}),
-            html.Label("WINDOW", style={"color": C["gray"], "fontSize": "8px", "marginRight": "4px",
-                                        "fontFamily": FONT_FAMILY}),
+            html.Span("|", style={"color": C["border"], "margin": "0 8px"}),
+            html.Label("WINDOW", style={"color": C["orange"], "fontSize": "8px", "marginRight": "4px",
+                                        "fontFamily": FONT_FAMILY, "fontWeight": "bold"}),
             dcc.RadioItems(
                 id="window-toggle",
                 options=WINDOW_OPTIONS,
