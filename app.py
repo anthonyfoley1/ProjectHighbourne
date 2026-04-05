@@ -50,7 +50,9 @@ def search_navigate(n_submit, value):
 )
 def update_search_suggestions(query):
     if not query or len(query) < 2:
-        return dash.no_update, dash.no_update
+        return [], {"display": "none", "position": "absolute", "top": "100%",
+                    "left": 0, "right": 0, "zIndex": 1000,
+                    "backgroundColor": "#1a1a1a", "border": "1px solid #444"}
 
     query_lower = query.lower().strip()
 
