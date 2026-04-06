@@ -163,9 +163,14 @@ def layout(symbol="AAPL"):
     )
 
     sec_desc = _build_description(info, symbol, barometer_data)
-    sec_news = _build_news(info, symbol=symbol)
+    # News + Earnings load asynchronously via callback (they're slow — LLM calls)
+    sec_news_placeholder = html.Div(id="news-section-async", children=[
+        html.Div("Loading news & earnings...", style={"color": C["dim"], "fontSize": "10px", "padding": "10px"}),
+    ], style=PANEL_STYLE)
     sec_price = _build_price_section(info, prices)
-    sec_earnings = _build_earnings_section(symbol)
+    sec_earnings_placeholder = html.Div(id="earnings-section-async", children=[
+        html.Div("Loading earnings data...", style={"color": C["dim"], "fontSize": "10px", "padding": "10px"}),
+    ], style=PANEL_STYLE)
     sec_financials = None
 
     # Stat cards
@@ -201,13 +206,15 @@ def layout(symbol="AAPL"):
         sec_header,
         sec_ticker_header,
         sec_desc,
-        sec_news,
+        sec_news_placeholder,
         sec_price,
-        sec_earnings,
+        sec_earnings_placeholder,
         sec_stat_cards,
         sec_rv,
         sec_technicals,
         function_key_bar("F4"),
+        # Hidden store to trigger async loading
+        dcc.Store(id="detail-symbol-store", data=symbol),
     ], style=CONTAINER_STYLE)
 
 
@@ -1840,3 +1847,34 @@ def update_rv_chart(ratio_name, window_name, pathname):
         dcc.Graph(figure=fig, config={"displayModeBar": False}, style={"height": "320px"}),
         sector_attr,
     ])
+
+
+# ---------------------------------------------------------------------------
+# Async loading callbacks — news and earnings load AFTER the page renders
+# ---------------------------------------------------------------------------
+
+@callback(
+    Output("news-section-async", "children"),
+    Input("detail-symbol-store", "data"),
+)
+def load_news_async(symbol):
+    """Load news section asynchronously after page renders."""
+    if not symbol:
+        return html.Div()
+    try:
+        info = fetch_ticker_info(symbol)
+    except Exception:
+        info = {}
+    result = _build_news(info, symbol=symbol)
+    return result
+
+
+@callback(
+    Output("earnings-section-async", "children"),
+    Input("detail-symbol-store", "data"),
+)
+def load_earnings_async(symbol):
+    """Load earnings section asynchronously after page renders."""
+    if not symbol:
+        return html.Div()
+    return _build_earnings_section(symbol)
