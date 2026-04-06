@@ -1129,11 +1129,20 @@ def _build_rv_summary_table(symbol, window_days=None):
 
 def _build_rv_controls(symbol):
     """RV summary table + window selector + RV chart. Ratio selected via table rows."""
-    # Hidden ratio RadioItems — updated by JavaScript when table rows are clicked
+    # Pick default ratio — first one that has data for this ticker
+    default_ratio = "P/E"
+    ticker_obj = startup.universe.get(symbol)
+    if ticker_obj:
+        for r in RATIO_NAMES:
+            s = ticker_obj.get_ratio(r)
+            if len(s) > 10:
+                default_ratio = r
+                break
+
     hidden_ratio = dcc.RadioItems(
         id="ratio-dropdown",
         options=[{"label": r, "value": r} for r in RATIO_NAMES],
-        value="P/E",
+        value=default_ratio,
         style={"display": "none"},
     )
 
