@@ -429,11 +429,14 @@ def _build_peers_ratios(symbol, competitors):
     rows = []
 
     # Company row (highlighted)
-    my_cells = [html.Td(symbol, style={**cell, "color": C["white"], "fontWeight": "bold", "textAlign": "left"})]
+    my_cells = [html.Td([
+        html.Span(symbol, style={"fontWeight": "bold"}),
+        html.Span(" ◄", style={"fontSize": "8px"}),
+    ], style={**cell, "color": C["cyan"], "textAlign": "left"})]
     for r in ratio_names:
         v = my_ratios.get(r)
         my_cells.append(html.Td(f"{v:.1f}x" if v else "—", style={**cell, "color": C["cyan"], "fontWeight": "bold"}))
-    rows.append(html.Tr(my_cells, style={"background": "rgba(0,188,212,0.06)"}))
+    rows.append(html.Tr(my_cells, style={"background": "rgba(0,188,212,0.10)", "borderLeft": f"3px solid {C['cyan']}"}))
 
     # Peer rows
     for comp in competitors[:5]:
