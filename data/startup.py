@@ -185,19 +185,7 @@ def get_ticker_ratios(symbol):
         return _ratios_cache[symbol]
 
     # ------------------------------------------------------------------
-    # Primary: DefeatBeta
-    # ------------------------------------------------------------------
-    try:
-        from data.defeatbeta import get_ratios as db_get_ratios
-        result = db_get_ratios(symbol)
-        if result:
-            _ratios_cache[symbol] = result
-            return result
-    except Exception:
-        pass
-
-    # ------------------------------------------------------------------
-    # Fallback: SQLite
+    # Primary: SQLite (instant — pre-computed during ingestion)
     # ------------------------------------------------------------------
     db = get_db()
 
@@ -221,7 +209,17 @@ def get_ticker_ratios(symbol):
     except Exception:
         pass
 
-    # Fallback: compute on the fly from prices + financials (slow, only if ratios table is empty)
+    # Fallback 1: DefeatBeta (slower but accurate)
+    try:
+        from data.defeatbeta import get_ratios as db_get_ratios
+        result = db_get_ratios(symbol)
+        if result:
+            _ratios_cache[symbol] = result
+            return result
+    except Exception:
+        pass
+
+    # Fallback 2: compute on the fly from prices + financials (slowest)
     import numpy as np
     from edgar_utils import build_daily_ttm, build_daily_instant
 
@@ -332,21 +330,7 @@ def get_prices(symbol, full=False):
         return price_cache[symbol]
 
     # ------------------------------------------------------------------
-    # Primary: DefeatBeta
-    # ------------------------------------------------------------------
-    try:
-        from data.defeatbeta import get_close_prices as db_close
-        prices = db_close(symbol)
-        if prices is not None and not prices.empty:
-            if not full:
-                prices = prices.iloc[-120:]
-            price_cache[symbol] = prices
-            return prices
-    except Exception:
-        pass
-
-    # ------------------------------------------------------------------
-    # Fallback: SQLite
+    # Primary: SQLite (instant)
     # ------------------------------------------------------------------
     db = get_db()
     if full:
@@ -363,6 +347,17 @@ def get_prices(symbol, full=False):
     if pdf.empty:
         if symbol in price_cache:
             return price_cache[symbol]
+        # Fallback: DefeatBeta
+        try:
+            from data.defeatbeta import get_close_prices as db_close
+            prices = db_close(symbol)
+            if prices is not None and not prices.empty:
+                if not full:
+                    prices = prices.iloc[-120:]
+                price_cache[symbol] = prices
+                return prices
+        except Exception:
+            pass
         return None
 
     pdf["date"] = pd.to_datetime(pdf["date"])

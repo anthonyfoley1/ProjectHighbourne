@@ -103,28 +103,26 @@ def layout(symbol="AAPL"):
             function_key_bar("F4"),
         ], style=CONTAINER_STYLE)
 
-    # ----- Use cached data first, defer yfinance to async -----
-    # Don't call fetch_ticker_info() here — it blocks for 2-3s
-    # Use screener data + DefeatBeta prices for immediate render
-    info = {}  # populated async in news/earnings callbacks
+    # ----- Fetch ticker info (yfinance) -----
+    try:
+        info = fetch_ticker_info(symbol)
+    except Exception:
+        info = {}
 
-    # ----- Compute key stats from cached data -----
+    # ----- Compute key stats -----
     sector = startup.ticker_sector.get(symbol, "Unknown")
-    industry = ""
+    industry = info.get("industry", "")
     price_val = float(prices.iloc[-1]) if prices is not None and not prices.empty else None
-    # Compute daily change from price history (no yfinance needed)
-    prev_close = float(prices.iloc[-2]) if prices is not None and len(prices) > 1 else None
+    prev_close = info.get("prev_close")
     daily_chg = None
     daily_chg_pct = None
     if price_val is not None and prev_close is not None and prev_close != 0:
         daily_chg = price_val - prev_close
         daily_chg_pct = daily_chg / prev_close
 
-    # Get from screener data (already in SQLite, instant)
-    screener_row = startup.screener_df[startup.screener_df["symbol"] == symbol]
-    volume = None
-    mkt_cap = None
-    next_er = None
+    volume = info.get("volume")
+    mkt_cap = info.get("market_cap")
+    next_er = fmt_date_friendly(info.get("next_earnings")) if info.get("next_earnings") else None
 
     # Returns
     ytd_ret, y1_ret = _compute_period_returns(prices, price_val)
