@@ -7,6 +7,8 @@ import pages.detail as detail
 
 # Dash auto-loads assets/style.css — no manual CSS injection needed
 app = dash.Dash(__name__, suppress_callback_exceptions=True)
+# Increase thread pool so slow callbacks (LLM, yfinance) don't block fast ones (RV chart)
+app.server.config['THREADS_PER_PAGE'] = 8
 app.title = "Highbourne Terminal"
 
 app.layout = html.Div([
